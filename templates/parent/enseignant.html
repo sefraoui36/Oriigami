@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mes Enseignants | Origami Privé</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(233, 236, 239, 1);
+        }
+        .gradient-button {
+            background: linear-gradient(135deg, #8B3DFF 0%, #AE128A 100%);
+            transition: all 0.3s ease;
+        }
+        .gradient-button:hover {
+            box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.25);
+            transform: translateY(-1px);
+        }
+        .sidebar-active-indicator {
+            box-shadow: inset 4px 0 0 0 #710fe5;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cdc2d8;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#d4bbff",
+                        "surface-tint": "#7921ed",
+                        "outline": "#7c7387",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#ffaede",
+                        "outline-variant": "#cdc2d8",
+                        "background": "#f8f9fa",
+                        "surface-container": "#edeeef",
+                        "tertiary-fixed-dim": "#ffb782",
+                        "secondary-fixed": "#ffd8ec",
+                        "tertiary": "#894500",
+                        "surface-dim": "#d9dadb",
+                        "surface-container-low": "#f3f4f5",
+                        "on-primary-fixed-variant": "#5d00c2",
+                        "on-tertiary-fixed": "#301400",
+                        "on-primary-container": "#faf1ff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#fff2eb",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#8b3dff",
+                        "on-tertiary-fixed-variant": "#703800",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#fe60cf",
+                        "surface": "#f8f9fa",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#191c1d",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-container-high": "#e7e8e9",
+                        "inverse-surface": "#2e3132",
+                        "secondary": "#ae128a",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary-fixed": "#ebdcff",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#191c1d",
+                        "on-primary-fixed": "#270058",
+                        "primary": "#710fe5",
+                        "on-secondary-fixed": "#3b002d",
+                        "tertiary-container": "#ad5900",
+                        "on-surface-variant": "#4b4456",
+                        "primary-fixed-dim": "#d4bbff",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e1e3e4",
+                        "on-secondary-container": "#680052",
+                        "tertiary-fixed": "#ffdcc5",
+                        "surface-bright": "#f8f9fa",
+                        "on-secondary-fixed-variant": "#87006b",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card-gap": "24px",
+                        "section-margin": "48px",
+                        "gutter": "24px",
+                        "container-padding": "32px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "title-md": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-sm overflow-x-hidden">
+<!-- Side Navigation Shell -->
+<aside class="w-[280px] h-screen fixed left-0 top-0 bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant dark:border-outline flex flex-col py-base z-50">
+<div class="px-6 py-8">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim">Origami Privé</h1>
+<p class="text-on-surface-variant font-label-md mt-1">Education d'Excellence</p>
+</div>
+<nav class="flex-1 overflow-y-auto px-4 space-y-1">
+<div class="cursor-pointer active:scale-95 transition-transform flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-body-sm">Dashboard</span>
+</div>
+<div class="cursor-pointer active:scale-95 transition-transform flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200">
+<span class="material-symbols-outlined mr-3">person</span>
+<span class="font-body-sm">Mon profil</span>
+</div>
+<div class="cursor-pointer active:scale-95 transition-transform flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200">
+<span class="material-symbols-outlined mr-3">child_care</span>
+<span class="font-body-sm">Mes enfants</span>
+</div>
+<div class="cursor-pointer active:scale-95 transition-transform flex items-center px-4 py-3 rounded-xl bg-primary-container/10 text-primary border-l-4 border-primary font-semibold">
+<span class="material-symbols-outlined mr-3">supervisor_account</span>
+<span class="font-body-sm">Mes enseignants</span>
+</div>
+<div class="cursor-pointer active:scale-95 transition-transform flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200">
+<span class="material-symbols-outlined mr-3">event_available</span>
+<span class="font-body-sm">Mes séances</span>
+</div>
+<div class="cursor-pointer active:scale-95 transition-transform flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200">
+<span class="material-symbols-outlined mr-3">payments</span>
+<span class="font-body-sm">Paiements</span>
+</div>
+<div class="cursor-pointer active:scale-95 transition-transform flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200">
+<span class="material-symbols-outlined mr-3">chat</span>
+<span class="font-body-sm">Messages</span>
+</div>
+<div class="cursor-pointer active:scale-95 transition-transform flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-body-sm">Paramètres</span>
+</div>
+</nav>
+<div class="p-4 mt-auto">
+<button class="w-full py-4 px-6 rounded-xl text-white font-semibold gradient-button flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+                Réserver une séance
+            </button>
+<div class="mt-6 flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold">JD</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-on-surface font-semibold truncate">Jean Dupont</p>
+<p class="text-on-surface-variant text-[11px] truncate">Parent Premium</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">logout</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[280px] min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md border-b border-outline-variant dark:border-outline flex justify-between items-center px-gutter z-40">
+<div class="flex items-center gap-4 flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Rechercher un enseignant ou une matière..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-full text-on-surface-variant hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-[20px]">filter_alt</span>
+<span class="font-label-md">Filtrer par enfant</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-full text-on-surface-variant hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-[20px]">subject</span>
+<span class="font-label-md">Filtrer par matière</span>
+</button>
+</div>
+<div class="h-6 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors relative">
+                        notifications
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-secondary rounded-full border-2 border-surface"></span>
+</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">help_outline</span>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="mt-16 p-gutter flex-1 space-y-gutter">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-6">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Mes Enseignants</h2>
+<p class="text-on-surface-variant font-body-sm">Gérez l'équipe pédagogique pour la réussite de vos enfants.</p>
+</div>
+</div>
+<!-- Summary Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-card-gap">
+<div class="glass-card p-6 rounded-2xl flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="p-3 bg-primary-fixed rounded-xl text-primary material-symbols-outlined">supervisor_account</span>
+<span class="text-on-surface-variant text-[12px] font-medium">+1 ce mois</span>
+</div>
+<div class="mt-4">
+<p class="text-on-surface-variant font-label-md uppercase tracking-wider">Enseignants Actifs</p>
+<h3 class="text-3xl font-bold text-on-surface mt-1">4</h3>
+</div>
+</div>
+<div class="glass-card p-6 rounded-2xl flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="p-3 bg-secondary-fixed rounded-xl text-secondary material-symbols-outlined">school</span>
+<span class="text-on-surface-variant text-[12px] font-medium">Répartis</span>
+</div>
+<div class="mt-4">
+<p class="text-on-surface-variant font-label-md uppercase tracking-wider">Matières</p>
+<h3 class="text-3xl font-bold text-on-surface mt-1">3</h3>
+</div>
+</div>
+<div class="glass-card p-6 rounded-2xl flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="p-3 bg-tertiary-fixed rounded-xl text-tertiary material-symbols-outlined">child_care</span>
+<span class="text-on-surface-variant text-[12px] font-medium">Inscrits</span>
+</div>
+<div class="mt-4">
+<p class="text-on-surface-variant font-label-md uppercase tracking-wider">Enfants Suivis</p>
+<h3 class="text-3xl font-bold text-on-surface mt-1">2</h3>
+</div>
+</div>
+<div class="glass-card p-6 rounded-2xl flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="p-3 bg-green-100 rounded-xl text-green-700 material-symbols-outlined">event_note</span>
+<span class="text-on-surface-variant text-[12px] font-medium">Semaine en cours</span>
+</div>
+<div class="mt-4">
+<p class="text-on-surface-variant font-label-md uppercase tracking-wider">Séances Prévues</p>
+<h3 class="text-3xl font-bold text-on-surface mt-1">6</h3>
+</div>
+</div>
+</div>
+<!-- Child-specific Sections -->
+<div class="space-y-section-margin">
+<!-- Ahmed's Section -->
+<section>
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a young boy named Ahmed, smiling warmly, studio lighting with a soft blue professional background, clean high-end photography style consistent with a premium educational platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgW6Sujg72exv2fYMpJxci0xo_d84zgQtdXEDBHzw3EvoJ-JwiYaaTEINMKetqOlFpfRVCgzjkwWZLnyKKMI4XNZRdS4KgLUCRz3Ygp_ucGFNYZlHeMvYD16oFtRMEfqNEyYA9cFc_SGUURvrdKBJN400bPM-v_haMyapG8u-g2puMdaO9Mm0rM5X43gtrcKxMyaqD16FvujUb5hUBjjqdBh-bi0XvQgpZctBAPjIT2FALgDzhznwLiA"/>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface">Ahmed</h4>
+<p class="text-on-surface-variant font-label-md">Classe de 4ème • 2 Enseignants</p>
+</div>
+<div class="ml-auto h-px flex-1 bg-outline-variant opacity-30"></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-card-gap">
+<!-- Teacher Card 1 -->
+<div class="glass-card group hover:shadow-xl transition-all cursor-pointer overflow-hidden flex" onclick="toggleDetails('teacher-1')">
+<div class="w-32 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Professional studio headshot of a middle-aged male teacher, wearing a navy blazer, confident and friendly expression, warm studio lighting, minimalist aesthetic with high clarity and professional detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv-NfBiWj6LpXi8dj6KFX4XLCSGukCuXqe6mvGRRpS2hxtq4cb9a7CxLA8tnFtlDyiSvmD5UUOo4rTK5ig7cObkMgcWj5s4WhGyGxacciIBkLsqEUN8R1Y13xU8NODgIUD4SOTHybgzxvayaURSWhcbCEIJeoRCkWpgnCCSBAzCniqZUgwbI1K6w5U-p495k3vs_KFzqbK5KZqntjjWifE35o8hM6w0v8vMRIsFFK6SkVA1EutEfcC-Q"/>
+</div>
+<div class="flex-1 p-5 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h5 class="font-title-md text-on-surface">M. Thomas Bernard</h5>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-primary text-[16px]">calculate</span>
+<span class="text-primary font-medium text-sm">Mathématiques</span>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase">Actif</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-4">
+<div>
+<p class="text-on-surface-variant text-[11px] uppercase tracking-tight">Prochaine séance</p>
+<p class="text-on-surface font-semibold text-sm">Jeu. 14 Mars • 17:00</p>
+</div>
+<div>
+<p class="text-on-surface-variant text-[11px] uppercase tracking-tight">Heures restantes</p>
+<p class="text-secondary font-bold text-sm">8.5 Heures</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Teacher Card 2 -->
+<div class="glass-card group hover:shadow-xl transition-all cursor-pointer overflow-hidden flex" onclick="toggleDetails('teacher-2')">
+<div class="w-32 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Professional studio headshot of a young female teacher with glasses, wearing a white shirt, bright and intellectual look, soft natural lighting, high-end educational branding style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_URB59ysY_0-hU7is-Pc0PoFvQBKZs2nZnlFjRHnKMTCbZRVuEXpHoNOqUExn02Dg4nQw_CAsK9e9Y3iUYFXG_2kLhQAowMfB-yzeX8G9ia1zSYAPzViksX9M5AYcjOekDHIgZW-N3zRd2SUtGYh4L_GZQf9XmKRV92kCbTevf7xp-qSlRGpn_lAuBsoMiLBHaLpjxpIIVD0IEZSXNp5pbMY50u0cxxVG9gA2i5SwxsJfOTpSKMdyNw"/>
+</div>
+<div class="flex-1 p-5 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h5 class="font-title-md text-on-surface">Mme. Claire Dubois</h5>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-primary text-[16px]">translate</span>
+<span class="text-primary font-medium text-sm">Anglais</span>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase">Actif</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-4">
+<div>
+<p class="text-on-surface-variant text-[11px] uppercase tracking-tight">Prochaine séance</p>
+<p class="text-on-surface font-semibold text-sm">Lun. 11 Mars • 18:30</p>
+</div>
+<div>
+<p class="text-on-surface-variant text-[11px] uppercase tracking-tight">Heures restantes</p>
+<p class="text-secondary font-bold text-sm">4.0 Heures</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Sara's Section -->
+<section>
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a young girl named Sara, looking curious and happy, soft pink background, professional soft-box lighting, high-end commercial photography style for a premium education app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHt4zlP69YNprMpNR4QyEK5BHr8c-x-cD-0qYNmRJJMCsuLwS7LeWYZ9I18NvBilPckpTuFLece8gd6TzRMO7FSMAn-rDzeTjzoM-IQLMx2UVF6bnFHDgU_ztVJVENJDsrMwaHrpW_1RtbbAGaZ7Ou9ZmEne6HrzmzeXSqQHQQfO-kW5fhmcoo8AEiqmW4r2tfHqpyijStdh8NT_3azOd0CafxIN5YcAXYZlUQ-dgVEt90Gv8LGs6nFw"/>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface">Sara</h4>
+<p class="text-on-surface-variant font-label-md">Classe de CM2 • 2 Enseignants</p>
+</div>
+<div class="ml-auto h-px flex-1 bg-outline-variant opacity-30"></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-card-gap">
+<!-- Teacher Card 3 -->
+<div class="glass-card group hover:shadow-xl transition-all cursor-pointer overflow-hidden flex" onclick="toggleDetails('teacher-2')">
+<div class="w-32 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Professional studio headshot of a young female teacher with glasses, wearing a white shirt, bright and intellectual look, soft natural lighting, high-end educational branding style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3sYhR_mnoBhbfDn8NtFOgDIJST-cR0LLoliCszhllMW5R2-kXJ4lPSfb4I9eR1Bygw9zgibwmriVUOyNVJ70Y9M45kQLMOwfC2ZX-76v3b5YMQRamjPwH94E2nTPpWvv84j8zaAmZPB26lT1wOROssp4Gan39EchzaDMb0K0v_EIXtjPyRAidP_Iu-N_5ByXkiGGhtB5eE6vv5yjfJO0qh5EdI4q6UiQ0q1mU42MkCRZ_tiVfkCNM4A"/>
+</div>
+<div class="flex-1 p-5 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h5 class="font-title-md text-on-surface">Mme. Claire Dubois</h5>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-primary text-[16px]">menu_book</span>
+<span class="text-primary font-medium text-sm">Français</span>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase">Actif</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-4">
+<div>
+<p class="text-on-surface-variant text-[11px] uppercase tracking-tight">Prochaine séance</p>
+<p class="text-on-surface font-semibold text-sm">Mer. 13 Mars • 14:00</p>
+</div>
+<div>
+<p class="text-on-surface-variant text-[11px] uppercase tracking-tight">Heures restantes</p>
+<p class="text-secondary font-bold text-sm">12.0 Heures</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Teacher Card 4 -->
+<div class="glass-card group hover:shadow-xl transition-all cursor-pointer overflow-hidden flex" onclick="toggleDetails('teacher-3')">
+<div class="w-32 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close up portrait of a senior male professor, silver hair, kind eyes, professional academic setting with bookshelves in soft focus background, warm and trusted lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBshNR3lOigi3gtR-JIEH6Q46CcZSYzYasFWMZ_lNx21QHdb2YnQlqUun3NpddyT300zvN5_yXcvFFjDY3GtJwwAsA3gOt2TwpV7muYXHMu5smdSiifqJiUX8DQeh2tY2Y1ZkXxIF2iE0T8j9go4SHQ3b4diLStBc5Pmq9cKkc6eo2tSFU0ZXLajG0AvHTPfDAPWnihHkC5VKXCZn_IQCuhP8Bt3dPxNT1u1-6HhEr0WCEtmWfeONjX6g"/>
+</div>
+<div class="flex-1 p-5 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h5 class="font-title-md text-on-surface">Dr. Marc Lefevre</h5>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-primary text-[16px]">biotech</span>
+<span class="text-primary font-medium text-sm">SVT</span>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase">Actif</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-4">
+<div>
+<p class="text-on-surface-variant text-[11px] uppercase tracking-tight">Prochaine séance</p>
+<p class="text-on-surface font-semibold text-sm">Ven. 15 Mars • 16:30</p>
+</div>
+<div>
+<p class="text-on-surface-variant text-[11px] uppercase tracking-tight">Heures restantes</p>
+<p class="text-secondary font-bold text-sm">2.5 Heures</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Detail Sidebar Overlay -->
+<div class="fixed inset-0 z-[60] bg-black/20 backdrop-blur-sm hidden transition-opacity duration-300" id="teacher-details">
+<div class="absolute right-0 top-0 h-full w-full max-w-2xl bg-surface-container-lowest shadow-2xl translate-x-full transition-transform duration-300 ease-out" id="details-panel">
+<div class="h-full flex flex-col">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Détails Enseignant</h3>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors" onclick="toggleDetails()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-gutter">
+<div class="flex gap-8 items-start mb-8">
+<div class="w-48 h-48 rounded-2xl overflow-hidden bg-surface-container-high shadow-lg">
+<img class="w-full h-full object-cover" data-alt="A large-scale professional studio portrait of a teacher, detailed skin textures, sharp focus on eyes, clean lighting, sophisticated atmosphere, high-resolution photography." id="detail-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsV9I7LMG1pTSdhuIOuQExH9vra09GwB-qF6iJzbl6SjgW_Ll0XjtY7ZhgHf8dsCR2LpPhP29xu22hvd9QQ8DNGXCVqXwq4GCHpXAtP1t9vCF5GsUXnNcead081F3qf90Gy6I8l1B_o-y141F4fQeuI-9uz-4T2P_kkbYOEpDcmXjz2m1eyZIUmu-IUR5tC9XUFVtvhR1z0YdZFTdAk67XK7egzTDDSG6XdTKnbKIezUP1SIypccLFPA"/>
+</div>
+<div class="flex-1">
+<h4 class="text-3xl font-extrabold text-on-surface" id="detail-name">M. Thomas Bernard</h4>
+<div class="flex items-center gap-2 mt-2">
+<span class="bg-primary-container/10 text-primary px-3 py-1 rounded-full font-bold text-sm" id="detail-subject">Mathématiques</span>
+<div class="flex items-center text-yellow-500">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold ml-1 text-on-surface">4.9</span>
+<span class="text-on-surface-variant text-xs ml-1">(124 avis)</span>
+</div>
+</div>
+<div class="mt-6 space-y-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">history_edu</span>
+<span class="text-on-surface text-sm">12 ans d'expérience pédagogique</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">workspace_premium</span>
+<span class="text-on-surface text-sm">Agrégation de Mathématiques - École Normale Supérieure</span>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-6 mb-8">
+<div class="p-5 rounded-2xl border border-outline-variant bg-surface-container-low">
+<p class="font-label-md text-on-surface-variant uppercase tracking-wider mb-3">Disponibilité</p>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Lundi - Jeudi</span>
+<span class="text-on-surface font-semibold">17:00 - 20:00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Samedi</span>
+<span class="text-on-surface font-semibold">09:00 - 13:00</span>
+</div>
+</div>
+</div>
+<div class="p-5 rounded-2xl border border-outline-variant bg-surface-container-low">
+<p class="font-label-md text-on-surface-variant uppercase tracking-wider mb-3">Enfants suivis</p>
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full border-2 border-surface overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of Ahmed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8ci1htWUDQ1ChHBBt4QBSmOS1pX8YkovHG1In5o78El0ZR7-CS-G0VVCiJj0qcFZmal8nOtGixYOpjRAr16w53i6iNOUUPHtJ9mKYLNu-8fV6Tz6GAJor4fBsipe5bmNjezEIgpNvDpfzHU-5KH3GBbSckcNoM1ldhLaVogjqza4hA6w0kz6Mkmq_k4WqHlMa2oZ4pWO7TTRllGQlGAYW6pTwyF1S4Iq4WWa5Qw6PeZTbf2RGiYPDkA"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-surface overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of Sara" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlcvRCzWYxwMB7zcWa6gEieUPW7N0RZgJmI7gMBY9J0yuKe1BYYs5dyI39aP7MKt3u11q2B_ry1o5mvYNM6ZXt7ABBEEwUGEXcmyH7CfUwvVRBpG6P4SFeu9HWPGSAoyG187NpwSKA70MFvg4D8OEAV5y3r1N5oy4MPsyVoTFlzL17Gadv9flsS_jfcOlyMKl3xUnN29fA8OVG46t7BPs330tf2YftWuQ3nzp6vRCDmx3MiNkOtlUUAg"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-surface bg-primary-fixed flex items-center justify-center text-[10px] font-bold text-primary">
+                                        +0
+                                    </div>
+</div>
+<p class="mt-2 text-sm font-semibold text-on-surface">Ahmed et Sara</p>
+</div>
+</div>
+<!-- Progress Section -->
+<div class="space-y-6">
+<h5 class="font-title-md text-on-surface border-b pb-2">Suivi par enfant</h5>
+<!-- Ahmed Stats -->
+<div class="bg-surface p-6 rounded-2xl border border-outline-variant">
+<div class="flex justify-between items-center mb-4">
+<p class="font-bold text-on-surface">Ahmed</p>
+<p class="text-xs text-on-surface-variant">Dernière séance: Hier</p>
+</div>
+<div class="grid grid-cols-3 gap-4 text-center">
+<div>
+<p class="text-2xl font-extrabold text-primary">24</p>
+<p class="text-[10px] text-on-surface-variant uppercase">Séances complétées</p>
+</div>
+<div>
+<p class="text-2xl font-extrabold text-secondary">8.5</p>
+<p class="text-[10px] text-on-surface-variant uppercase">Heures restantes</p>
+</div>
+<div>
+<p class="text-2xl font-extrabold text-on-surface">14/03</p>
+<p class="text-[10px] text-on-surface-variant uppercase">Prochaine date</p>
+</div>
+</div>
+<div class="mt-6 w-full bg-surface-container rounded-full h-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 72%;"></div>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-2">72% du forfait annuel utilisé</p>
+</div>
+<!-- Sara Stats -->
+<div class="bg-surface p-6 rounded-2xl border border-outline-variant">
+<div class="flex justify-between items-center mb-4">
+<p class="font-bold text-on-surface">Sara</p>
+<p class="text-xs text-on-surface-variant">Dernière séance: Il y a 4 jours</p>
+</div>
+<div class="grid grid-cols-3 gap-4 text-center">
+<div>
+<p class="text-2xl font-extrabold text-primary">12</p>
+<p class="text-[10px] text-on-surface-variant uppercase">Séances complétées</p>
+</div>
+<div>
+<p class="text-2xl font-extrabold text-secondary">4.0</p>
+<p class="text-[10px] text-on-surface-variant uppercase">Heures restantes</p>
+</div>
+<div>
+<p class="text-2xl font-extrabold text-on-surface">11/03</p>
+<p class="text-[10px] text-on-surface-variant uppercase">Prochaine date</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-6 border-t border-outline-variant bg-surface-container-low flex gap-4">
+<button class="flex-1 py-4 border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary/5 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">chat</span>
+                            Envoyer un message
+                        </button>
+<button class="flex-1 py-4 gradient-button text-white font-bold rounded-xl flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">calendar_add_on</span>
+                            Planifier une séance
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        function toggleDetails(teacherId) {
+            const overlay = document.getElementById('teacher-details');
+            const panel = document.getElementById('details-panel');
+            
+            if (overlay.classList.contains('hidden')) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.replace('bg-black/0', 'bg-black/20');
+                    panel.classList.replace('translate-x-full', 'translate-x-0');
+                }, 10);
+            } else {
+                panel.classList.replace('translate-x-0', 'translate-x-full');
+                overlay.classList.replace('bg-black/20', 'bg-black/0');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Close on ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !document.getElementById('teacher-details').classList.contains('hidden')) {
+                toggleDetails();
+            }
+        });
+    </script>
+</body></html>
