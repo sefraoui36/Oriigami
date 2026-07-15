@@ -1,0 +1,500 @@
+<!-- templates/etudiants/enseignants.html -->
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mes Enseignants - Origami Privé</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#d4bbff",
+                    "surface-tint": "#7921ed",
+                    "outline": "#7c7387",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#ffaede",
+                    "outline-variant": "#cdc2d8",
+                    "background": "#f8f9fa",
+                    "surface-container": "#edeeef",
+                    "tertiary-fixed-dim": "#ffb782",
+                    "secondary-fixed": "#ffd8ec",
+                    "tertiary": "#894500",
+                    "surface-dim": "#d9dadb",
+                    "surface-container-low": "#f3f4f5",
+                    "on-primary-fixed-variant": "#5d00c2",
+                    "on-tertiary-fixed": "#301400",
+                    "on-primary-container": "#faf1ff",
+                    "error": "#ba1a1a",
+                    "on-tertiary-container": "#fff2eb",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-container": "#8b3dff",
+                    "on-tertiary-fixed-variant": "#703800",
+                    "on-primary": "#ffffff",
+                    "secondary-container": "#fe60cf",
+                    "surface": "#f8f9fa",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#191c1d",
+                    "inverse-on-surface": "#f0f1f2",
+                    "surface-container-high": "#e7e8e9",
+                    "inverse-surface": "#2e3132",
+                    "secondary": "#ae128a",
+                    "surface-container-highest": "#e1e3e4",
+                    "primary-fixed": "#ebdcff",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#191c1d",
+                    "on-primary-fixed": "#270058",
+                    "primary": "#710fe5",
+                    "on-secondary-fixed": "#3b002d",
+                    "tertiary-container": "#ad5900",
+                    "on-surface-variant": "#4b4456",
+                    "primary-fixed-dim": "#d4bbff",
+                    "on-secondary": "#ffffff",
+                    "surface-variant": "#e1e3e4",
+                    "on-secondary-container": "#680052",
+                    "tertiary-fixed": "#ffdcc5",
+                    "surface-bright": "#f8f9fa",
+                    "on-secondary-fixed-variant": "#87006b",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "card-gap": "24px",
+                    "section-margin": "48px",
+                    "gutter": "24px",
+                    "container-padding": "32px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "title-md": ["Plus Jakarta Sans"],
+                    "body-sm": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(233, 236, 239, 1);
+        }
+        .gradient-button {
+            background: linear-gradient(135deg, #8B3DFF 0%, #FE60CF 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .gradient-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.2);
+        }
+        .sidebar-active {
+            background-color: rgba(139, 61, 255, 0.1);
+            color: #710fe5;
+            border-left-width: 4px;
+            border-left-color: #710fe5;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-sm">
+<!-- SideNavBar Shell -->
+<aside class="w-[280px] h-screen fixed left-0 top-0 bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant dark:border-outline flex flex-col py-base z-50">
+<div class="px-gutter mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">change_history</span>
+</div>
+<div>
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim leading-none">Origami Privé</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Education d'Excellence</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="dashboard.html">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="profil.html">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-sm">Mon profil</span>
+</a>
+<a class="sidebar-active flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200" href="enseignants.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">supervisor_account</span>
+<span class="font-body-sm">Mes enseignants</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="seances.html">
+<span class="material-symbols-outlined">event_available</span>
+<span class="font-body-sm">Mes séances</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="forfait.html">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-sm">Mes forfaits</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="portefeuille.html">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-body-sm">Mon portefeuille</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="progression.html">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-body-sm">Ma progression</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="avis.html">
+<span class="material-symbols-outlined">star</span>
+<span class="font-body-sm">Avis enseignants</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="notifications.html">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-body-sm">Notifications</span>
+<span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="calendrier.html">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-body-sm">Calendrier</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="parametres.html">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-sm">Paramètres</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full gradient-button text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>Réserver une séance</span>
+</button>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant z-40 flex justify-between items-center px-gutter ml-[280px] shadow-sm">
+<div class="flex items-center gap-4 flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary/20 text-body-sm outline-none" placeholder="Rechercher un enseignant ou une matière..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full border-2 border-surface"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+<div class="text-right hidden md:block">
+<p class="font-semibold text-body-sm text-on-surface">Lucas Bernard</p>
+<p class="text-label-md text-on-surface-variant">Étudiant Premium</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary-container/20 border-2 border-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[24px]" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[280px] pt-16 min-h-screen p-container-padding">
+<!-- Header Section with Filters -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+<div>
+<nav class="flex items-center gap-2 text-label-md text-outline mb-2">
+<span>Plateforme</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-medium">Mes Enseignants</span>
+</nav>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Mes Enseignants</h2>
+<p class="text-body-sm text-on-surface-variant">Gérez vos sessions et suivez votre progression avec vos tuteurs attitrés.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded-xl border border-outline-variant">
+<span class="material-symbols-outlined text-outline text-[20px]">filter_list</span>
+<select class="bg-transparent border-none text-body-sm font-medium focus:ring-0 cursor-pointer">
+<option>Toutes les matières</option>
+<option>Mathématiques</option>
+<option>Physique-Chimie</option>
+<option>Anglais</option>
+<option>Français</option>
+</select>
+</div>
+<button class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded-xl border border-outline-variant text-body-sm font-medium hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-outline text-[20px]">sort</span>
+<span>Trier par</span>
+</button>
+</div>
+</div>
+<!-- Teacher Cards Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-card-gap">
+<!-- Teacher Card 1 -->
+<div class="glass-card rounded-2xl overflow-hidden flex flex-col group">
+<div class="p-6">
+<div class="flex gap-4">
+<div class="relative">
+<div class="w-20 h-20 rounded-2xl bg-primary-container/20 flex items-center justify-center border border-outline-variant shadow-sm">
+<span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<span class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Dr. Sophie Martin</h3>
+<p class="text-primary font-medium text-body-sm">Mathématiques & Algèbre</p>
+</div>
+<div class="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-yellow-600 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-yellow-700 font-bold text-label-md">4.9</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mt-3">
+<span class="bg-surface-container-high text-on-surface-variant px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">work_history</span> 12 ans d'exp.
+                                </span>
+<span class="bg-primary-container/10 text-primary px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">devices</span> Hybride
+                                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Tracking Info -->
+<div class="bg-surface-container-low/50 px-6 py-4 border-t border-outline-variant space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-label-md text-on-surface-variant font-medium">Forfait Actuel</span>
+<span class="text-body-sm font-semibold text-secondary">Expert 20h / mois</span>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-label-md mb-1">
+<span class="text-on-surface-variant">Heures restantes</span>
+<span class="font-bold text-on-surface">8h / 20h</span>
+</div>
+<div class="w-full h-1.5 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 40%"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-2">
+<div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/50">
+<p class="text-[10px] text-outline uppercase font-bold mb-1">Séances</p>
+<p class="text-body-sm font-bold">24 complétées</p>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/50">
+<p class="text-[10px] text-outline uppercase font-bold mb-1">Prochaine</p>
+<p class="text-body-sm font-bold text-primary">Demain, 14:00</p>
+</div>
+</div>
+</div>
+<div class="p-4 flex gap-3 mt-auto">
+<button class="flex-1 border border-outline-variant hover:bg-surface-container-high py-2.5 rounded-xl font-semibold text-body-sm transition-all">
+                        Voir l'historique
+                    </button>
+<button class="flex-1 bg-on-surface text-surface py-2.5 rounded-xl font-semibold text-body-sm hover:opacity-90 transition-all">
+                        Voir le profil
+                    </button>
+</div>
+</div>
+<!-- Teacher Card 2 -->
+<div class="glass-card rounded-2xl overflow-hidden flex flex-col group">
+<div class="p-6">
+<div class="flex gap-4">
+<div class="relative">
+<div class="w-20 h-20 rounded-2xl bg-secondary-container/20 flex items-center justify-center border border-outline-variant shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[32px]" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<span class="absolute -bottom-1 -right-1 w-5 h-5 bg-orange-400 border-2 border-white rounded-full"></span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Julien Lefebvre</h3>
+<p class="text-primary font-medium text-body-sm">Physique-Chimie</p>
+</div>
+<div class="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-yellow-600 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-yellow-700 font-bold text-label-md">4.8</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mt-3">
+<span class="bg-surface-container-high text-on-surface-variant px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">work_history</span> 5 ans d'exp.
+                                </span>
+<span class="bg-secondary-container/10 text-secondary px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">language</span> En ligne
+                                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Tracking Info -->
+<div class="bg-surface-container-low/50 px-6 py-4 border-t border-outline-variant space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-label-md text-on-surface-variant font-medium">Forfait Actuel</span>
+<span class="text-body-sm font-semibold text-secondary">Standard 10h / mois</span>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-label-md mb-1">
+<span class="text-on-surface-variant">Heures restantes</span>
+<span class="font-bold text-on-surface">1h / 10h</span>
+</div>
+<div class="w-full h-1.5 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-error rounded-full" style="width: 90%"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-2">
+<div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/50">
+<p class="text-[10px] text-outline uppercase font-bold mb-1">Séances</p>
+<p class="text-body-sm font-bold">12 complétées</p>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/50">
+<p class="text-[10px] text-outline uppercase font-bold mb-1">Dernière</p>
+<p class="text-body-sm font-bold text-on-surface-variant">12 Mai, 16:30</p>
+</div>
+</div>
+</div>
+<div class="p-4 flex gap-3 mt-auto">
+<button class="flex-1 border border-outline-variant hover:bg-surface-container-high py-2.5 rounded-xl font-semibold text-body-sm transition-all">
+                        Voir l'historique
+                    </button>
+<button class="flex-1 bg-on-surface text-surface py-2.5 rounded-xl font-semibold text-body-sm hover:opacity-90 transition-all">
+                        Voir le profil
+                    </button>
+</div>
+</div>
+<!-- Teacher Card 3 -->
+<div class="glass-card rounded-2xl overflow-hidden flex flex-col group">
+<div class="p-6">
+<div class="flex gap-4">
+<div class="relative">
+<div class="w-20 h-20 rounded-2xl bg-tertiary-container/20 flex items-center justify-center border border-outline-variant shadow-sm">
+<span class="material-symbols-outlined text-tertiary text-[32px]" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<span class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Emma Thompson</h3>
+<p class="text-primary font-medium text-body-sm">Anglais Littéraire</p>
+</div>
+<div class="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-yellow-600 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-yellow-700 font-bold text-label-md">5.0</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mt-3">
+<span class="bg-surface-container-high text-on-surface-variant px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">work_history</span> 8 ans d'exp.
+                                </span>
+<span class="bg-tertiary-container/10 text-tertiary px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Présentiel
+                                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Tracking Info -->
+<div class="bg-surface-container-low/50 px-6 py-4 border-t border-outline-variant space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-label-md text-on-surface-variant font-medium">Forfait Actuel</span>
+<span class="text-body-sm font-semibold text-secondary">Duo 5h / semaine</span>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-label-md mb-1">
+<span class="text-on-surface-variant">Heures restantes</span>
+<span class="font-bold text-on-surface">4h / 5h</span>
+</div>
+<div class="w-full h-1.5 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 20%"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-2">
+<div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/50">
+<p class="text-[10px] text-outline uppercase font-bold mb-1">Séances</p>
+<p class="text-body-sm font-bold">8 complétées</p>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/50">
+<p class="text-[10px] text-outline uppercase font-bold mb-1">Prochaine</p>
+<p class="text-body-sm font-bold text-primary">Ven 17, 10:00</p>
+</div>
+</div>
+</div>
+<div class="p-4 flex gap-3 mt-auto">
+<button class="flex-1 border border-outline-variant hover:bg-surface-container-high py-2.5 rounded-xl font-semibold text-body-sm transition-all">
+                        Voir l'historique
+                    </button>
+<button class="flex-1 bg-on-surface text-surface py-2.5 rounded-xl font-semibold text-body-sm hover:opacity-90 transition-all">
+                        Voir le profil
+                    </button>
+</div>
+</div>
+<!-- Empty State / Add New Card -->
+<div class="border-2 border-dashed border-outline-variant rounded-2xl flex flex-col items-center justify-center p-12 text-center group cursor-pointer hover:border-primary/40 transition-all hover:bg-surface-container-low/30">
+<div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-outline text-[32px] group-hover:text-primary transition-colors">person_add</span>
+</div>
+<h4 class="font-title-md text-title-md text-on-surface mb-1">Trouver un nouvel enseignant</h4>
+<p class="text-body-sm text-on-surface-variant max-w-[240px]">Explorez notre catalogue d'experts pour d'autres matières.</p>
+<button class="mt-6 text-primary font-bold text-body-sm flex items-center gap-2">
+                    Parcourir le catalogue
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Pagination / Summary -->
+<div class="mt-12 flex flex-col md:flex-row items-center justify-between gap-6 pt-6 border-t border-outline-variant">
+<p class="text-body-sm text-on-surface-variant">Affichage de 3 enseignants actifs</p>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-xl border border-outline-variant flex items-center justify-center hover:bg-surface-container-low transition-colors disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold">1</button>
+<button class="w-10 h-10 rounded-xl border border-outline-variant flex items-center justify-center hover:bg-surface-container-low transition-colors">2</button>
+<button class="w-10 h-10 rounded-xl border border-outline-variant flex items-center justify-center hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-8 right-8 w-16 h-16 gradient-button rounded-full text-white shadow-2xl flex items-center justify-center z-50 group">
+<span class="material-symbols-outlined text-[32px] group-hover:rotate-90 transition-transform">add</span>
+</button>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.boxShadow = '0px 10px 30px rgba(139, 61, 255, 0.08)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.boxShadow = 'none';
+            });
+        });
+    </script>
+</body></html>
