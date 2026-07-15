@@ -1,0 +1,401 @@
+<!-- templates/etudiants/avis.html -->
+<!DOCTYPE html>
+<html class="light" lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Avis enseignants | Origami Privé</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "primary-fixed-dim": "#d4bbff",
+                "outline": "#7c7387",
+                "tertiary-fixed": "#ffdcc5",
+                "surface-container-highest": "#e1e3e4",
+                "secondary-container": "#fe60cf",
+                "error-container": "#ffdad6",
+                "on-primary": "#ffffff",
+                "on-primary-fixed": "#270058",
+                "primary-container": "#8b3dff",
+                "on-tertiary-fixed": "#301400",
+                "primary": "#710fe5",
+                "primary-fixed": "#ebdcff",
+                "surface-variant": "#e1e3e4",
+                "secondary": "#ae128a",
+                "on-primary-fixed-variant": "#5d00c2",
+                "tertiary-container": "#ad5900",
+                "on-secondary": "#ffffff",
+                "inverse-on-surface": "#f0f1f2",
+                "on-secondary-container": "#680052",
+                "surface-dim": "#d9dadb",
+                "secondary-fixed": "#ffd8ec",
+                "on-error": "#ffffff",
+                "surface-container": "#edeeef",
+                "tertiary-fixed-dim": "#ffb782",
+                "surface-bright": "#f8f9fa",
+                "surface": "#f8f9fa",
+                "on-primary-container": "#faf1ff",
+                "on-tertiary-fixed-variant": "#703800",
+                "on-tertiary-container": "#fff2eb",
+                "background": "#f8f9fa",
+                "on-error-container": "#93000a",
+                "secondary-fixed-dim": "#ffaede",
+                "on-secondary-fixed": "#3b002d",
+                "surface-container-lowest": "#ffffff",
+                "tertiary": "#894500",
+                "on-secondary-fixed-variant": "#87006b",
+                "surface-container-low": "#f3f4f5",
+                "on-tertiary": "#ffffff",
+                "on-surface-variant": "#4b4456",
+                "on-background": "#191c1d",
+                "outline-variant": "#cdc2d8",
+                "inverse-surface": "#2e3132",
+                "surface-container-high": "#e7e8e9",
+                "error": "#ba1a1a",
+                "surface-tint": "#7921ed",
+                "on-surface": "#191c1d",
+                "inverse-primary": "#d4bbff"
+            },
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            spacing: {
+                "container-padding": "32px",
+                "card-gap": "24px",
+                "section-margin": "48px",
+                "base": "8px",
+                "gutter": "24px"
+            },
+            fontFamily: {
+                "headline-lg-mobile": ["Plus Jakarta Sans"],
+                "body-sm": ["Plus Jakarta Sans"],
+                "title-md": ["Plus Jakarta Sans"],
+                "label-md": ["Inter"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "headline-lg": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"]
+            },
+            fontSize: {
+                "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+        },
+    },
+}
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid #E9ECEF;
+        transition: all 0.3s ease;
+    }
+    .glass-card:hover {
+        box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.08);
+    }
+    .gradient-button {
+        background: linear-gradient(135deg, #8b3dff 0%, #ae128a 100%);
+        transition: transform 0.2s, opacity 0.2s;
+    }
+    .gradient-button:active {
+        transform: scale(0.95);
+    }
+    .star-active {
+        font-variation-settings: 'FILL' 1;
+        color: #ffb782;
+    }
+    .sidebar-link {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #4b4456;
+        text-decoration: none;
+    }
+    .sidebar-link:hover {
+        background: rgba(113, 15, 229, 0.08);
+        color: #710fe5;
+    }
+    .sidebar-link.active {
+        background: rgba(113, 15, 229, 0.12);
+        color: #710fe5;
+        font-weight: 600;
+        border-left: 4px solid #710fe5;
+    }
+    .sidebar-link.active .material-symbols-outlined {
+        color: #710fe5;
+    }
+    .animate-pulse-slow {
+        animation: pulse-soft 4s ease-in-out infinite;
+    }
+    @keyframes pulse-soft {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+    }
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #cdc2d8;
+        border-radius: 10px;
+    }
+</style>
+</head>
+<body class="bg-background text-on-surface font-body-lg antialiased overflow-hidden h-screen">
+
+<div class="flex h-screen overflow-hidden">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
+        <!-- Logo -->
+        <div class="flex items-center gap-3 px-3 py-4 mb-6">
+            <div class="w-10 h-10 gradient-button rounded-xl flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">change_history</span>
+            </div>
+            <span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Origami Privé</span>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 space-y-1">
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">person</span>
+                <span>Mon Profil</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">school</span>
+                <span>Mes Enseignants</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+                <span>Mes Séances</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">sell</span>
+                <span>Mon Forfait</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+                <span>Mon Portefeuille</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">trending_up</span>
+                <span>Ma Progression</span>
+            </a>
+            <a href="#" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]">star</span>
+                <span>Avis Enseignants</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">notifications</span>
+                <span>Notifications</span>
+                <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">calendar_today</span>
+                <span>Calendrier</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">settings</span>
+                <span>Paramètres</span>
+            </a>
+        </nav>
+
+        <!-- Déconnexion -->
+        <div class="mt-auto pt-4 border-t border-outline-variant/30">
+            <a href="#" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+                <span class="material-symbols-outlined text-[22px]">logout</span>
+                <span>Déconnexion</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 overflow-y-auto p-8">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="font-headline-lg text-headline-lg text-primary">⭐ Avis Enseignants</h1>
+                <p class="text-on-surface-variant body-sm">Partagez votre expérience et aidez les autres étudiants</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
+                    <span class="material-symbols-outlined text-[24px]">notifications</span>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="w-10 h-10 rounded-full gradient-button flex items-center justify-center text-white font-semibold shadow-lg">
+                    TM
+                </div>
+            </div>
+        </div>
+
+        <!-- Satisfaction Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="glass-card p-6 rounded-xl relative overflow-hidden flex flex-col justify-center border-l-4 border-primary">
+                <p class="text-label-md font-label-md text-outline uppercase mb-2">Satisfaction Globale</p>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-display-lg font-display-lg text-primary">4.8</span>
+                    <span class="text-headline-lg-mobile text-outline">/ 5</span>
+                </div>
+                <div class="flex gap-1 mt-2">
+                    <span class="material-symbols-outlined star-active">star</span>
+                    <span class="material-symbols-outlined star-active">star</span>
+                    <span class="material-symbols-outlined star-active">star</span>
+                    <span class="material-symbols-outlined star-active">star</span>
+                    <span class="material-symbols-outlined star-active">star_half</span>
+                </div>
+            </div>
+            <div class="glass-card p-6 rounded-xl">
+                <p class="text-label-md font-label-md text-outline uppercase mb-4">Total des avis laissés</p>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-headline-lg font-headline-lg text-on-surface">12 <span class="text-body-sm font-normal text-outline">avis</span></p>
+                        <p class="text-body-sm text-secondary font-medium mt-1">+2 ce mois-ci</p>
+                    </div>
+                    <div class="w-14 h-14 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+                        <span class="material-symbols-outlined text-3xl">rate_review</span>
+                    </div>
+                </div>
+            </div>
+            <div class="glass-card p-6 rounded-xl">
+                <p class="text-label-md font-label-md text-outline uppercase mb-4">Moyenne de Progression</p>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-headline-lg font-headline-lg text-on-surface">+15%</p>
+                        <p class="text-body-sm text-outline mt-1">Senti. d'amélioration</p>
+                    </div>
+                    <div class="w-14 h-14 rounded-full bg-tertiary-container/10 flex items-center justify-center text-tertiary-container">
+                        <span class="material-symbols-outlined text-3xl">trending_up</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Reviews -->
+        <div>
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-title-md text-title-md text-on-surface">Vos enseignants récents</h3>
+                <div class="flex gap-2">
+                    <button class="px-4 py-2 rounded-lg bg-surface-container-high text-body-sm font-semibold text-primary">Tous</button>
+                    <button class="px-4 py-2 rounded-lg text-body-sm font-medium text-on-surface-variant hover:bg-surface-container-low">À noter</button>
+                    <button class="px-4 py-2 rounded-lg text-body-sm font-medium text-on-surface-variant hover:bg-surface-container-low">Déjà notés</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- Teacher 1: Not Rated -->
+                <div class="glass-card p-6 rounded-2xl flex flex-col h-full border-2 border-dashed border-primary/20 bg-primary/5">
+                    <div class="flex gap-4 items-start mb-6">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
+                            <img class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=Dr.+Sophie+Martin&background=710fe5&color=fff&size=128&bold=true" alt="Dr. Sophie Martin"/>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-title-md text-on-surface">Dr. Sophie Martin</h4>
+                            <p class="text-label-md text-primary font-bold uppercase tracking-tight">Mathématiques / Expert</p>
+                            <div class="flex items-center gap-2 mt-1 text-body-sm text-outline">
+                                <span class="material-symbols-outlined text-sm">schedule</span>
+                                <span>Dernière séance: 12 Oct 2023</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 rounded-xl p-4 mb-6 flex-1 border border-outline-variant/30 italic text-body-sm text-on-surface-variant text-center flex flex-col justify-center">
+                        "Vous n'avez pas encore laissé d'avis pour cette enseignante. Votre retour est précieux."
+                    </div>
+                    <button class="gradient-button w-full py-3 rounded-xl text-white font-bold text-body-sm shadow-md flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">edit_square</span>
+                        Laisser un avis
+                    </button>
+                </div>
+
+                <!-- Teacher 2: Rated -->
+                <div class="glass-card p-6 rounded-2xl flex flex-col h-full">
+                    <div class="flex gap-4 items-start mb-4">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
+                            <img class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=Jean-Pierre+Durand&background=ae128a&color=fff&size=128&bold=true" alt="Jean-Pierre Durand"/>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-title-md text-on-surface">Jean-Pierre Durand</h4>
+                            <p class="text-label-md text-primary font-bold uppercase tracking-tight">Histoire &amp; Géo</p>
+                            <div class="flex gap-0.5 mt-2">
+                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
+                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
+                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
+                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
+                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-container-low rounded-xl p-4 mb-6 flex-1 border border-outline-variant/30">
+                        <p class="text-body-sm text-on-surface-variant line-clamp-4">
+                            "Excellent pédagogue. Jean-Pierre a su redonner le goût de l'histoire à mon fils grâce à des exemples concrets et une narration captivante. Nous recommandons vivement !"
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between text-label-md text-outline">
+                        <span>Posté le 05 Oct 2023</span>
+                        <button class="text-primary hover:underline font-semibold">Modifier</button>
+                    </div>
+                </div>
+
+                <!-- Teacher 3: Rated -->
+                <div class="glass-card p-6 rounded-2xl flex flex-col h-full">
+                    <div class="flex gap-4 items-start mb-4">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
+                            <img class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=Lucas+Bernard&background=ad5900&color=fff&size=128&bold=true" alt="Lucas Bernard"/>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-title-md text-on-surface">Lucas Bernard</h4>
+                            <p class="text-label-md text-primary font-bold uppercase tracking-tight">Anglais / TOEFL</p>
+                            <div class="flex gap-0.5 mt-2">
+                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
+                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
+                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
+                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
+                                <span class="material-symbols-outlined text-outline text-[18px]">star</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-container-low rounded-xl p-4 mb-6 flex-1 border border-outline-variant/30">
+                        <p class="text-body-sm text-on-surface-variant line-clamp-4">
+                            "Méthode interactive très efficace pour préparer le TOEFL. Lucas est très ponctuel et dynamique. Petit bémol sur les supports de cours qui pourraient être plus variés."
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between text-label-md text-outline">
+                        <span>Posté le 28 Sep 2023</span>
+                        <button class="text-primary hover:underline font-semibold">Modifier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
