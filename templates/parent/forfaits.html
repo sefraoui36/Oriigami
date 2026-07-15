@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mes Enfants - Origami Privé</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#4b4456",
+                        "tertiary-container": "#ad5900",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary-container": "#faf1ff",
+                        "primary-fixed": "#ebdcff",
+                        "secondary": "#ae128a",
+                        "secondary-container": "#fe60cf",
+                        "tertiary-fixed": "#ffdcc5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#e7e8e9",
+                        "on-secondary-fixed-variant": "#87006b",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#d4bbff",
+                        "surface-bright": "#f8f9fa",
+                        "error": "#ba1a1a",
+                        "primary": "#710fe5",
+                        "on-surface": "#191c1d",
+                        "on-secondary-container": "#680052",
+                        "tertiary": "#894500",
+                        "outline": "#7c7387",
+                        "surface-container": "#edeeef",
+                        "surface-dim": "#d9dadb",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#cdc2d8",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1d",
+                        "on-tertiary-fixed": "#301400",
+                        "on-primary-fixed": "#270058",
+                        "surface-tint": "#7921ed",
+                        "surface": "#f8f9fa",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#3b002d",
+                        "primary-fixed-dim": "#d4bbff",
+                        "on-primary-fixed-variant": "#5d00c2",
+                        "on-tertiary-container": "#fff2eb",
+                        "inverse-surface": "#2e3132",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#ffaede",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface-container-low": "#f3f4f5",
+                        "on-tertiary-fixed-variant": "#703800",
+                        "tertiary-fixed-dim": "#ffb782",
+                        "background": "#f8f9fa",
+                        "surface-variant": "#e1e3e4",
+                        "secondary-fixed": "#ffd8ec",
+                        "primary-container": "#8b3dff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "32px",
+                        "section-margin": "48px",
+                        "base": "8px",
+                        "card-gap": "24px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(233, 236, 239, 1);
+        }
+        .soft-shadow {
+            box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.08);
+        }
+        .premium-gradient {
+            background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+        }
+        .progress-bar-animate {
+            transition: width 1s ease-in-out;
+        }
+        .sidebar-item-active {
+            background: rgba(113, 15, 229, 0.1);
+            color: #710fe5;
+            border-left: 4px solid #710fe5;
+            font-weight: 600;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-background font-body-lg text-on-background min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="bg-surface-container-low dark:bg-surface-dim w-[280px] h-screen fixed left-0 top-0 border-r border-outline-variant dark:border-outline flex flex-col py-base z-50">
+<div class="px-gutter mb-section-margin">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim">Origami Privé</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-70">Education d'Excellence</p>
+</div>
+<nav class="flex-1 overflow-y-auto">
+<ul class="space-y-1">
+<li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">dashboard</span>Dashboard</a></li>
+<li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">person</span>Mon profil</a></li>
+<li><a class="flex items-center px-gutter py-3 sidebar-item-active transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">child_care</span>Mes enfants</a></li>
+<li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">school</span>Mes étudiants</a></li>
+<li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">inventory_2</span>Mes forfaits</a></li>
+<li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">supervisor_account</span>Mes enseignants</a></li>
+<li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">event_available</span>Mes séances</a></li>
+<li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">payments</span>Paiements</a></li>
+<li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">account_balance_wallet</span>Mon portefeuille</a></li>
+<li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">notifications</span>Notifications</a></li>
+<li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">chat</span>Messages</a></li>
+<li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">calendar_month</span>Calendrier</a></li>
+<li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">trending_up</span>Progression</a></li>
+</ul>
+</nav>
+<div class="px-base mt-auto">
+<button class="w-full premium-gradient text-on-primary font-semibold py-4 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 transform transition hover:scale-[1.02] active:scale-95">
+<span class="material-symbols-outlined">add_circle</span>
+                Réserver une séance
+            </button>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md border-b border-outline-variant dark:border-outline shadow-sm flex justify-between items-center px-gutter z-40">
+<div class="flex items-center bg-surface-container-low px-4 py-2 rounded-full w-96 border border-outline-variant/30 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-full" placeholder="Rechercher un cours, un prof..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-all text-on-surface-variant relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant/30">
+<div class="text-right">
+<p class="font-title-md text-sm text-on-surface">Famille Dupont</p>
+<p class="font-label-md text-xs text-on-surface-variant">Parent Premium</p>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a sophisticated middle-aged man in business casual attire, smiling warmly. The background is a blurred, high-end home office with warm lighting and minimalist shelves. The overall mood is professional, trustworthy, and premium, aligned with a high-end educational service brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYD9A8Ke2-lreUwoQGUKi8a9eNCd_qEQoQb4FK1KjJ4gHv0Nu5f7wihm9d_wFtTs5wDuvcTlIV6MvB4supzBYCL0hGw1DOj0PoXAjBeMstDI2tYhFaYfYCtzd9ynBBDMsNRy9IP9NW-HGeem8_k096tg57q2nrQ9UvZ4RmIzczZUXNGTnercqBkP6rV2H60qYV4emC0IFibcS8J22GZrKr14HA7ezhKSk477UPoOdrmIcmJ0reKTG4FN3mlSv7cy7-hSL10EFanxfM"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-[280px] pt-16 min-h-screen p-gutter bg-background">
+<div class="max-w-[1160px] mx-auto py-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-1">Mes Enfants</h2>
+<p class="text-on-surface-variant font-body-sm">Gérez le parcours scolaire de vos <span class="font-bold text-primary">3 enfants</span> inscrits.</p>
+</div>
+<div class="flex flex-wrap items-center gap-4">
+<div class="flex bg-surface-container p-1 rounded-xl">
+<button class="px-4 py-2 rounded-lg bg-surface-container-lowest text-primary font-semibold text-sm shadow-sm">Tous</button>
+<button class="px-4 py-2 rounded-lg text-on-surface-variant hover:text-primary text-sm transition-all">Aujourd'hui</button>
+<button class="px-4 py-2 rounded-lg text-on-surface-variant hover:text-primary text-sm transition-all">Alertes heures</button>
+</div>
+<button class="premium-gradient text-on-primary flex items-center gap-2 px-6 py-3 rounded-xl font-semibold shadow-lg hover:opacity-90 transition-all" onclick="document.getElementById('modal-add-child').classList.remove('hidden')">
+<span class="material-symbols-outlined">person_add</span>
+                        Ajouter un enfant
+                    </button>
+</div>
+</div>
+<!-- Children Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-card-gap mb-section-margin">
+<!-- Ahmed's Card -->
+<div class="glass-card soft-shadow rounded-3xl p-6 flex flex-col hover:border-primary/40 transition-all group">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-16 h-16 rounded-full border-4 border-white shadow-md overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A focused high school student looking confidently at the camera, wearing a clean white t-shirt. The background is a soft blue gradient with subtle mathematical equations faintly visible, reflecting a focus on STEM subjects. High-key lighting, professional photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHx_8J1YkjbT4Y0jr8jn-YzDQI0WrPo0WTHgJ0tOxnDgLq99zlyo4KNtjp1SsDNojwWHRGIdR7GviJGNZ9iaXyLg8hTezSHH6rcWAuoUIHUOzFMCWGYmPrIO4AqZtb7dQWZoKrwus0-FSFygSew7RrLD7PDvMguqNAxN8S6XEIVe_4Z2Z-q0QpKj-z3Xe_qoQ6assG1TZUfXJqVmM1pwHd2bS9OZjBIpoWcPOpbEwFiZdy6RJwyhg8ikIAKmypzlZG4otNl6YxxHts"/>
+</div>
+<span class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></span>
+</div>
+<div class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs font-bold">2nde</div>
+</div>
+<div class="mb-4">
+<h3 class="font-title-md text-lg text-on-surface group-hover:text-primary transition-colors">Ahmed Dupont</h3>
+<p class="text-on-surface-variant text-sm">15 ans • Lycée International</p>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-surface-container px-2 py-1 rounded text-[10px] uppercase font-bold text-on-surface-variant">MATHS</span>
+<span class="bg-surface-container px-2 py-1 rounded text-[10px] uppercase font-bold text-on-surface-variant">PHYSIQUE</span>
+</div>
+<div class="space-y-4 mb-6">
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface-variant">Heures restantes</span>
+<span class="font-bold text-primary">12/20 hrs</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full progress-bar-animate" style="width: 60%"></div>
+</div>
+</div>
+<div class="flex justify-between items-center p-3 bg-surface-container-low rounded-xl">
+<div class="text-xs">
+<p class="text-on-surface-variant">Moyenne</p>
+<p class="font-bold text-primary text-base">15.8/20</p>
+</div>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-primary-container/20 flex items-center justify-center text-[10px] font-bold text-primary">+2 Profs</div>
+</div>
+</div>
+</div>
+<button class="w-full py-3 border border-primary/20 text-primary rounded-xl font-semibold hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2">
+                        Détails & Progrès
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Sara's Card -->
+<div class="glass-card soft-shadow rounded-3xl p-6 flex flex-col hover:border-primary/40 transition-all group">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-16 h-16 rounded-full border-4 border-white shadow-md overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A young teenage girl with a bright smile, wearing a stylish denim jacket. The background is a soft purple wash with icons related to languages like English and French. The aesthetic is clean, cheerful, and premium." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwPt6SYhGn6egBVHu_YK_eD6DVDCahjlAd8gdEimgZ1vBFebC2vZippawZdF6XiaaO7q5TCZ8-rR5uDAw0XM6QxDP3xCsox9bfJO-9EAaEjPOv6HqOTDRuPTPRwUOAk05L8C0pjw2j38lHlXBFDQDRqHk6bMIGIZV5KzUax6K6yWhMZ8x3NuXHzS98_kaTAFSpev7XtpX-cg18r7xklUeYfcI4amUSAUpJBsZ6a4R0vXTtcFo99PJraWkP-Xxoxtyom6ils1yJ67mw"/>
+</div>
+<span class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></span>
+</div>
+<div class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs font-bold">4ème</div>
+</div>
+<div class="mb-4">
+<h3 class="font-title-md text-lg text-on-surface group-hover:text-primary transition-colors">Sara Dupont</h3>
+<p class="text-on-surface-variant text-sm">13 ans • Collège Notre Dame</p>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-surface-container px-2 py-1 rounded text-[10px] uppercase font-bold text-on-surface-variant">ANGLAIS</span>
+<span class="bg-surface-container px-2 py-1 rounded text-[10px] uppercase font-bold text-on-surface-variant">FRANÇAIS</span>
+</div>
+<div class="space-y-4 mb-6">
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface-variant">Heures restantes</span>
+<span class="font-bold text-primary">30/40 hrs</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full progress-bar-animate" style="width: 75%"></div>
+</div>
+</div>
+<div class="flex justify-between items-center p-3 bg-surface-container-low rounded-xl">
+<div class="text-xs">
+<p class="text-on-surface-variant">Moyenne</p>
+<p class="font-bold text-primary text-base">17.2/20</p>
+</div>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-primary-container/20 flex items-center justify-center text-[10px] font-bold text-primary">+1 Prof</div>
+</div>
+</div>
+</div>
+<button class="w-full py-3 border border-primary/20 text-primary rounded-xl font-semibold hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2">
+                        Détails & Progrès
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Lucas's Card -->
+<div class="glass-card soft-shadow rounded-3xl p-6 flex flex-col border-2 border-error/20 hover:border-error transition-all group">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-16 h-16 rounded-full border-4 border-white shadow-md overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A young boy laughing, wearing a colorful striped sweater. The background is a soft yellow with playful geometric shapes. The image captures a sense of curiosity and youthful energy. Professional lighting, crisp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_VIUD5-BZ7qKAD50eNzV7NmWbXTq8lYOyaCjYUWj4rvEEUrF9Qj_3Efnu87Rj54LNXMCPT0xDpRIn4x4w40vTVpMr5Djs8R04evVYW2NSNz-j0ZkqF5Bn1Nzx4Pd8DfkxX0Dm66ULx45lYSCxwadW1u_PWXM8dxh2SLxSwQ8oguhajhwRAns-_beBy1LV9bYUsuJCetHTQ8IfkU3qv_5D58K0rmzribApHJQbdM-h7RpjYe1o_ztntsKbxPIDKNQJHJG6tLM07bN8"/>
+</div>
+<span class="absolute -bottom-1 -right-1 w-5 h-5 bg-amber-500 border-2 border-white rounded-full"></span>
+</div>
+<div class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs font-bold">6ème</div>
+</div>
+<div class="mb-4 text-error">
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-sm">warning</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Forfait presque vide</span>
+</div>
+<h3 class="font-title-md text-lg text-on-surface group-hover:text-primary transition-colors">Lucas Dupont</h3>
+<p class="text-on-surface-variant text-sm">11 ans • Ecole primaire Est</p>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-surface-container px-2 py-1 rounded text-[10px] uppercase font-bold text-on-surface-variant">MATHS</span>
+<span class="bg-surface-container px-2 py-1 rounded text-[10px] uppercase font-bold text-on-surface-variant">FRANÇAIS</span>
+</div>
+<div class="space-y-4 mb-6">
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface-variant">Heures restantes</span>
+<span class="font-bold text-error">8/20 hrs</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-error h-full progress-bar-animate" style="width: 40%"></div>
+</div>
+</div>
+<div class="flex justify-between items-center p-3 bg-surface-container-low rounded-xl">
+<div class="text-xs">
+<p class="text-on-surface-variant">Moyenne</p>
+<p class="font-bold text-primary text-base">14.5/20</p>
+</div>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-primary-container/20 flex items-center justify-center text-[10px] font-bold text-primary">+1 Prof</div>
+</div>
+</div>
+</div>
+<button class="w-full py-3 premium-gradient text-white rounded-xl font-semibold hover:opacity-90 transition-all flex items-center justify-center gap-2">
+                        Recharger le forfait
+                        <span class="material-symbols-outlined text-sm">bolt</span>
+</button>
+</div>
+</div>
+<!-- Bento Layout for Stats & Table -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-card-gap mb-section-margin">
+<!-- Table Section (2/3 width) -->
+<div class="lg:col-span-2 glass-card soft-shadow rounded-3xl overflow-hidden flex flex-col">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-title-md text-on-surface">Séances à venir</h3>
+<button class="text-primary text-sm font-semibold hover:underline">Voir le calendrier complet</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low text-on-surface-variant font-label-md text-[10px] uppercase tracking-widest">
+<tr>
+<th class="px-6 py-4 font-semibold">Enfant</th>
+<th class="px-6 py-4 font-semibold">Matière</th>
+<th class="px-6 py-4 font-semibold">Enseignant</th>
+<th class="px-6 py-4 font-semibold">Date & Heure</th>
+<th class="px-6 py-4 font-semibold">Statut</th>
+<th class="px-6 py-4 font-semibold">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">AD</div>
+<span class="text-sm font-medium">Ahmed</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm">Mathématiques</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest"></div>
+<span class="text-sm">Dr. Robert M.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium">Demain, 16:30</td>
+<td class="px-6 py-4">
+<span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-bold">Confirmé</span>
+</td>
+<td class="px-6 py-4">
+<button class="text-primary font-bold text-xs hover:text-secondary">Détails</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-[10px] font-bold text-secondary">SD</div>
+<span class="text-sm font-medium">Sara</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm">Anglais Intensif</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest"></div>
+<span class="text-sm">Sarah Jones</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium">24 oct, 10:00</td>
+<td class="px-6 py-4">
+<span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-bold">Confirmé</span>
+</td>
+<td class="px-6 py-4">
+<button class="text-primary font-bold text-xs hover:text-secondary">Détails</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-[10px] font-bold text-amber-700">LD</div>
+<span class="text-sm font-medium">Lucas</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm">Français</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest"></div>
+<span class="text-sm">Mme. Leclerc</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium">25 oct, 14:00</td>
+<td class="px-6 py-4">
+<span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[10px] font-bold">En attente</span>
+</td>
+<td class="px-6 py-4">
+<button class="text-primary font-bold text-xs hover:text-secondary">Modifier</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Consumption Stats (1/3 width) -->
+<div class="glass-card soft-shadow rounded-3xl p-6 flex flex-col justify-between">
+<div>
+<h3 class="font-title-md text-on-surface mb-6">Forfaits & Consommation</h3>
+<div class="flex justify-center mb-8 relative">
+<!-- Simulated Circular Chart -->
+<div class="w-40 h-40 rounded-full border-[12px] border-primary-container/20 relative flex items-center justify-center">
+<div class="absolute inset-0 rounded-full border-[12px] border-primary" style="clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%);"></div>
+<div class="text-center">
+<p class="text-3xl font-extrabold text-primary">62%</p>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase">Utilisés</p>
+</div>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center text-sm">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-on-surface-variant">Ahmed</span>
+</div>
+<span class="font-bold">12 hrs</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="text-on-surface-variant">Sara</span>
+</div>
+<span class="font-bold">30 hrs</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-amber-500"></div>
+<span class="text-on-surface-variant">Lucas</span>
+</div>
+<span class="font-bold">8 hrs</span>
+</div>
+</div>
+</div>
+<div class="mt-8 bg-primary/5 p-4 rounded-2xl border border-primary/10">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">autorenew</span>
+<div>
+<p class="text-xs font-bold text-primary mb-1">Recommandation</p>
+<p class="text-[11px] text-on-surface-variant leading-relaxed italic">"Le forfait de Lucas arrive à expiration. Activez le renouvellement automatique pour éviter toute interruption."</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Progression Reports Section -->
+<div class="mb-section-margin">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-lg text-title-md text-on-surface">Rapports de progression</h3>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-colors"><span class="material-symbols-outlined">download</span></button>
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-colors"><span class="material-symbols-outlined">share</span></button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-card-gap">
+<!-- Progress Chart 1 -->
+<div class="glass-card soft-shadow rounded-3xl p-6">
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="text-xs font-bold text-primary uppercase mb-1">Moyenne Générale</p>
+<h4 class="font-title-md text-on-surface">Évolution Trimestrielle</h4>
+</div>
+<select class="bg-surface-container border-none text-xs rounded-lg font-semibold focus:ring-primary/20">
+<option>Ahmed</option>
+<option>Sara</option>
+<option>Lucas</option>
+</select>
+</div>
+<div class="h-48 w-full relative flex items-end justify-between gap-2 px-2">
+<div class="w-full h-[1px] bg-outline-variant/30 absolute bottom-0 left-0"></div>
+<div class="w-full h-[1px] bg-outline-variant/30 absolute bottom-1/4 left-0"></div>
+<div class="w-full h-[1px] bg-outline-variant/30 absolute bottom-1/2 left-0"></div>
+<div class="w-full h-[1px] bg-outline-variant/30 absolute bottom-3/4 left-0"></div>
+<!-- Simple Visual Bars to simulate chart -->
+<div class="flex-1 bg-primary/20 rounded-t-lg h-[60%] hover:bg-primary transition-all group relative">
+<span class="hidden group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] py-1 px-2 rounded">12.5</span>
+</div>
+<div class="flex-1 bg-primary/20 rounded-t-lg h-[75%] hover:bg-primary transition-all group relative">
+<span class="hidden group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] py-1 px-2 rounded">14.8</span>
+</div>
+<div class="flex-1 bg-primary rounded-t-lg h-[82%] relative group">
+<span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-bold py-1 px-2 rounded">15.8</span>
+</div>
+<div class="flex-1 bg-primary/20 rounded-t-lg h-[85%] hover:bg-primary transition-all group relative">
+<span class="hidden group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] py-1 px-2 rounded">16.2</span>
+</div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] font-bold text-on-surface-variant uppercase">
+<span>Sept</span>
+<span>Oct</span>
+<span>Nov</span>
+<span>Déc</span>
+</div>
+</div>
+<!-- Goals & Badges -->
+<div class="glass-card soft-shadow rounded-3xl p-6">
+<h4 class="font-title-md text-on-surface mb-6">Succès & Objectifs</h4>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-tertiary-container/5 rounded-2xl border border-tertiary-container/10 flex flex-col items-center text-center">
+<div class="w-12 h-12 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary mb-3 float-animation">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+<p class="text-xs font-bold text-tertiary mb-1">Top Performeur</p>
+<p class="text-[10px] text-on-surface-variant">Sara a dépassé son objectif de 2 points en Anglais</p>
+</div>
+<div class="p-4 bg-secondary-container/5 rounded-2xl border border-secondary-container/10 flex flex-col items-center text-center">
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary mb-3">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<p class="text-xs font-bold text-secondary mb-1">Assiduité 100%</p>
+<p class="text-[10px] text-on-surface-variant">Ahmed a complété 10 séances sans absence</p>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-outline-variant/30">
+<div class="flex justify-between items-center mb-4">
+<span class="text-xs font-bold text-on-surface">Prochain Objectif</span>
+<span class="text-[10px] font-bold text-primary">85%</span>
+</div>
+<div class="w-full bg-surface-container h-3 rounded-full overflow-hidden">
+<div class="premium-gradient h-full w-[85%]"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-2 italic">Objectif Groupe : Moyenne de 16/20 pour tous les enfants ce trimestre.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Modal: Ajouter un enfant -->
+<div class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4" id="modal-add-child">
+<div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="this.parentElement.classList.add('hidden')"></div>
+<div class="bg-surface rounded-[32px] w-full max-w-2xl overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300">
+<div class="p-8 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-lg text-title-md text-primary">Nouvelle Inscription</h3>
+<button class="p-2 hover:bg-surface-container rounded-full" onclick="document.getElementById('modal-add-child').classList.add('hidden')"><span class="material-symbols-outlined">close</span></button>
+</div>
+<form class="p-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="md:col-span-2 flex flex-col items-center gap-4 mb-4">
+<div class="w-24 h-24 rounded-full border-2 border-dashed border-primary/40 flex flex-col items-center justify-center text-primary-container bg-primary-container/5 cursor-pointer hover:bg-primary-container/10 transition-all">
+<span class="material-symbols-outlined text-3xl">add_a_photo</span>
+<span class="text-[10px] font-bold mt-1">Photo</span>
+</div>
+<p class="text-xs text-on-surface-variant">Format JPG ou PNG (max 2Mo)</p>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-xs font-bold text-on-surface-variant ml-1">Nom Complet</label>
+<input class="bg-surface-container-low border-outline-variant/30 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary" placeholder="Ex: Jean Dupont" type="text"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-xs font-bold text-on-surface-variant ml-1">Date de naissance</label>
+<input class="bg-surface-container-low border-outline-variant/30 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary" type="date"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-xs font-bold text-on-surface-variant ml-1">Classe</label>
+<select class="bg-surface-container-low border-outline-variant/30 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary">
+<option>Sélectionnez la classe</option>
+<option>Primaire (CP-CM2)</option>
+<option>Collège (6ème-3ème)</option>
+<option>Lycée (2nde-Terminale)</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-xs font-bold text-on-surface-variant ml-1">Établissement</label>
+<input class="bg-surface-container-low border-outline-variant/30 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary" placeholder="Nom de l'école" type="text"/>
+</div>
+<div class="md:col-span-2 flex flex-col gap-1">
+<label class="text-xs font-bold text-on-surface-variant ml-1">Matières souhaitées</label>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="px-3 py-1 rounded-full border border-primary text-primary text-xs font-bold cursor-pointer hover:bg-primary hover:text-white transition-all">Mathématiques</span>
+<span class="px-3 py-1 rounded-full border border-outline-variant text-on-surface-variant text-xs font-medium cursor-pointer hover:border-primary hover:text-primary transition-all">Français</span>
+<span class="px-3 py-1 rounded-full border border-outline-variant text-on-surface-variant text-xs font-medium cursor-pointer hover:border-primary hover:text-primary transition-all">Anglais</span>
+<span class="px-3 py-1 rounded-full border border-outline-variant text-on-surface-variant text-xs font-medium cursor-pointer hover:border-primary hover:text-primary transition-all">Physique-Chimie</span>
+</div>
+</div>
+<div class="md:col-span-2 flex flex-col gap-1">
+<label class="text-xs font-bold text-on-surface-variant ml-1">Objectifs principaux</label>
+<textarea class="bg-surface-container-low border-outline-variant/30 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary h-24" placeholder="Décrivez les besoins spécifiques de votre enfant..."></textarea>
+</div>
+</div>
+<div class="mt-8 flex gap-4">
+<button class="flex-1 py-4 text-on-surface-variant font-bold hover:bg-surface-container rounded-2xl transition-all" onclick="document.getElementById('modal-add-child').classList.add('hidden')" type="button">Annuler</button>
+<button class="flex-1 py-4 premium-gradient text-white font-bold rounded-2xl shadow-lg hover:opacity-90 transition-all" type="button">Valider l'inscription</button>
+</div>
+</form>
+</div>
+</div>
+<script>
+        // Simple logic to handle modal visibility toggle for demonstration
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('modal-add-child').classList.add('hidden');
+            }
+        });
+    </script>
+</body></html>
