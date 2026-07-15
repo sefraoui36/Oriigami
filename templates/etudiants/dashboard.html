@@ -1,0 +1,485 @@
+<!-- templates/etudiants/dashboard.html -->
+<!DOCTYPE html>
+<html class="light" lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Origami Privé - Dashboard Étudiant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "on-surface-variant": "#4b4456",
+                "error": "#ba1a1a",
+                "tertiary-fixed-dim": "#ffb782",
+                "surface-dim": "#d9dadb",
+                "inverse-surface": "#2e3132",
+                "primary-container": "#8b3dff",
+                "background": "#f8f9fa",
+                "on-primary": "#ffffff",
+                "on-primary-fixed": "#270058",
+                "surface-container": "#edeeef",
+                "tertiary-container": "#ad5900",
+                "on-surface": "#191c1d",
+                "inverse-on-surface": "#f0f1f2",
+                "on-error-container": "#93000a",
+                "outline-variant": "#cdc2d8",
+                "surface-tint": "#7921ed",
+                "on-tertiary-fixed": "#301400",
+                "on-primary-fixed-variant": "#5d00c2",
+                "secondary": "#ae128a",
+                "secondary-fixed-dim": "#ffaede",
+                "on-secondary-fixed-variant": "#87006b",
+                "tertiary": "#894500",
+                "surface-container-high": "#e7e8e9",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#3b002d",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#ebdcff",
+                "on-primary-container": "#faf1ff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#fe60cf",
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#d4bbff",
+                "surface-container-low": "#f3f4f5",
+                "outline": "#7c7387",
+                "surface": "#f8f9fa",
+                "on-secondary-container": "#680052",
+                "tertiary-fixed": "#ffdcc5",
+                "inverse-primary": "#d4bbff",
+                "on-tertiary-fixed-variant": "#703800",
+                "primary": "#710fe5",
+                "on-error": "#ffffff",
+                "surface-variant": "#e1e3e4",
+                "surface-container-highest": "#e1e3e4",
+                "secondary-fixed": "#ffd8ec",
+                "on-tertiary-container": "#fff2eb",
+                "on-background": "#191c1d"
+            },
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            spacing: {
+                "container-padding": "32px",
+                "card-gap": "24px",
+                "gutter": "24px",
+                "base": "8px",
+                "section-margin": "48px"
+            },
+            fontFamily: {
+                "headline-lg": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"],
+                "body-sm": ["Plus Jakarta Sans"],
+                "label-md": ["Inter"],
+                "title-md": ["Plus Jakarta Sans"],
+                "headline-lg-mobile": ["Plus Jakarta Sans"]
+            },
+            fontSize: {
+                "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+        },
+    },
+}
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    }
+    .sidebar-link {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #4b4456;
+        text-decoration: none;
+    }
+    .sidebar-link:hover {
+        background: rgba(113, 15, 229, 0.08);
+        color: #710fe5;
+    }
+    .sidebar-link.active {
+        background: rgba(113, 15, 229, 0.12);
+        color: #710fe5;
+        font-weight: 600;
+    }
+    .sidebar-link.active .material-symbols-outlined {
+        color: #710fe5;
+    }
+    .stat-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+    }
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+    }
+    .bg-soft-glow {
+        background: radial-gradient(circle at 50% 50%, rgba(139, 61, 255, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+    }
+    .animate-pulse-slow {
+        animation: pulse-soft 4s ease-in-out infinite;
+    }
+    @keyframes pulse-soft {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+    }
+    .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 9999px;
+        display: inline-block;
+    }
+    .badge-dot.green { background: #10b981; }
+    .badge-dot.orange { background: #f59e0b; }
+    .badge-dot.red { background: #ef4444; }
+    .badge-dot.blue { background: #3b82f6; }
+</style>
+</head>
+<body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
+
+<!-- Animated background -->
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+    <div class="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] animate-pulse-slow"></div>
+    <div class="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+</div>
+
+<div class="flex h-screen overflow-hidden">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
+        <!-- Logo -->
+        <div class="flex items-center gap-3 px-3 py-4 mb-6">
+            <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">change_history</span>
+            </div>
+            <span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Origami Privé</span>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 space-y-1">
+            <a href="#" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">person</span>
+                <span>Mon Profil</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">school</span>
+                <span>Mes Enseignants</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+                <span>Mes Séances</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">sell</span>
+                <span>Mon Forfait</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">wallet</span>
+                <span>Mon Portefeuille</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">trending_up</span>
+                <span>Ma Progression</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">star</span>
+                <span>Avis Enseignants</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">notifications</span>
+                <span>Notifications</span>
+                <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">calendar_today</span>
+                <span>Calendrier</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">settings</span>
+                <span>Paramètres</span>
+            </a>
+        </nav>
+
+        <!-- Déconnexion -->
+        <div class="mt-auto pt-4 border-t border-outline-variant/30">
+            <a href="#" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+                <span class="material-symbols-outlined text-[22px]">logout</span>
+                <span>Déconnexion</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 overflow-y-auto p-8">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface">Bonjour, Thomas 👋</h1>
+                <p class="text-on-surface-variant body-sm">Bienvenue sur votre espace étudiant</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
+                    <span class="material-symbols-outlined text-[24px]">notifications</span>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
+                    TM
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-primary">book</span>
+                    <span class="text-xs font-bold text-primary-container bg-primary/10 px-3 py-1 rounded-full">En cours</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">4</p>
+                <p class="text-sm text-on-surface-variant">Cours actifs</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-green-500">check_circle</span>
+                    <span class="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">Terminés</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">12</p>
+                <p class="text-sm text-on-surface-variant">Cours complétés</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-orange-500">schedule</span>
+                    <span class="text-xs font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Restant</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">8h</p>
+                <p class="text-sm text-on-surface-variant">Heures restantes</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-purple-500">stars</span>
+                    <span class="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Moyenne</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">16.5</p>
+                <p class="text-sm text-on-surface-variant">Moyenne générale /20</p>
+            </div>
+        </div>
+
+        <!-- Grid: Cours + Prochaines séances -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Cours en cours -->
+            <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="font-title-md text-title-md text-on-surface">📚 Mes cours en cours</h2>
+                    <a href="#" class="text-sm text-primary font-semibold hover:underline">Voir tout →</a>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4 p-4 bg-background rounded-xl border border-outline-variant/20">
+                        <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">calculate</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-on-surface">Mathématiques Avancées</h3>
+                            <p class="text-sm text-on-surface-variant">Prof. Martin • 4 séances restantes</p>
+                            <div class="mt-2 flex items-center gap-3">
+                                <div class="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                                    <div class="h-full bg-primary-gradient rounded-full" style="width: 65%"></div>
+                                </div>
+                                <span class="text-xs font-medium text-primary">65%</span>
+                            </div>
+                        </div>
+                        <span class="badge-dot green"></span>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 bg-background rounded-xl border border-outline-variant/20">
+                        <div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+                            <span class="material-symbols-outlined">translate</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-on-surface">Anglais des Affaires</h3>
+                            <p class="text-sm text-on-surface-variant">Prof. Dupont • 2 séances restantes</p>
+                            <div class="mt-2 flex items-center gap-3">
+                                <div class="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                                    <div class="h-full bg-secondary rounded-full" style="width: 40%"></div>
+                                </div>
+                                <span class="text-xs font-medium text-secondary">40%</span>
+                            </div>
+                        </div>
+                        <span class="badge-dot orange"></span>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 bg-background rounded-xl border border-outline-variant/20">
+                        <div class="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center text-tertiary">
+                            <span class="material-symbols-outlined">code</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-on-surface">Développement Web</h3>
+                            <p class="text-sm text-on-surface-variant">Prof. Moreau • 3 séances restantes</p>
+                            <div class="mt-2 flex items-center gap-3">
+                                <div class="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                                    <div class="h-full bg-tertiary-container rounded-full" style="width: 80%"></div>
+                                </div>
+                                <span class="text-xs font-medium text-tertiary-container">80%</span>
+                            </div>
+                        </div>
+                        <span class="badge-dot green"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prochaines séances -->
+            <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <h2 class="font-title-md text-title-md text-on-surface mb-4">📅 Prochaines séances</h2>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3 p-3 bg-background rounded-xl border border-outline-variant/20">
+                        <div class="w-12 h-12 rounded-xl bg-primary/5 flex flex-col items-center justify-center text-primary border border-primary/10">
+                            <span class="text-[10px] font-bold uppercase">Lun</span>
+                            <span class="text-lg font-bold">15</span>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-on-surface text-sm">Mathématiques</p>
+                            <p class="text-xs text-on-surface-variant">14:00 - 15:30</p>
+                            <p class="text-xs text-primary mt-0.5">Prof. Martin</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-3 bg-background rounded-xl border border-outline-variant/20">
+                        <div class="w-12 h-12 rounded-xl bg-secondary/5 flex flex-col items-center justify-center text-secondary border border-secondary/10">
+                            <span class="text-[10px] font-bold uppercase">Mer</span>
+                            <span class="text-lg font-bold">17</span>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-on-surface text-sm">Anglais</p>
+                            <p class="text-xs text-on-surface-variant">10:00 - 11:30</p>
+                            <p class="text-xs text-secondary mt-0.5">Prof. Dupont</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-3 bg-background rounded-xl border border-outline-variant/20">
+                        <div class="w-12 h-12 rounded-xl bg-tertiary/5 flex flex-col items-center justify-center text-tertiary border border-tertiary/10">
+                            <span class="text-[10px] font-bold uppercase">Ven</span>
+                            <span class="text-lg font-bold">19</span>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-on-surface text-sm">Développement Web</p>
+                            <p class="text-xs text-on-surface-variant">09:00 - 10:30</p>
+                            <p class="text-xs text-tertiary-container mt-0.5">Prof. Moreau</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="block text-center text-sm text-primary font-semibold mt-4 hover:underline">
+                    Voir tout le planning →
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Notifications et progression -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+
+            <!-- Notifications récentes -->
+            <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-title-md text-title-md text-on-surface">🔔 Notifications récentes</h2>
+                    <a href="#" class="text-sm text-primary font-semibold hover:underline">Voir tout</a>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-start gap-3 p-3 bg-primary/5 rounded-xl border-l-4 border-primary">
+                        <span class="material-symbols-outlined text-primary">info</span>
+                        <div>
+                            <p class="text-sm text-on-surface">Votre cours de Mathématiques démarre dans 2 heures.</p>
+                            <p class="text-xs text-on-surface-variant mt-0.5">Il y a 15 minutes</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-3 bg-background rounded-xl border-l-4 border-secondary">
+                        <span class="material-symbols-outlined text-secondary">grade</span>
+                        <div>
+                            <p class="text-sm text-on-surface">Prof. Dupont a ajouté une note à votre devoir d'anglais.</p>
+                            <p class="text-xs text-on-surface-variant mt-0.5">Il y a 2 heures</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-3 bg-background rounded-xl border-l-4 border-tertiary">
+                        <span class="material-symbols-outlined text-tertiary">schedule</span>
+                        <div>
+                            <p class="text-sm text-on-surface">Votre forfait expire dans 5 jours.</p>
+                            <p class="text-xs text-on-surface-variant mt-0.5">Il y a 1 jour</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progression globale -->
+            <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <h2 class="font-title-md text-title-md text-on-surface mb-4">📊 Progression globale</h2>
+                <div class="flex items-center justify-center mb-4">
+                    <div class="relative w-36 h-36">
+                        <svg class="w-36 h-36 transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#grad)" stroke-width="8" stroke-dasharray="263.89" stroke-dashoffset="52.78" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#710fe5;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#ae128a;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-2xl font-bold text-on-surface">80%</span>
+                            <span class="text-xs text-on-surface-variant">Progression</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-on-surface-variant">Cours complétés</span>
+                        <span class="font-semibold text-on-surface">12/15</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-on-surface-variant">Quiz réussis</span>
+                        <span class="font-semibold text-on-surface">18/24</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-on-surface-variant">Heures de cours</span>
+                        <span class="font-semibold text-on-surface">32/40h</span>
+                    </div>
+                </div>
+                <a href="#" class="block text-center text-sm text-primary font-semibold mt-4 hover:underline">
+                    Voir les détails →
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
