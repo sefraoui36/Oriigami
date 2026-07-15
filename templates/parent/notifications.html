@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Notifications - Origami Privé</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .notification-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .notification-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.08);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cdc2d8;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#d4bbff",
+                        "outline": "#7c7387",
+                        "tertiary-fixed": "#ffdcc5",
+                        "surface-container-highest": "#e1e3e4",
+                        "secondary-container": "#fe60cf",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#270058",
+                        "primary-container": "#8b3dff",
+                        "on-tertiary-fixed": "#301400",
+                        "primary": "#710fe5",
+                        "primary-fixed": "#ebdcff",
+                        "surface-variant": "#e1e3e4",
+                        "secondary": "#ae128a",
+                        "on-primary-fixed-variant": "#5d00c2",
+                        "tertiary-container": "#ad5900",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-secondary-container": "#680052",
+                        "surface-dim": "#d9dadb",
+                        "secondary-fixed": "#ffd8ec",
+                        "on-error": "#ffffff",
+                        "surface-container": "#edeeef",
+                        "tertiary-fixed-dim": "#ffb782",
+                        "surface-bright": "#f8f9fa",
+                        "surface": "#f8f9fa",
+                        "on-primary-container": "#faf1ff",
+                        "on-tertiary-fixed-variant": "#703800",
+                        "on-tertiary-container": "#fff2eb",
+                        "background": "#f8f9fa",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#ffaede",
+                        "on-secondary-fixed": "#3b002d",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#894500",
+                        "on-secondary-fixed-variant": "#87006b",
+                        "surface-container-low": "#f3f4f5",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#4b4456",
+                        "on-background": "#191c1d",
+                        "outline-variant": "#cdc2d8",
+                        "inverse-surface": "#2e3132",
+                        "surface-container-high": "#e7e8e9",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#7921ed",
+                        "on-surface": "#191c1d",
+                        "inverse-primary": "#d4bbff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "32px",
+                        "card-gap": "24px",
+                        "section-margin": "48px",
+                        "base": "8px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"],
+                        "title-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar -->
+<aside class="w-[280px] h-screen fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant flex flex-col py-base z-50">
+<div class="px-gutter mb-10">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">Origami Privé</h1>
+<p class="text-on-surface-variant font-label-md text-label-md tracking-wider opacity-70">Education d'Excellence</p>
+</div>
+<nav class="flex-1 overflow-y-auto px-4 space-y-1 custom-scrollbar">
+<!-- Navigation Items Mapping -->
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-sm text-body-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-sm text-body-sm">Mon profil</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">child_care</span>
+<span class="font-body-sm text-body-sm">Mes enfants</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-body-sm text-body-sm">Mes étudiants</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-sm text-body-sm">Mes forfaits</span>
+</a>
+<!-- Active Notification Tab -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/10 text-primary border-l-4 border-primary font-semibold transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications</span>
+<span class="font-body-sm text-body-sm">Notifications</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">chat</span>
+<span class="font-body-sm text-body-sm">Messages</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-body-sm text-body-sm">Calendrier</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-sm text-body-sm">Paramètres</span>
+</a>
+</div>
+</nav>
+<div class="px-4 mt-auto mb-4">
+<button class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-semibold flex items-center justify-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span class="text-sm">Réserver une séance</span>
+</button>
+</div>
+<div class="px-4 py-4 border-t border-outline-variant">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-error hover:bg-error-container/20 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-sm text-body-sm">Déconnexion</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-gutter z-40">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full focus:ring-2 focus:ring-primary/20 text-body-sm font-body-sm" placeholder="Rechercher une notification..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">help_outline</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer">
+<div class="text-right hidden sm:block">
+<p class="text-label-md font-label-md text-on-surface font-semibold">Jean Dupont</p>
+<p class="text-[10px] text-on-surface-variant">Parent d'élève</p>
+</div>
+<img class="w-10 h-10 rounded-full border-2 border-primary/20 object-cover" data-alt="A professional headshot of a middle-aged male parent with a friendly expression, set against a clean, light-colored background that reflects a high-end educational platform's premium minimalist aesthetic. The lighting is soft and natural, emphasizing a sense of reliability and trust within the Origami Privé ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0FH1VrpnFPx_5nPofMgcJw5BTDMXX2X7toFhBrFrhTFGcswd0qOEZlYHbR28u9xeIvHonEgWEgTG200lm0lvlOVhNemvnRyQ6njlcG3S9arhz6at_UYwtNDEMvEbH-u2LgyhFugROgJBJfbeVJvc0sWA9G_3P-Dk334icrUd0lAWH-dR4IW5OyK-BcaGE9dr-fufO9DZpAZOqQUzPxJTP17WW_2JgWT78mcJc4BNijHA6hVSIdtoY2g"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[280px] pt-24 pb-12 px-gutter min-h-screen">
+<div class="max-w-5xl mx-auto">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-1">Centre de notifications</h2>
+<p class="text-on-surface-variant font-body-lg text-body-lg">Restez informé de l'évolution scolaire de vos enfants.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 text-on-surface-variant hover:text-primary font-label-md text-label-md transition-colors">
+<span class="material-symbols-outlined text-[18px]">done_all</span>
+                        Tout marquer comme lu
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 text-error hover:bg-error-container/10 rounded-lg font-label-md text-label-md transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+                        Tout supprimer
+                    </button>
+</div>
+</div>
+<!-- Filter Tabs -->
+<div class="flex items-center gap-2 mb-8 border-b border-outline-variant overflow-x-auto pb-px">
+<button class="px-6 py-3 text-primary font-bold border-b-2 border-primary whitespace-nowrap">Tous (12)</button>
+<button class="px-6 py-3 text-on-surface-variant hover:text-on-surface font-label-md transition-all whitespace-nowrap">Non lus</button>
+<button class="px-6 py-3 text-on-surface-variant hover:text-on-surface font-label-md transition-all whitespace-nowrap">Séances</button>
+<button class="px-6 py-3 text-on-surface-variant hover:text-on-surface font-label-md transition-all whitespace-nowrap">Paiements</button>
+<button class="px-6 py-3 text-on-surface-variant hover:text-on-surface font-label-md transition-all whitespace-nowrap">Messages</button>
+</div>
+<!-- Notifications List -->
+<div class="space-y-4">
+<!-- Session Notification (Unread) -->
+<div class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant flex gap-5 relative group">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-primary rounded-r-full"></div>
+<div class="w-12 h-12 rounded-xl bg-primary-container/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+</div>
+<div class="flex-1">
+<div class="flex items-start justify-between mb-1">
+<h3 class="text-title-md font-title-md text-on-surface">Nouvelle séance programmée</h3>
+<span class="text-label-md text-on-surface-variant">Il y a 5 min</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-4">Une séance de Mathématiques avec M. Lefebvre a été confirmée pour demain à 16h00 pour Sarah.</p>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-primary-fixed text-on-primary-fixed text-label-md font-semibold rounded-lg hover:bg-primary-fixed-dim transition-colors">Détails de la séance</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+</div>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<!-- Payment Notification -->
+<div class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant flex gap-5 group">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<div class="flex-1">
+<div class="flex items-start justify-between mb-1">
+<h3 class="text-title-md font-title-md text-on-surface">Paiement reçu</h3>
+<span class="text-label-md text-on-surface-variant">Il y a 2 heures</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-4">Votre paiement de 240,00€ pour le forfait "Excellence" a été validé avec succès. Votre facture est disponible.</p>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-surface-container-high text-on-surface text-label-md font-semibold rounded-lg hover:bg-surface-variant transition-colors">Télécharger la facture</button>
+</div>
+</div>
+</div>
+<!-- Teacher Note Notification (Unread) -->
+<div class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant flex gap-5 relative group">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-primary rounded-r-full"></div>
+<div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">reviews</span>
+</div>
+<div class="flex-1">
+<div class="flex items-start justify-between mb-1">
+<h3 class="text-title-md font-title-md text-on-surface">Commentaire de l'enseignant</h3>
+<span class="text-label-md text-on-surface-variant">Il y a 5 heures</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-4">Mme. Durand a laissé une note de progression pour le cours d'Anglais de Lucas : "Excellents résultats sur le dernier test de grammaire."</p>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-primary-fixed text-on-primary-fixed text-label-md font-semibold rounded-lg hover:bg-primary-fixed-dim transition-colors">Voir la progression</button>
+</div>
+</div>
+</div>
+<!-- System Notification -->
+<div class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant flex gap-5 group">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</div>
+<div class="flex-1">
+<div class="flex items-start justify-between mb-1">
+<h3 class="text-title-md font-title-md text-on-surface">Mise à jour du profil</h3>
+<span class="text-label-md text-on-surface-variant">Hier, 18:30</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">Votre adresse e-mail de contact secondaire a été mise à jour avec succès.</p>
+</div>
+</div>
+<!-- Session Reminder -->
+<div class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant flex gap-5 group">
+<div class="w-12 h-12 rounded-xl bg-primary-container/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary">alarm</span>
+</div>
+<div class="flex-1">
+<div class="flex items-start justify-between mb-1">
+<h3 class="text-title-md font-title-md text-on-surface">Rappel : Séance dans 2 heures</h3>
+<span class="text-label-md text-on-surface-variant">Hier, 10:00</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-4">N'oubliez pas la séance de Physique-Chimie prévue pour Sarah à 14h00.</p>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-surface-container-high text-on-surface text-label-md font-semibold rounded-lg hover:bg-surface-variant transition-colors">Lancer le cours en ligne</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More -->
+<div class="mt-12 flex justify-center">
+<button class="px-8 py-3 rounded-full border border-primary text-primary font-semibold hover:bg-primary-container/5 active:scale-95 transition-all">
+                    Charger les notifications plus anciennes
+                </button>
+</div>
+</div>
+</main>
+<!-- Floating Atmosphere -->
+<div class="fixed inset-0 pointer-events-none -z-10 opacity-30 overflow-hidden">
+<div class="absolute top-[-10%] right-[-5%] w-[40%] h-[60%] rounded-full bg-primary/10 blur-[100px]"></div>
+<div class="absolute bottom-[-10%] left-[-5%] w-[40%] h-[60%] rounded-full bg-secondary/10 blur-[100px]"></div>
+</div>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('.notification-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const indicator = card.querySelector('.absolute.right-4');
+                if(indicator) indicator.style.opacity = '1';
+            });
+        });
+
+        // Simple filter logic simulation
+        const buttons = document.querySelectorAll('.flex.items-center.gap-2.mb-8 button');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => {
+                    b.classList.remove('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                    b.classList.add('text-on-surface-variant');
+                });
+                btn.classList.add('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                btn.classList.remove('text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>
