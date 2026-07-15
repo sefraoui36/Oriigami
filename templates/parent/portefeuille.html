@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mon Portefeuille - Origami Privé</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#7921ed",
+                    "inverse-primary": "#d4bbff",
+                    "surface-container-highest": "#e1e3e4",
+                    "primary-fixed": "#ebdcff",
+                    "secondary-container": "#fe60cf",
+                    "secondary": "#ae128a",
+                    "on-surface": "#191c1d",
+                    "error": "#ba1a1a",
+                    "surface-bright": "#f8f9fa",
+                    "primary-fixed-dim": "#d4bbff",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-high": "#e7e8e9",
+                    "on-tertiary-fixed-variant": "#703800",
+                    "secondary-fixed-dim": "#ffaede",
+                    "on-surface-variant": "#4b4456",
+                    "tertiary-container": "#ad5900",
+                    "outline": "#7c7387",
+                    "on-primary-container": "#faf1ff",
+                    "primary": "#710fe5",
+                    "surface-dim": "#d9dadb",
+                    "on-error-container": "#93000a",
+                    "background": "#f8f9fa",
+                    "on-error": "#ffffff",
+                    "on-secondary-container": "#680052",
+                    "on-primary-fixed-variant": "#5d00c2",
+                    "surface-variant": "#e1e3e4",
+                    "inverse-on-surface": "#f0f1f2",
+                    "secondary-fixed": "#ffd8ec",
+                    "on-tertiary-container": "#fff2eb",
+                    "tertiary-fixed": "#ffdcc5",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#301400",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#edeeef",
+                    "on-secondary-fixed-variant": "#87006b",
+                    "on-secondary-fixed": "#3b002d",
+                    "tertiary-fixed-dim": "#ffb782",
+                    "tertiary": "#894500",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#cdc2d8",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#2e3132",
+                    "primary-container": "#8b3dff",
+                    "surface": "#f8f9fa",
+                    "surface-container-low": "#f3f4f5",
+                    "on-primary-fixed": "#270058",
+                    "on-background": "#191c1d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "gutter": "24px",
+                    "card-gap": "24px",
+                    "container-padding": "32px",
+                    "section-margin": "48px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-sm": ["Plus Jakarta Sans"],
+                    "title-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .premium-gradient {
+            background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(225, 227, 228, 0.5);
+        }
+        .soft-shadow {
+            box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.08);
+        }
+        .pulse-active {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .chart-bar-grow {
+            transition: height 1s ease-out;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cdc2d8;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #710fe5;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-lg overflow-x-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-[280px] z-50 bg-surface-container-low border-r border-surface-variant flex flex-col py-base gap-1 overflow-y-auto">
+<div class="px-6 py-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl premium-gradient flex items-center justify-center text-white font-bold text-xl">O</div>
+<div>
+<h1 class="font-headline-lg text-title-md font-extrabold bg-gradient-to-r from-primary to-secondary-container bg-clip-text text-transparent">Origami Privé</h1>
+<p class="text-[10px] font-label-md uppercase tracking-wider text-on-surface-variant/70">Tutoring Excellence</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">person</span>
+<span class="font-label-md">Profil</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">school</span>
+<span class="font-label-md">Enfants/Étudiants</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-l-4 border-primary font-bold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-label-md">Portefeuille</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">inventory_2</span>
+<span class="font-label-md">Forfaits</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">group</span>
+<span class="font-label-md">Enseignants</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">event_repeat</span>
+<span class="font-label-md">Séances</span>
+</a>
+<div class="pt-4 pb-2 px-4">
+<p class="text-[10px] font-bold text-outline uppercase tracking-widest">Communication</p>
+</div>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">notifications</span>
+<span class="font-label-md">Notifications</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">chat</span>
+<span class="font-label-md">Messages</span>
+</a>
+<div class="mt-auto pt-8">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">settings</span>
+<span class="font-label-md">Paramètres</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-error hover:bg-error/5 transition-all group" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md">Déconnexion</span>
+</a>
+</div>
+</nav>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-[280px] h-20 z-40 bg-surface/80 backdrop-blur-xl border-b border-surface-variant flex items-center justify-between px-container-padding">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-on-surface-variant text-sm">
+<span class="font-label-md">Dashboard</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-primary font-bold">Mon Portefeuille</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">help</span>
+</div>
+<div class="relative group">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">notifications</span>
+<span class="absolute -top-1 -right-1 w-4 h-4 bg-error text-[10px] text-white flex items-center justify-center rounded-full font-bold">3</span>
+</div>
+<div class="h-10 w-[1px] bg-outline-variant"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right">
+<p class="font-bold text-sm text-on-surface">Ahmed El Mansouri</p>
+<p class="text-xs text-on-surface-variant">Parent Premium</p>
+</div>
+<img class="w-10 h-10 rounded-full border-2 border-primary/20 object-cover group-hover:border-primary transition-all" data-alt="Portrait of a sophisticated Middle Eastern man in a professional business setting, high-end photography, soft office lighting, modern executive aesthetic with a friendly but professional demeanor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAavI2SCnKlK-ou853BvNhF96dc20U-lre1TkwsKxCjzBjJfz6eQYVRR0spTB2dUgu0cbrYd_U_QXlPc2ChFwyFZ6j0U-ev_mYu-QU4HRbs_ykRiN9DYKx8Ih992lQxG5axhKYVvkVyFeQ32a_urH1o9usr5omwPR527-iYiRPzipG6p8oO-A1QWZi6wxwkEOpTO0gwKpdQZxMNopHx5slTW6n1G-hj5jSKW6tZTEbo5_aeD0lMnnuE3vHDZziGAjh8ungItqS8cNrh"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[280px] pt-20 p-container-padding space-y-gutter">
+<!-- Welcome Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Mon Portefeuille</h2>
+<p class="text-on-surface-variant mt-2">Gérez vos fonds et vos forfaits de cours en toute simplicité.</p>
+</div>
+<div class="flex items-center gap-2 bg-secondary-fixed text-on-secondary-fixed px-4 py-2 rounded-full font-label-md">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                Parent Premium
+            </div>
+</div>
+<!-- Wallet Top Grid -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Balance Card -->
+<div class="col-span-8 premium-gradient rounded-3xl p-10 text-white relative overflow-hidden soft-shadow group">
+<div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined !text-[120px]">account_balance_wallet</span>
+</div>
+<div class="relative z-10 flex flex-col h-full justify-between">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-md uppercase tracking-[0.2em] opacity-80">Solde Actuel</p>
+<h3 class="font-display-lg text-[48px] mt-2">2 800,00 MAD</h3>
+</div>
+<div class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl flex items-center gap-2">
+<span class="w-2 h-2 bg-green-400 rounded-full pulse-active"></span>
+<span class="font-label-md font-bold">Actif</span>
+</div>
+</div>
+<div class="mt-12 flex items-end justify-between">
+<div class="space-y-1">
+<p class="text-sm opacity-70">Wallet ID: <span class="font-mono">#OP-99283</span></p>
+<p class="text-sm opacity-70">Dernière mise à jour: Aujourd'hui, 10:24</p>
+</div>
+<div class="text-right">
+<p class="text-sm opacity-70">Compte valide jusqu'au</p>
+<p class="font-bold">12 / 2025</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="col-span-4 flex flex-col gap-4">
+<button class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant hover:border-primary hover:bg-primary/5 transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">add_circle</span>
+</div>
+<div class="text-left">
+<p class="font-bold text-on-surface">Recharger</p>
+<p class="text-xs text-on-surface-variant">Ajouter des fonds au compte</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary">chevron_right</span>
+</button>
+<button class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant hover:border-secondary hover:bg-secondary/5 transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">shopping_bag</span>
+</div>
+<div class="text-left">
+<p class="font-bold text-on-surface">Payer un forfait</p>
+<p class="text-xs text-on-surface-variant">Voir le catalogue de cours</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary">chevron_right</span>
+</button>
+<button class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant hover:border-tertiary hover:bg-tertiary/5 transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">download</span>
+</div>
+<div class="text-left">
+<p class="font-bold text-on-surface">Télécharger l'historique</p>
+<p class="text-xs text-on-surface-variant">Export PDF / CSV</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-tertiary">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- KPI Row -->
+<div class="grid grid-cols-4 gap-gutter">
+<div class="glass-card soft-shadow p-6 rounded-2xl">
+<p class="text-xs text-on-surface-variant font-label-md uppercase tracking-wider">Total rechargé</p>
+<p class="text-2xl font-bold mt-2 text-on-surface">15 000 MAD</p>
+<div class="mt-4 flex items-center gap-1 text-xs text-green-600">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12% vs mois dernier</span>
+</div>
+</div>
+<div class="glass-card soft-shadow p-6 rounded-2xl">
+<p class="text-xs text-on-surface-variant font-label-md uppercase tracking-wider">Total dépensé</p>
+<p class="text-2xl font-bold mt-2 text-on-surface">12 200 MAD</p>
+<div class="mt-4 flex items-center gap-1 text-xs text-primary">
+<span class="material-symbols-outlined text-sm">info</span>
+<span>81% de taux d'utilisation</span>
+</div>
+</div>
+<div class="glass-card soft-shadow p-6 rounded-2xl">
+<p class="text-xs text-on-surface-variant font-label-md uppercase tracking-wider">Dernière transaction</p>
+<p class="text-2xl font-bold mt-2 text-green-600">+500 MAD</p>
+<div class="mt-4 flex items-center gap-1 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+<span>Hier, 15:30</span>
+</div>
+</div>
+<div class="glass-card soft-shadow p-6 rounded-2xl border-l-4 border-l-primary">
+<p class="text-xs text-on-surface-variant font-label-md uppercase tracking-wider">Total heures achetées</p>
+<p class="text-2xl font-bold mt-2 text-on-surface">120h</p>
+<div class="mt-4 flex items-center gap-1 text-xs text-primary">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span>45h restantes ce mois</span>
+</div>
+</div>
+</div>
+<!-- Analytics Section -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Evolution Graph -->
+<div class="col-span-8 glass-card soft-shadow p-8 rounded-3xl">
+<div class="flex justify-between items-center mb-10">
+<h4 class="font-title-md text-on-surface">Évolution du Solde</h4>
+<div class="flex p-1 bg-surface-container rounded-lg">
+<button class="px-4 py-1.5 rounded-md text-sm font-bold bg-white shadow-sm text-primary">Mensuel</button>
+<button class="px-4 py-1.5 rounded-md text-sm text-on-surface-variant hover:text-on-surface">Annuel</button>
+</div>
+</div>
+<div class="h-64 flex items-end justify-between gap-4 px-2">
+<!-- Bar Chart Implementation -->
+<div class="flex flex-col items-center gap-3 flex-1 group">
+<div class="w-full bg-primary/10 rounded-t-lg relative h-[40%] hover:bg-primary/20 transition-all cursor-pointer">
+<div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-lg chart-bar-grow" style="height: 60%"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-bold">JAN</span>
+</div>
+<div class="flex flex-col items-center gap-3 flex-1">
+<div class="w-full bg-primary/10 rounded-t-lg relative h-[60%]">
+<div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-lg chart-bar-grow" style="height: 75%"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-bold">FEB</span>
+</div>
+<div class="flex flex-col items-center gap-3 flex-1">
+<div class="w-full bg-primary/10 rounded-t-lg relative h-[50%]">
+<div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-lg chart-bar-grow" style="height: 40%"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-bold">MAR</span>
+</div>
+<div class="flex flex-col items-center gap-3 flex-1">
+<div class="w-full bg-primary/10 rounded-t-lg relative h-[80%]">
+<div class="absolute inset-x-0 bottom-0 bg-primary rounded-t-lg chart-bar-grow" style="height: 85%"></div>
+</div>
+<span class="text-[10px] text-primary font-bold">APR</span>
+</div>
+<div class="flex flex-col items-center gap-3 flex-1">
+<div class="w-full bg-primary/10 rounded-t-lg relative h-[65%]">
+<div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-lg chart-bar-grow" style="height: 55%"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-bold">MAY</span>
+</div>
+<div class="flex flex-col items-center gap-3 flex-1">
+<div class="w-full bg-primary/10 rounded-t-lg relative h-[90%]">
+<div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-lg chart-bar-grow" style="height: 80%"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-bold">JUN</span>
+</div>
+</div>
+</div>
+<!-- Distribution Pie -->
+<div class="col-span-4 glass-card soft-shadow p-8 rounded-3xl flex flex-col">
+<h4 class="font-title-md text-on-surface mb-6">Répartition des Dépenses</h4>
+<div class="flex-1 flex flex-col items-center justify-center">
+<div class="relative w-48 h-48">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<circle cx="18" cy="18" fill="none" r="16" stroke="#f1f3f4" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="16" stroke="#710fe5" stroke-dasharray="65, 100" stroke-linecap="round" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="16" stroke="#ae128a" stroke-dasharray="20, 100" stroke-dashoffset="-65" stroke-linecap="round" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="16" stroke="#894500" stroke-dasharray="15, 100" stroke-dashoffset="-85" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<p class="text-3xl font-bold text-on-surface">81%</p>
+<p class="text-[10px] uppercase font-label-md text-on-surface-variant">Utilisé</p>
+</div>
+</div>
+<div class="mt-8 w-full space-y-3">
+<div class="flex justify-between items-center text-sm">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-on-surface-variant">Forfaits Premium</span>
+</div>
+<span class="font-bold">65%</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="text-on-surface-variant">Cours à l'unité</span>
+</div>
+<span class="font-bold">20%</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<span class="text-on-surface-variant">Autres frais</span>
+</div>
+<span class="font-bold">15%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Transactions -->
+<div class="glass-card soft-shadow rounded-3xl overflow-hidden">
+<div class="p-8 flex justify-between items-center border-b border-surface-variant">
+<h4 class="font-title-md text-on-surface">Transactions Récentes</h4>
+<div class="flex gap-4">
+<div class="relative">
+<input class="pl-10 pr-4 py-2 bg-surface-container rounded-full border-none text-sm w-64 focus:ring-2 focus:ring-primary" placeholder="Rechercher..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+</div>
+<button class="px-4 py-2 bg-surface-container hover:bg-surface-container-high rounded-full flex items-center gap-2 text-sm transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                        Filtrer
+                    </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low text-on-surface-variant font-label-md text-xs uppercase tracking-widest">
+<tr>
+<th class="px-8 py-4">Date</th>
+<th class="px-6 py-4">Type</th>
+<th class="px-6 py-4">Description</th>
+<th class="px-6 py-4">Montant</th>
+<th class="px-6 py-4">Méthode</th>
+<th class="px-8 py-4">Statut</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-variant">
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-8 py-5">
+<p class="text-sm font-bold">14 Avr, 2024</p>
+<p class="text-xs text-on-surface-variant">10:24 AM</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-green-600 bg-green-50 p-1.5 rounded-lg">account_balance_wallet</span>
+                                    Recharge
+                                </div>
+</td>
+<td class="px-6 py-5 text-sm">Rechargement manuel du compte</td>
+<td class="px-6 py-5 font-bold text-green-600">+500,00 MAD</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Visa •••• 4242</td>
+<td class="px-8 py-5">
+<span class="bg-green-100 text-green-800 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wide">Complété</span>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-8 py-5">
+<p class="text-sm font-bold">12 Avr, 2024</p>
+<p class="text-xs text-on-surface-variant">15:45 PM</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-primary bg-primary/5 p-1.5 rounded-lg">shopping_basket</span>
+                                    Paiement
+                                </div>
+</td>
+<td class="px-6 py-5 text-sm">Forfait Standard - 20 Heures</td>
+<td class="px-6 py-5 font-bold text-on-surface">-2 200,00 MAD</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Solde Wallet</td>
+<td class="px-8 py-5">
+<span class="bg-green-100 text-green-800 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wide">Complété</span>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-8 py-5">
+<p class="text-sm font-bold">10 Avr, 2024</p>
+<p class="text-xs text-on-surface-variant">09:12 AM</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-amber-600 bg-amber-50 p-1.5 rounded-lg">history</span>
+                                    En attente
+                                </div>
+</td>
+<td class="px-6 py-5 text-sm">Rechargement via Virement</td>
+<td class="px-6 py-5 font-bold text-amber-600">+1 000,00 MAD</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Transfert Bancaire</td>
+<td class="px-8 py-5">
+<span class="bg-amber-100 text-amber-800 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wide">En attente</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-surface-container-low text-center">
+<button class="text-primary font-bold text-sm hover:underline">Voir toutes les transactions</button>
+</div>
+</div>
+<!-- Payment Methods & Packages Bento -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Payment Methods -->
+<div class="col-span-4 flex flex-col gap-gutter">
+<div class="glass-card soft-shadow p-8 rounded-3xl h-full">
+<h4 class="font-title-md text-on-surface mb-6">Méthodes de Paiement</h4>
+<div class="space-y-4">
+<div class="p-4 border-2 border-primary bg-primary/5 rounded-2xl flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-8 bg-black rounded flex items-center justify-center text-white text-[10px] font-bold">VISA</div>
+<div>
+<p class="font-bold text-sm">•••• •••• •••• 4242</p>
+<p class="text-xs text-on-surface-variant">Exp: 12/26</p>
+</div>
+</div>
+<span class="bg-primary text-white text-[10px] px-2 py-0.5 rounded font-bold">DÉFAUT</span>
+</div>
+<div class="p-4 border border-outline-variant hover:border-primary/50 transition-all cursor-pointer rounded-2xl flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-8 bg-red-600 rounded flex items-center justify-center text-white text-[10px] font-bold italic">mastercard</div>
+<div>
+<p class="font-bold text-sm">•••• •••• •••• 8812</p>
+<p class="text-xs text-on-surface-variant">Exp: 08/25</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary">more_vert</span>
+</div>
+<button class="w-full py-4 border-2 border-dashed border-outline-variant rounded-2xl text-on-surface-variant font-bold text-sm hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add</span>
+                            Ajouter une méthode
+                        </button>
+</div>
+</div>
+</div>
+<!-- Packages Bento -->
+<div class="col-span-8">
+<div class="grid grid-cols-3 gap-gutter h-full">
+<!-- Package 1 -->
+<div class="glass-card soft-shadow p-6 rounded-3xl flex flex-col items-center text-center group hover:-translate-y-2 transition-transform">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-6 group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-primary text-3xl">lightbulb</span>
+</div>
+<h5 class="font-title-md">Pack Light</h5>
+<p class="text-xs text-on-surface-variant mt-2">Idéal pour un soutien ponctuel</p>
+<div class="my-6">
+<span class="text-3xl font-extrabold text-on-surface">1 200</span>
+<span class="text-sm font-bold text-on-surface-variant">MAD</span>
+</div>
+<div class="flex flex-col gap-2 w-full mb-8">
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
+                                10 Heures de cours
+                            </div>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
+                                Tous niveaux
+                            </div>
+</div>
+<button class="w-full py-3 rounded-xl border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all mt-auto">Choisir</button>
+</div>
+<!-- Package 2 (Populaire) -->
+<div class="glass-card soft-shadow p-6 rounded-3xl flex flex-col items-center text-center border-2 border-primary relative group hover:-translate-y-2 transition-transform">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-widest">Populaire</div>
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-3xl">rocket_launch</span>
+</div>
+<h5 class="font-title-md">Pack Standard</h5>
+<p class="text-xs text-on-surface-variant mt-2">Le meilleur équilibre progrès/prix</p>
+<div class="my-6">
+<span class="text-3xl font-extrabold text-on-surface">2 200</span>
+<span class="text-sm font-bold text-on-surface-variant">MAD</span>
+</div>
+<div class="flex flex-col gap-2 w-full mb-8">
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
+                                20 Heures de cours
+                            </div>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
+                                Rapport personnalisé
+                            </div>
+</div>
+<button class="w-full py-3 rounded-xl premium-gradient text-white font-bold hover:opacity-90 shadow-lg shadow-primary/25 mt-auto">Acheter</button>
+</div>
+<!-- Package 3 -->
+<div class="glass-card soft-shadow p-6 rounded-3xl flex flex-col items-center text-center group hover:-translate-y-2 transition-transform overflow-hidden relative">
+<div class="absolute top-2 right-2 opacity-10 rotate-12">
+<span class="material-symbols-outlined !text-6xl">workspace_premium</span>
+</div>
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-6 group-hover:bg-secondary/10 transition-colors">
+<span class="material-symbols-outlined text-secondary text-3xl">workspace_premium</span>
+</div>
+<h5 class="font-title-md">Pack Premium</h5>
+<p class="text-xs text-on-surface-variant mt-2">Accompagnement intensif complet</p>
+<div class="my-6">
+<span class="text-3xl font-extrabold text-on-surface">4 000</span>
+<span class="text-sm font-bold text-on-surface-variant">MAD</span>
+</div>
+<div class="flex flex-col gap-2 w-full mb-8">
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
+                                40 Heures de cours
+                            </div>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant font-bold text-primary">
+<span class="material-symbols-outlined text-primary text-sm">stars</span>
+                                Meilleur rapport/h
+                            </div>
+</div>
+<button class="w-full py-3 rounded-xl border-2 border-secondary text-secondary font-bold hover:bg-secondary hover:text-white transition-all mt-auto">Découvrir</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Micro-interactions for chart animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const bars = document.querySelectorAll('.chart-bar-grow');
+            setTimeout(() => {
+                bars.forEach(bar => {
+                    const finalHeight = bar.style.height;
+                    bar.style.height = '0%';
+                    setTimeout(() => {
+                        bar.style.height = finalHeight;
+                    }, 200);
+                });
+            }, 500);
+        });
+
+        // Search highlight simulation
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('input', (e) => {
+            const rows = document.querySelectorAll('tbody tr');
+            const val = e.target.value.toLowerCase();
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(val) ? '' : 'none';
+            });
+        });
+    </script>
+</body></html>
