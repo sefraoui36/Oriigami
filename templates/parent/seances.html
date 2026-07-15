@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mes Séances | Origami Privé</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(233, 236, 239, 1);
+        }
+        .sidebar-active-gradient {
+            background: linear-gradient(90deg, rgba(139, 61, 255, 0.1) 0%, rgba(139, 61, 255, 0) 100%);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #8B3DFF 0%, #FE60CF 100%);
+        }
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        .animate-pulse-soft {
+            animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#270058",
+                        "inverse-primary": "#d4bbff",
+                        "on-secondary-fixed": "#3b002d",
+                        "on-primary-container": "#faf1ff",
+                        "primary-container": "#8b3dff",
+                        "outline-variant": "#cdc2d8",
+                        "secondary-fixed": "#ffd8ec",
+                        "secondary-container": "#fe60cf",
+                        "outline": "#7c7387",
+                        "tertiary-fixed": "#ffdcc5",
+                        "on-secondary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "background": "#f8f9fa",
+                        "on-secondary-container": "#680052",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary-fixed-dim": "#d4bbff",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb782",
+                        "surface-container-high": "#e7e8e9",
+                        "on-tertiary-container": "#fff2eb",
+                        "surface-container": "#edeeef",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#894500",
+                        "surface": "#f8f9fa",
+                        "surface-variant": "#e1e3e4",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "on-tertiary-fixed": "#301400",
+                        "on-secondary-fixed-variant": "#87006b",
+                        "inverse-surface": "#2e3132",
+                        "on-error": "#ffffff",
+                        "primary": "#710fe5",
+                        "on-surface-variant": "#4b4456",
+                        "surface-dim": "#d9dadb",
+                        "tertiary-container": "#ad5900",
+                        "on-background": "#191c1d",
+                        "surface-container-low": "#f3f4f5",
+                        "on-primary-fixed-variant": "#5d00c2",
+                        "surface-tint": "#7921ed",
+                        "secondary": "#ae128a",
+                        "primary-fixed": "#ebdcff",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#ffaede",
+                        "on-tertiary-fixed-variant": "#703800",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "container-padding": "32px",
+                        "gutter": "24px",
+                        "section-margin": "48px",
+                        "card-gap": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "title-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "body-sm": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background font-body-sm text-on-surface selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- Fixed Side Navigation -->
+<aside class="w-[280px] h-screen fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant flex flex-col py-base z-50">
+<div class="px-6 mb-8 mt-4">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">Origami Privé</h1>
+<p class="text-on-surface-variant text-xs font-medium tracking-wide uppercase">Education d'Excellence</p>
+</div>
+<nav class="flex-1 px-3 space-y-1 overflow-y-auto no-scrollbar">
+<!-- Nav Items generated from JSON Logic -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">person</span>
+<span class="font-medium">Mon profil</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">child_care</span>
+<span class="font-medium">Mes enfants</span>
+</a>
+<!-- Active State: Mes séances -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary-container/10 text-primary border-l-4 border-primary font-semibold sidebar-active-gradient" href="#">
+<span class="material-symbols-outlined">event_available</span>
+<span>Mes séances</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">school</span>
+<span class="font-medium">Mes enseignants</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">payments</span>
+<span class="font-medium">Paiements</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">chat</span>
+<span class="font-medium">Messages</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">settings</span>
+<span class="font-medium">Paramètres</span>
+</a>
+</nav>
+<div class="p-4 mt-auto">
+<div class="bg-primary/5 rounded-2xl p-4 border border-primary/10">
+<p class="text-xs font-bold text-primary uppercase mb-2">Besoin d'aide ?</p>
+<p class="text-xs text-on-surface-variant leading-relaxed mb-3">Notre équipe est là pour vous accompagner 24/7.</p>
+<button class="w-full bg-primary text-white py-2 rounded-lg text-xs font-bold hover:shadow-lg hover:shadow-primary/20 transition-all">Contacter Support</button>
+</div>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-gutter z-40">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container rounded-full border-none focus:ring-2 focus:ring-primary/20 text-body-sm outline-none" placeholder="Rechercher une séance, un enseignant..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-all relative">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full border-2 border-surface"></span>
+</button>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">help_outline</span>
+</button>
+</div>
+<div class="h-8 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right">
+<p class="text-xs font-bold text-on-surface leading-none">M. Jean Dupont</p>
+<p class="text-[10px] text-on-surface-variant">Parent Premium</p>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 group-hover:border-primary transition-all overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A portrait of a sophisticated, middle-aged professional man with a warm smile, wearing a clean white shirt and dark blazer. The lighting is soft and studio-quality, conveying trust and reliability. The background is a clean, modern off-white with subtle depth and minimal shadows, matching a premium educational brand aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7hEU4jffEdHinhTYVfWKPXPEsFh-kz5y7Uzz3wAv0hEHPe2E5mbzB4X0jTv54OKNpXlViMcfGSr90PgOP-a0J_yX3xPqpMYnMBkive8jd1VwbXy2m2eNpXdfxVYOVry6nL4IhLiG1iLyF1_9KVeoCku6zcuc5jm1o8ITKgtRSZPy5z6oPTU9Po8Yldu4G4h5_AZZvawBVWSa4AYz-AWE2Ex-7IlEL1FgOf0DHW2wrfcaR0G24ca-Tuc4cOLUOuCLoLljyvRW1g1qe"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[280px] pt-16 min-h-screen">
+<div class="max-w-[1440px] mx-auto p-container-padding">
+<!-- Page Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Mes Séances</h2>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/5 text-primary rounded-full text-xs font-bold border border-primary/10 animate-pulse-soft">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                            Généré par IA
+                        </span>
+</div>
+<p class="text-on-surface-variant font-medium">8 séances prévues cette semaine pour vos 3 enfants.</p>
+</div>
+<button class="primary-gradient text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all" onclick="toggleModal(true)">
+<span class="material-symbols-outlined">add_circle</span>
+                    Planifier une séance
+                </button>
+</div>
+<!-- Bento Layout Content -->
+<div class="grid grid-cols-12 gap-card-gap">
+<!-- Horizontal Weekly Overview (Left 8 cols) -->
+<div class="col-span-12 lg:col-span-8 space-y-card-gap">
+<div class="glass-card rounded-2xl p-6 shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-sm">Aujourd'hui</button>
+<button class="px-4 py-2 text-on-surface-variant hover:bg-surface-container rounded-lg text-sm font-semibold transition-all">Cette semaine</button>
+<button class="px-4 py-2 text-on-surface-variant hover:bg-surface-container rounded-lg text-sm font-semibold transition-all">Le mois prochain</button>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<span class="font-bold text-sm">Octobre 2023</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex justify-between gap-2 overflow-x-auto no-scrollbar pb-2">
+<!-- Week Days -->
+<div class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-surface-container transition-all cursor-pointer">
+<span class="text-[10px] font-bold uppercase text-on-surface-variant">Lun</span>
+<span class="w-10 h-10 flex items-center justify-center font-bold rounded-full">23</span>
+<div class="flex gap-1"><div class="w-1.5 h-1.5 bg-primary rounded-full"></div><div class="w-1.5 h-1.5 bg-secondary rounded-full"></div></div>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl bg-primary text-white shadow-lg shadow-primary/30 cursor-pointer">
+<span class="text-[10px] font-bold uppercase opacity-80">Mar</span>
+<span class="w-10 h-10 flex items-center justify-center font-bold">24</span>
+<div class="flex gap-1"><div class="w-1.5 h-1.5 bg-white rounded-full"></div></div>
+</div>
+<!-- More days... -->
+<div class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-surface-container transition-all cursor-pointer">
+<span class="text-[10px] font-bold uppercase text-on-surface-variant">Mer</span>
+<span class="w-10 h-10 flex items-center justify-center font-bold">25</span>
+<div class="flex gap-1"><div class="w-1.5 h-1.5 bg-primary rounded-full"></div></div>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-surface-container transition-all cursor-pointer">
+<span class="text-[10px] font-bold uppercase text-on-surface-variant">Jeu</span>
+<span class="w-10 h-10 flex items-center justify-center font-bold">26</span>
+<div class="flex gap-1"><div class="w-1.5 h-1.5 bg-primary rounded-full"></div></div>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-surface-container transition-all cursor-pointer">
+<span class="text-[10px] font-bold uppercase text-on-surface-variant">Ven</span>
+<span class="w-10 h-10 flex items-center justify-center font-bold">27</span>
+<div class="flex gap-1"><div class="w-1.5 h-1.5 bg-primary rounded-full"></div></div>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-surface-container transition-all cursor-pointer opacity-50">
+<span class="text-[10px] font-bold uppercase text-on-surface-variant">Sam</span>
+<span class="w-10 h-10 flex items-center justify-center font-bold">28</span>
+<div class="h-1.5"></div>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-surface-container transition-all cursor-pointer opacity-50">
+<span class="text-[10px] font-bold uppercase text-on-surface-variant">Dim</span>
+<span class="w-10 h-10 flex items-center justify-center font-bold">29</span>
+<div class="h-1.5"></div>
+</div>
+</div>
+</div>
+<!-- Filters & Search Bar -->
+<div class="flex flex-col md:flex-row gap-4 items-center">
+<div class="flex-1 w-full relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">filter_list</span>
+<select class="w-full pl-10 pr-4 py-3 bg-white rounded-xl border border-outline-variant focus:ring-2 focus:ring-primary/20 text-sm font-semibold appearance-none outline-none">
+<option>Tous les enfants</option>
+<option>Ahmed</option>
+<option>Sara</option>
+<option>Lucas</option>
+</select>
+</div>
+<div class="flex gap-2 w-full md:w-auto">
+<button class="flex-1 md:flex-none px-4 py-3 bg-white border border-outline-variant rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-[18px]">school</span>
+                                Matières
+                            </button>
+<button class="flex-1 md:flex-none px-4 py-3 bg-white border border-outline-variant rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                                Date
+                            </button>
+</div>
+</div>
+<!-- Sessions Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Ahmed: Maths (Confirmé) -->
+<div class="glass-card rounded-2xl p-5 border border-outline-variant flex flex-col gap-4 group hover:shadow-xl hover:shadow-primary/5 transition-all">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined">calculate</span>
+</div>
+<div>
+<p class="font-bold text-sm">Mathématiques</p>
+<p class="text-xs text-on-surface-variant font-medium">Ahmed • 17:00 - 18:30</p>
+</div>
+</div>
+<span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-extrabold uppercase tracking-tight">Confirmé</span>
+</div>
+<div class="flex items-center gap-4 py-2 border-y border-outline-variant/30">
+<div class="flex items-center gap-2 flex-1">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male teacher, Karim Benani, in his late 30s. He has a friendly and academic look, wearing glasses and a light blue polo shirt. The lighting is bright and professional, suggesting an online tutoring session environment. High-end modern photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdb6-nEo8lkkZlJef2LZ-T8lqsPxJT6jeg0eOKqVtECsAJaLdNebAfl-MwoX_rcr_HRPuE2XuI-kIw2edzkvxlQ7agHwyphqrsCwX0s1EA8Ehs73HRZwtTxoN8zyKAZ-LTpaTqiuNkPO-Sd5KIn97x_WELyAge2kkKj2pa9WUmVK_5_Xa2Aj4pvCOwVdqj3YlBhJYs49n7W0aWnMNBIvc0-azyG6fe8hpBXz52VdrDUpdGerXXxAWlxtMgE1XE8vLDJwhxsc4VxoH5"/>
+</div>
+<div>
+<p class="text-[11px] font-bold">Karim Benani</p>
+<p class="text-[10px] text-on-surface-variant">Expert Maths</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-bold text-on-surface-variant flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[14px]">videocam</span> En visio
+                                    </p>
+<p class="text-[10px] text-on-surface-variant font-medium">Lien prêt</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-2 rounded-lg bg-primary text-white text-[11px] font-bold hover:brightness-110 transition-all">Rejoindre</button>
+<button class="px-3 py-2 rounded-lg bg-surface-container text-on-surface-variant text-[11px] font-bold hover:bg-surface-container-high transition-all">Modifier</button>
+</div>
+</div>
+<!-- Sara: English (Pending) -->
+<div class="glass-card rounded-2xl p-5 border border-outline-variant flex flex-col gap-4 group hover:shadow-xl hover:shadow-primary/5 transition-all">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-secondary/10 text-secondary rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined">translate</span>
+</div>
+<div>
+<p class="font-bold text-sm">Anglais</p>
+<p class="text-xs text-on-surface-variant font-medium">Sara • 18:30 - 19:30</p>
+</div>
+</div>
+<span class="px-2.5 py-1 bg-orange-100 text-orange-700 rounded-full text-[10px] font-extrabold uppercase tracking-tight">En attente</span>
+</div>
+<div class="flex items-center gap-4 py-2 border-y border-outline-variant/30">
+<div class="flex items-center gap-2 flex-1">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of Sophie Lemaire, an elegant and welcoming female teacher in her 20s. She is smiling confidently, wearing a light-colored sweater. The background is a clean, organized office with soft bokeh lighting. Professional photography style, bright and airy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBS8UxdKIBeK7ieAB9Ud1ZKjHnsyTxEPJ-B7PpWU3fVNqnNw4vtH0yD8Ti3ovK73DREBhTKRMqw8F67JrD6NOX8ylNIKM_p2ROpa4O8eWocLX5xreIpekzuLqmhJVomfqv9KaPWN3uDoPFdyKae5qhWn-IGL6dbWYGMgM4Ff5_9ql9x4D6qCIsG60rqCDE-5bzklAP7Rkc3O46GFGTTrDN1FNwMrqemmfiNyZkaGsQfPG77x5DeiQmZWiqOGiqj--WaFrIo7W6ZYb0"/>
+</div>
+<div>
+<p class="text-[11px] font-bold">Sophie Lemaire</p>
+<p class="text-[10px] text-on-surface-variant">Native Speaker</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-bold text-on-surface-variant flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Domicile
+                                    </p>
+<p class="text-[10px] text-on-surface-variant font-medium">Paris 16e</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-2 rounded-lg bg-surface-container-high text-on-surface-variant text-[11px] font-bold cursor-not-allowed">Attendre confirmation</button>
+<button class="px-3 py-2 rounded-lg bg-surface-container text-on-surface-variant text-[11px] font-bold hover:bg-error/10 hover:text-error transition-all">Annuler</button>
+</div>
+</div>
+<!-- Ahmed: Physics (IA Recommended) -->
+<div class="glass-card rounded-2xl p-5 border-2 border-primary/20 flex flex-col gap-4 group hover:shadow-xl hover:shadow-primary/10 transition-all bg-primary-container/5 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-12 -mt-12"></div>
+<div class="flex justify-between items-start relative z-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined">biotech</span>
+</div>
+<div>
+<p class="font-bold text-sm">Physique-Chimie</p>
+<p class="text-xs text-on-surface-variant font-medium">Ahmed • Demain 17:30</p>
+</div>
+</div>
+<span class="px-2.5 py-1 bg-primary text-white rounded-full text-[10px] font-extrabold uppercase tracking-tight flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                                    Recommandé
+                                </span>
+</div>
+<p class="text-[11px] text-primary font-medium bg-primary/5 p-2 rounded-lg relative z-10">
+<span class="font-bold">IA Origami:</span> Basé sur les examens de la semaine prochaine, cette séance est cruciale.
+                            </p>
+<div class="flex gap-2 relative z-10">
+<button class="flex-1 py-2 rounded-lg bg-primary text-white text-[11px] font-bold shadow-md shadow-primary/20">Confirmer Créneau</button>
+<button class="px-3 py-2 rounded-lg bg-white border border-outline-variant text-on-surface-variant text-[11px] font-bold">Autre date</button>
+</div>
+</div>
+<!-- Lucas: French (Confirmé) -->
+<div class="glass-card rounded-2xl p-5 border border-outline-variant flex flex-col gap-4 group hover:shadow-xl hover:shadow-primary/5 transition-all">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-tertiary/10 text-tertiary rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined">menu_book</span>
+</div>
+<div>
+<p class="font-bold text-sm">Français</p>
+<p class="text-xs text-on-surface-variant font-medium">Lucas • Mercredi 16:00</p>
+</div>
+</div>
+<span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-extrabold uppercase tracking-tight">Confirmé</span>
+</div>
+<div class="flex items-center gap-4 py-2 border-y border-outline-variant/30">
+<div class="flex items-center gap-2 flex-1">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of Paul Martin, a senior academic male teacher with a grey beard and a friendly, wise expression. He is wearing a dark brown corduroy jacket. The background shows a library-style setting with blurred books. High-end professional headshot photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrz5--OUqXql--kKKOSPT_HP2vHOH6tU5PVAnQsbogLbCd7ZV27Ez_Iakqh_193gW6bYgiN56OcDD23sPinh9vqRlovG6Q7RWurhjCpk8hCf_8-dOnpNU8X72sVgM8uQm0INNreaGMiTbi43_6X-6NKZAVHvJL3krye_XMTef2q-aOqYlBWa_dGg9gyCScLFNkwDBgZASWRasgmbcr8onhZo26SYBcmi8Yil3ypa1UOMCw0R_dDbIKQW30KHjcac54JiYCnKUnJg0B"/>
+</div>
+<div>
+<p class="text-[11px] font-bold">Paul Martin</p>
+<p class="text-[10px] text-on-surface-variant">Agrégé de Lettres</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-bold text-on-surface-variant flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[14px]">videocam</span> En visio
+                                    </p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-2 rounded-lg bg-surface-container-high text-on-surface-variant text-[11px] font-bold">Détails de la séance</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar (4 cols) -->
+<div class="col-span-12 lg:col-span-4 space-y-card-gap">
+<!-- Smart Scheduling Optimization -->
+<div class="primary-gradient rounded-2xl p-6 text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
+<div class="absolute -right-4 -bottom-4 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+<div class="relative z-10">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-sm flex items-center gap-2">
+<span class="material-symbols-outlined">psychology</span>
+                                    Optimisation IA
+                                </h3>
+<span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold">Score: 92%</span>
+</div>
+<p class="text-xs text-white/90 leading-relaxed mb-6">
+                                Votre planning actuel est optimisé. Cependant, 2 créneaux pourraient être regroupés pour économiser du temps de transport.
+                            </p>
+<button class="w-full bg-white text-primary py-3 rounded-xl font-bold text-xs hover:bg-opacity-90 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+                                Optimiser mon planning
+                            </button>
+</div>
+</div>
+<!-- Daily Timeline View -->
+<div class="glass-card rounded-2xl p-6 shadow-sm flex flex-col h-full">
+<h3 class="font-bold text-sm mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">schedule</span>
+                            Fil de la journée
+                        </h3>
+<div class="relative border-l-2 border-surface-container pl-6 space-y-8">
+<!-- Timeline items -->
+<div class="relative">
+<div class="absolute -left-[31px] top-0 w-3.5 h-3.5 bg-primary rounded-full border-2 border-white shadow-sm ring-4 ring-primary/10"></div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold text-on-surface-variant">17:00 • 1h30</span>
+<p class="text-sm font-bold">Mathématiques</p>
+<p class="text-xs text-on-surface-variant font-medium">Ahmed avec Karim Benani</p>
+</div>
+</div>
+<div class="relative">
+<div class="absolute -left-[31px] top-0 w-3.5 h-3.5 bg-secondary rounded-full border-2 border-white shadow-sm ring-4 ring-secondary/10"></div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold text-on-surface-variant">18:30 • 1h00</span>
+<p class="text-sm font-bold">Anglais</p>
+<p class="text-xs text-on-surface-variant font-medium">Sara avec Sophie Lemaire</p>
+</div>
+</div>
+<div class="relative opacity-40">
+<div class="absolute -left-[31px] top-0 w-3.5 h-3.5 bg-outline-variant rounded-full border-2 border-white"></div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold text-on-surface-variant">Terminé</span>
+<p class="text-sm font-bold">Français (Hier)</p>
+<p class="text-xs text-on-surface-variant font-medium">Lucas • Rapport disponible</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- History Table (Full width) -->
+<div class="col-span-12">
+<div class="glass-card rounded-2xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h3 class="font-bold text-sm">Historique des séances</h3>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-surface-container rounded-lg transition-all text-on-surface-variant flex items-center gap-2 text-xs font-bold">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span> PDF
+                                </button>
+<button class="p-2 hover:bg-surface-container rounded-lg transition-all text-on-surface-variant flex items-center gap-2 text-xs font-bold">
+<span class="material-symbols-outlined text-[18px]">calendar_add_on</span> ICS
+                                </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low/50">
+<tr class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">
+<th class="px-6 py-4">Enfant / Matière</th>
+<th class="px-6 py-4">Enseignant</th>
+<th class="px-6 py-4">Date & Heure</th>
+<th class="px-6 py-4">Durée</th>
+<th class="px-6 py-4">Statut</th>
+<th class="px-6 py-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<tr class="hover:bg-surface-container-low transition-all">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center text-sm font-bold">F</div>
+<div>
+<p class="text-xs font-bold">Français</p>
+<p class="text-[10px] text-on-surface-variant">Sara</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-xs font-medium">Paul Martin</td>
+<td class="px-6 py-4 text-xs font-medium">18 Oct. • 14:00</td>
+<td class="px-6 py-4 text-xs font-medium">1h30</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">Complétée</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary text-[11px] font-bold hover:underline">Voir rapport</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-all">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">M</div>
+<div>
+<p class="text-xs font-bold">Mathématiques</p>
+<p class="text-[10px] text-on-surface-variant">Lucas</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-xs font-medium">Sarah Bernard</td>
+<td class="px-6 py-4 text-xs font-medium">16 Oct. • 16:30</td>
+<td class="px-6 py-4 text-xs font-medium">2h00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">Complétée</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary text-[11px] font-bold hover:underline">Voir rapport</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Modal: Plan Session (5-Step Flow) -->
+<div class="fixed inset-0 z-[100] hidden" id="booking-modal">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="toggleModal(false)"></div>
+<!-- Modal Content -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[921px]">
+<!-- Modal Header -->
+<div class="px-8 py-6 border-b border-outline-variant flex justify-between items-center">
+<div>
+<h2 class="font-bold text-xl">Planifier une séance</h2>
+<p class="text-xs text-on-surface-variant">Suivez les 5 étapes pour une planification optimale</p>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all" onclick="toggleModal(false)">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Steps Progress -->
+<div class="px-8 py-4 bg-surface-container-low flex justify-between gap-2">
+<div class="flex-1 h-1.5 rounded-full bg-primary"></div>
+<div class="flex-1 h-1.5 rounded-full bg-outline-variant"></div>
+<div class="flex-1 h-1.5 rounded-full bg-outline-variant"></div>
+<div class="flex-1 h-1.5 rounded-full bg-outline-variant"></div>
+<div class="flex-1 h-1.5 rounded-full bg-outline-variant"></div>
+</div>
+<!-- Modal Body (Dynamic Steps) -->
+<div class="p-8 overflow-y-auto" id="modal-content">
+<!-- Step 1 Content (Default) -->
+<div class="space-y-6">
+<h3 class="font-bold text-lg">Étape 1 : Pour quel enfant ?</h3>
+<div class="grid grid-cols-3 gap-4">
+<button class="flex flex-col items-center gap-3 p-4 rounded-2xl border-2 border-primary bg-primary/5 transition-all">
+<div class="w-16 h-16 rounded-full overflow-hidden border-4 border-white shadow-md">
+<img class="w-full h-full object-cover" data-alt="Portrait of Ahmed, a 12-year-old boy with a bright, curious expression. He is wearing a school uniform. The photo is clean, with soft natural lighting, conveying a positive academic spirit." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArrqw6rEE_xPVT4amCyJsufdUWzLcZVo_a0VOPgbImGHul8r1h-SfWuNvzy4pnIYojb9s9RKLuNC20XcvDpnDAINfghk3gN_trVpGNqZPgNVYdE0UtG2fSPNFFA-29W8sYVt-awHczvOyQbZZv6jYLw7Udd4p0HE4mGUpqYqvt_DI5mimf7wKx7AwG-eGs14iq1k1MRWqAAReJyAL8np9jzaAxCBwOnsDWRAJybI9Ez8r1V0JRYGwAaCFGef7F68TJJcCjg4et8Zgi"/>
+</div>
+<span class="font-bold text-sm text-primary">Ahmed</span>
+</button>
+<button class="flex flex-col items-center gap-3 p-4 rounded-2xl border-2 border-outline-variant hover:border-primary/50 transition-all opacity-60">
+<div class="w-16 h-16 rounded-full overflow-hidden border-4 border-white shadow-md">
+<img class="w-full h-full object-cover" data-alt="Portrait of Sara, a 9-year-old girl with a joyful smile and braided hair. She is wearing a colorful casual top. The background is slightly blurred with warm sunlight. Professional children photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwPdT_hHsDr63UzJbRbkAfqRudMMsyBUWYbhMb6xhVhOm_ilW6oJPn19Dm_HpdOKywqtlZnJn2z7-6CghO-hfGJazyjHWUESGNXqYwQj943E5UlLAxU5q_U8_RUxKS_Ufib-6hrdnAyaRsPPcLqwGhorgbVgjSseXwmov7tRMtRAnZMf9PeaKJU0ZdJdc1d2K8LLOkL6duiZhkr6p9QETEmNivcC4i9_slmomzvRCzhkTKoO3fr0ruYAVw_Zz7hmEbQorZgsTE_KwW"/>
+</div>
+<span class="font-bold text-sm">Sara</span>
+</button>
+<button class="flex flex-col items-center gap-3 p-4 rounded-2xl border-2 border-outline-variant hover:border-primary/50 transition-all opacity-60">
+<div class="w-16 h-16 rounded-full overflow-hidden border-4 border-white shadow-md">
+<img class="w-full h-full object-cover" data-alt="Portrait of Lucas, a 7-year-old boy with messy hair and an energetic expression. He has a playful look, wearing a green t-shirt. The background is light and airy. High-quality commercial kid portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeIY0PCDctrlQVIFFSojlZrrh3ps79EMEd37zCDKNc6_YK6hIGatHwVBW1MRECWbsvUdNB-KtKTDMUj3wCUpz5-fdqlRtRIjEgaPvmlYXmsTaZFj3cNPj4DIawbxf3jzarhfPk2dmCz2CGKXkMJ7cIen3LH1HNspJwnF-h5n7QSdDbbVWQfu6QEpwUFytNAJx1ZLoR7tmbtl6cP42-iTuaZQnvNj0kb2ADgGXeSoKBBqPAzb5Tkztelucuw0N4fQVjCfZbt3QOTh1_"/>
+</div>
+<span class="font-bold text-sm">Lucas</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-8 py-6 border-t border-outline-variant flex justify-between items-center bg-surface-container-low">
+<button class="px-6 py-2.5 rounded-xl font-bold text-on-surface-variant hover:bg-surface-container transition-all">Précédent</button>
+<button class="px-8 py-2.5 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all">Suivant</button>
+</div>
+</div>
+</div>
+<script>
+        function toggleModal(show) {
+            const modal = document.getElementById('booking-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Add some interactive hover effects to cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Simple Tab Logic for Month/Week
+        const tabButtons = document.querySelectorAll('.weekly-tab-btn');
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabButtons.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-white', 'shadow-sm');
+                    b.classList.add('text-on-surface-variant');
+                });
+                btn.classList.add('bg-primary', 'text-white', 'shadow-sm');
+                btn.classList.remove('text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>
