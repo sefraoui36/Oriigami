@@ -1,5 +1,5 @@
 from django.db import models
-from authentication.models import Utilisateur
+from utilisateurs.models import Utilisateur
 
 class ZoneDeplacement(models.Model):
     id_zone_Deplacement = models.AutoField(primary_key=True)

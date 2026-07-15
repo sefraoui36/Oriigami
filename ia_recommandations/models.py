@@ -1,5 +1,5 @@
 from django.db import models
-from authentication.models import Utilisateur
+from utilisateurs.models import Utilisateur
 
 class IaRecommendations(models.Model):
     id_IA_recommendation = models.AutoField(primary_key=True)

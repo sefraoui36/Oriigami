@@ -1,0 +1,124 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Oriigami - Étudiant{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="flex min-h-screen bg-[#f8f9fa]">
+        
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="sidebar">
+            <!-- Logo -->
+            <div class="sidebar-logo">
+                <span class="text-2xl font-bold" style="background: linear-gradient(135deg, #8B3DFF, #E54BB9); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Oriigami
+                </span>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="space-y-1">
+                <a href="{% url 'dashboard_etudiant' %}" class="sidebar-link {% if active == 'dashboard' %}active{% endif %}">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'profil_etudiant' %}" class="sidebar-link {% if active == 'profil' %}active{% endif %}">
+                    <i class="fas fa-user"></i>
+                    <span>Mon Profil</span>
+                </a>
+                <a href="{% url 'enseignants_etudiant' %}" class="sidebar-link {% if active == 'enseignants' %}active{% endif %}">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Mes Enseignants</span>
+                </a>
+                <a href="{% url 'seances_etudiant' %}" class="sidebar-link {% if active == 'seances' %}active{% endif %}">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Mes Séances</span>
+                </a>
+                <a href="{% url 'forfait_etudiant' %}" class="sidebar-link {% if active == 'forfait' %}active{% endif %}">
+                    <i class="fas fa-tag"></i>
+                    <span>Mon Forfait</span>
+                </a>
+                <a href="{% url 'portefeuille_etudiant' %}" class="sidebar-link {% if active == 'portefeuille' %}active{% endif %}">
+                    <i class="fas fa-wallet"></i>
+                    <span>Mon Portefeuille</span>
+                </a>
+                <a href="{% url 'progression_etudiant' %}" class="sidebar-link {% if active == 'progression' %}active{% endif %}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Ma Progression</span>
+                </a>
+                <a href="{% url 'avis_etudiant' %}" class="sidebar-link {% if active == 'avis' %}active{% endif %}">
+                    <i class="fas fa-star"></i>
+                    <span>Avis Enseignants</span>
+                </a>
+                <a href="{% url 'notifications_etudiant' %}" class="sidebar-link {% if active == 'notifications' %}active{% endif %}">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                    {% if notif_non_lues > 0 %}
+                    <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">{{ notif_non_lues }}</span>
+                    {% endif %}
+                </a>
+                <a href="{% url 'calendrier_etudiant' %}" class="sidebar-link {% if active == 'calendrier' %}active{% endif %}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Calendrier</span>
+                </a>
+                <a href="{% url 'parametres_etudiant' %}" class="sidebar-link {% if active == 'parametres' %}active{% endif %}">
+                    <i class="fas fa-cog"></i>
+                    <span>Paramètres</span>
+                </a>
+            </nav>
+            
+            <!-- Footer -->
+            <div class="mt-auto pt-4 border-t border-gray-200">
+                <a href="{% url 'logout' %}" class="sidebar-link text-red-500 hover:bg-red-50">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Déconnexion</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- ===== MAIN CONTENT ===== -->
+        <div class="flex-1 ml-[280px]">
+            
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 px-8 py-4 sticky top-0 z-10">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl font-bold text-gray-800">{% block page_title %}Dashboard{% endblock %}</h1>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm text-gray-600">{{ user.username }}</span>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-[#8B3DFF] to-[#E54BB9] text-white flex items-center justify-center font-bold">
+                            {{ user.username|first|upper }}
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <main class="p-8">
+                {% block content %}{% endblock %}
+            </main>
+            
+        </div>
+    </div>
+    
+    {% load static %}
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

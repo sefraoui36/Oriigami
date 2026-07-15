@@ -1,5 +1,5 @@
 from django.db import models
-from authentication.models import Utilisateur
+from utilisateurs.models import Utilisateur
 
 class Rh(models.Model):
     id_rh = models.AutoField(primary_key=True)

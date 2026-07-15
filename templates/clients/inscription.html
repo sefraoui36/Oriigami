@@ -1,0 +1,401 @@
+<!-- templates/clients/inscription.html -->
+<!DOCTYPE html>
+<html class="light" lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Origami Privé - Inscription</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#4b4456",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb782",
+                        "surface-dim": "#d9dadb",
+                        "inverse-surface": "#2e3132",
+                        "primary-container": "#8b3dff",
+                        "background": "#f8f9fa",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#270058",
+                        "surface-container": "#edeeef",
+                        "tertiary-container": "#ad5900",
+                        "on-surface": "#191c1d",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#cdc2d8",
+                        "surface-tint": "#7921ed",
+                        "on-tertiary-fixed": "#301400",
+                        "on-primary-fixed-variant": "#5d00c2",
+                        "secondary": "#ae128a",
+                        "secondary-fixed-dim": "#ffaede",
+                        "on-secondary-fixed-variant": "#87006b",
+                        "tertiary": "#894500",
+                        "surface-container-high": "#e7e8e9",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#3b002d",
+                        "surface-bright": "#f8f9fa",
+                        "primary-fixed": "#ebdcff",
+                        "on-primary-container": "#faf1ff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#fe60cf",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#d4bbff",
+                        "surface-container-low": "#f3f4f5",
+                        "outline": "#7c7387",
+                        "surface": "#f8f9fa",
+                        "on-secondary-container": "#680052",
+                        "tertiary-fixed": "#ffdcc5",
+                        "inverse-primary": "#d4bbff",
+                        "on-tertiary-fixed-variant": "#703800",
+                        "primary": "#710fe5",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e1e3e4",
+                        "surface-container-highest": "#e1e3e4",
+                        "secondary-fixed": "#ffd8ec",
+                        "on-tertiary-container": "#fff2eb",
+                        "on-background": "#191c1d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "32px",
+                        "card-gap": "24px",
+                        "gutter": "24px",
+                        "base": "8px",
+                        "section-margin": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "title-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .gradient-button {
+            background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .gradient-button:hover:not(:disabled) {
+            box-shadow: 0px 10px 30px rgba(113, 15, 229, 0.25);
+            transform: translateY(-2px);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        }
+        .role-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .role-card.active {
+            border-color: #710fe5;
+            background-color: white;
+            box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+            transform: scale(1.02);
+        }
+        .role-card.active .icon-box {
+            background: #710fe5;
+            color: white;
+            transform: scale(1.1);
+        }
+        .input-group:focus-within label {
+            color: #710fe5;
+        }
+        .step-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 9999px;
+            background: #e1e3e4;
+            transition: all 0.3s ease;
+        }
+        .step-indicator.active {
+            width: 24px;
+            background: #710fe5;
+        }
+        .bg-soft-glow {
+            background: radial-gradient(circle at 50% 50%, rgba(139, 61, 255, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+        }
+        .bg-primary-gradient {
+            background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+        }
+        .form-input-focus:focus {
+            box-shadow: 0 0 0 4px rgba(113, 15, 229, 0.1);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(233, 236, 239, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-background font-body-lg text-on-surface min-h-screen selection:bg-primary/20">
+
+<!-- ===== BACKGROUND ANIMÉ ===== -->
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+<div class="absolute -top-1/4 -right-1/4 w-[1000px] h-[1000px] rounded-full bg-primary/5 blur-[120px] animate-pulse"></div>
+<div class="absolute -bottom-1/4 -left-1/4 w-[800px] h-[800px] rounded-full bg-secondary/5 blur-[100px] animate-pulse" style="animation-delay: 2s;"></div>
+</div>
+
+<main class="flex flex-col items-center justify-center min-h-screen px-container-padding py-12">
+
+<!-- ===== LOGO & HEADER ===== -->
+<div class="text-center mb-8 animate-fade-in">
+<h1 class="font-display-lg text-display-lg text-primary mb-2">Origami Privé</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-md mx-auto">Votre passerelle vers une éducation d'excellence commence ici.</p>
+</div>
+
+<!-- ===== MULTI-STEP REGISTRATION CARD ===== -->
+<div class="w-full max-w-2xl glass-card rounded-2xl p-8 lg:p-12 transition-all duration-500 overflow-hidden">
+
+    <!-- Step Progress Indicator -->
+    <div class="flex justify-center gap-2 mb-10">
+        <div class="step-indicator active" id="dot-1"></div>
+        <div class="step-indicator" id="dot-2"></div>
+    </div>
+
+    <!-- ===== STEP 1: ROLE SELECTION ===== -->
+    <div class="space-y-8 animate-fade-in" id="step-1">
+        <div class="text-center mb-10">
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Quel est votre profil ?</h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">Personnalisez votre expérience selon vos besoins</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Parent -->
+            <div class="role-card group p-8 rounded-xl border-2 border-outline-variant/30 bg-surface-container-lowest flex flex-col items-center text-center space-y-5" id="role-parent" onclick="selectRole('parent')">
+                <div class="icon-box w-16 h-16 rounded-2xl bg-surface-container-high flex items-center justify-center transition-all duration-300">
+                    <span class="material-symbols-outlined text-[36px]">family_restroom</span>
+                </div>
+                <div>
+                    <h3 class="font-title-md text-title-md mb-2 group-hover:text-primary transition-colors">Je suis un Parent</h3>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Suivez l'évolution académique et gérez le planning de vos enfants.</p>
+                </div>
+            </div>
+            <!-- Student -->
+            <div class="role-card group p-8 rounded-xl border-2 border-outline-variant/30 bg-surface-container-lowest flex flex-col items-center text-center space-y-5" id="role-student" onclick="selectRole('student')">
+                <div class="icon-box w-16 h-16 rounded-2xl bg-surface-container-high flex items-center justify-center transition-all duration-300">
+                    <span class="material-symbols-outlined text-[36px]">school</span>
+                </div>
+                <div>
+                    <h3 class="font-title-md text-title-md mb-2 group-hover:text-primary transition-colors">Je suis un Étudiant</h3>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Accédez à vos cours, exercices et interagissez avec vos tuteurs.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center pt-6">
+            <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 opacity-40 cursor-not-allowed transition-all duration-300" disabled id="next-btn" onclick="nextStep()">
+                Continuer
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== STEP 2: FORM DETAILS ===== -->
+    <form class="hidden space-y-8 animate-fade-in" id="step-2" onsubmit="handleSubmit(event)">
+        <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <span>Retour au profil</span>
+        </button>
+
+        <div>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Finalisez votre inscription</h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Veuillez renseigner vos informations pour accéder à votre espace.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+            <!-- Prénom -->
+            <div class="input-group space-y-2">
+                <label class="block text-label-md text-on-surface-variant font-medium ml-1">Prénom</label>
+                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" placeholder="Ex: Thomas" required type="text"/>
+            </div>
+            <!-- Nom -->
+            <div class="input-group space-y-2">
+                <label class="block text-label-md text-on-surface-variant font-medium ml-1">Nom</label>
+                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" placeholder="Ex: Martin" required type="text"/>
+            </div>
+            <!-- Email -->
+            <div class="input-group space-y-2 md:col-span-2">
+                <label class="block text-label-md text-on-surface-variant font-medium ml-1">Email professionnel ou personnel</label>
+                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" placeholder="t.martin@exemple.com" required type="email"/>
+            </div>
+            <!-- Téléphone -->
+            <div class="input-group space-y-2">
+                <label class="block text-label-md text-on-surface-variant font-medium ml-1">Téléphone</label>
+                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" placeholder="+33 6 00 00 00 00" required type="tel"/>
+            </div>
+            <!-- Ville -->
+            <div class="input-group space-y-2">
+                <label class="block text-label-md text-on-surface-variant font-medium ml-1">Ville</label>
+                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" placeholder="Ex: Lyon" required type="text"/>
+            </div>
+            <!-- Mot de passe -->
+            <div class="input-group space-y-2">
+                <label class="block text-label-md text-on-surface-variant font-medium ml-1">Mot de passe</label>
+                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" placeholder="••••••••" required type="password"/>
+            </div>
+            <!-- Confirmer -->
+            <div class="input-group space-y-2">
+                <label class="block text-label-md text-on-surface-variant font-medium ml-1">Confirmer</label>
+                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" placeholder="••••••••" required type="password"/>
+            </div>
+        </div>
+
+        <!-- Terms -->
+        <div class="flex items-start gap-3 bg-surface-container-low/50 p-4 rounded-xl">
+            <input class="mt-1 w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer" id="terms" required type="checkbox"/>
+            <label class="text-body-sm text-on-surface-variant leading-snug cursor-pointer" for="terms">
+                J'accepte les <a class="text-primary font-semibold hover:underline" href="#">conditions d'utilisation</a> et je reconnais avoir pris connaissance de la <a class="text-primary font-semibold hover:underline" href="#">politique de confidentialité</a>.
+            </label>
+        </div>
+
+        <!-- Submit -->
+        <button class="w-full gradient-button text-on-primary py-4.5 rounded-xl font-title-md text-title-md shadow-xl flex items-center justify-center gap-2 group" type="submit">
+            Créer mon compte
+            <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">rocket_launch</span>
+        </button>
+    </form>
+
+    <!-- Login link -->
+    <div class="mt-10 pt-8 border-t border-outline-variant/30 text-center">
+        <p class="font-body-sm text-on-surface-variant">
+            Déjà membre ? <a class="text-primary font-bold hover:underline ml-1" href="#">Connectez-vous</a>
+        </p>
+    </div>
+
+</div>
+
+<!-- ===== TRUST FEATURES ===== -->
+<div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl w-full">
+    <div class="flex flex-col items-center text-center p-4">
+        <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-3">
+            <span class="material-symbols-outlined text-[20px]">verified_user</span>
+        </div>
+        <h4 class="text-label-md font-bold text-on-surface uppercase tracking-widest mb-1">Confidentialité</h4>
+        <p class="text-[12px] text-on-surface-variant">Données 100% sécurisées et conformes RGPD.</p>
+    </div>
+    <div class="flex flex-col items-center text-center p-4">
+        <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-3">
+            <span class="material-symbols-outlined text-[20px]">workspace_premium</span>
+        </div>
+        <h4 class="text-label-md font-bold text-on-surface uppercase tracking-widest mb-1">Qualité Premium</h4>
+        <p class="text-[12px] text-on-surface-variant">Accompagnement par les meilleurs experts.</p>
+    </div>
+    <div class="flex flex-col items-center text-center p-4">
+        <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-3">
+            <span class="material-symbols-outlined text-[20px]">support_agent</span>
+        </div>
+        <h4 class="text-label-md font-bold text-on-surface uppercase tracking-widest mb-1">Assistance</h4>
+        <p class="text-[12px] text-on-surface-variant">Une équipe à votre écoute 7j/7.</p>
+    </div>
+</div>
+
+</main>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+    let selectedRole = null;
+
+    function selectRole(role) {
+        selectedRole = role;
+        
+        document.querySelectorAll('.role-card').forEach(card => card.classList.remove('active'));
+        document.getElementById(`role-${role}`).classList.add('active');
+        
+        const nextBtn = document.getElementById('next-btn');
+        nextBtn.removeAttribute('disabled');
+        nextBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+    }
+
+    function nextStep() {
+        if (!selectedRole) return;
+        
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const dot1 = document.getElementById('dot-1');
+        const dot2 = document.getElementById('dot-2');
+        
+        step1.style.opacity = '0';
+        step1.style.transform = 'translateX(-20px)';
+        
+        setTimeout(() => {
+            step1.classList.add('hidden');
+            step2.classList.remove('hidden');
+            dot1.classList.remove('active');
+            dot2.classList.add('active');
+        }, 300);
+    }
+
+    function prevStep() {
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const dot1 = document.getElementById('dot-1');
+        const dot2 = document.getElementById('dot-2');
+        
+        step2.classList.add('hidden');
+        step1.classList.remove('hidden');
+        step1.style.opacity = '1';
+        step1.style.transform = 'translateX(0)';
+        
+        dot1.classList.add('active');
+        dot2.classList.remove('active');
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        alert('Votre inscription a été reçue ! Bienvenue sur Origami Privé.');
+    }
+
+    // Animation au chargement
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('.animate-fade-in').style.animation = 'fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+    });
+</script>
+
+<style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .py-4\.5 {
+            padding-top: 1.125rem;
+            padding-bottom: 1.125rem;
+        }
+</style>
+
+</body>
+</html>

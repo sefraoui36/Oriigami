@@ -15,5 +15,23 @@ class Utilisateur(AbstractUser):
     rating = models.FloatField(default=0.0)
     must_change_password = models.BooleanField(default=False)
 
+    # ===== AJOUTER CES LIGNES POUR ÉVITER LES CONFLITS =====
+    groups = models.ManyToManyField(
+        'auth.Group',
+        verbose_name='groups',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        related_name='utilisateur_set',      # ← AJOUTER
+        related_query_name='utilisateur',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        verbose_name='user permissions',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        related_name='utilisateur_set',      # ← AJOUTER
+        related_query_name='utilisateur',
+    )
+
     def __str__(self):
         return self.username
