@@ -1,4 +1,5 @@
 <!-- templates/etudiants/dashboard.html -->
+<!-- stylelint-disable -->
 <!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
@@ -139,9 +140,6 @@ tailwind.config = {
     .bg-primary-gradient {
         background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
     }
-    .bg-soft-glow {
-        background: radial-gradient(circle at 50% 50%, rgba(139, 61, 255, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
-    }
     .animate-pulse-slow {
         animation: pulse-soft 4s ease-in-out infinite;
     }
@@ -159,11 +157,70 @@ tailwind.config = {
     .badge-dot.orange { background: #f59e0b; }
     .badge-dot.red { background: #ef4444; }
     .badge-dot.blue { background: #3b82f6; }
+
+    .bg-primary-light { background-color: rgba(113, 15, 229, 0.1); }
+    .bg-secondary-light { background-color: rgba(174, 18, 138, 0.1); }
+    .bg-tertiary-light { background-color: rgba(137, 69, 0, 0.1); }
+    .bg-blue-light { background-color: rgba(59, 130, 246, 0.1); }
+    .bg-purple-light { background-color: rgba(139, 92, 246, 0.1); }
+    .bg-orange-light { background-color: rgba(249, 115, 22, 0.1); }
+    .bg-green-light { background-color: rgba(34, 197, 94, 0.1); }
+    .bg-indigo-light { background-color: rgba(99, 102, 241, 0.1); }
+    .bg-pink-light { background-color: rgba(236, 72, 153, 0.1); }
+    .bg-teal-light { background-color: rgba(20, 184, 166, 0.1); }
+    .bg-emerald-light { background-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-lighter { background-color: rgba(113, 15, 229, 0.05); }
+    .bg-secondary-lighter { background-color: rgba(174, 18, 138, 0.05); }
+    .bg-tertiary-lighter { background-color: rgba(137, 69, 0, 0.05); }
+    .bg-blue-lighter { background-color: rgba(59, 130, 246, 0.05); }
+    .bg-purple-lighter { background-color: rgba(139, 92, 246, 0.05); }
+    .bg-orange-lighter { background-color: rgba(249, 115, 22, 0.05); }
+    .bg-green-lighter { background-color: rgba(34, 197, 94, 0.05); }
+    .bg-indigo-lighter { background-color: rgba(99, 102, 241, 0.05); }
+    .bg-pink-lighter { background-color: rgba(236, 72, 153, 0.05); }
+    .bg-teal-lighter { background-color: rgba(20, 184, 166, 0.05); }
+    .bg-emerald-lighter { background-color: rgba(16, 185, 129, 0.05); }
+
+    .border-primary-light { border-color: rgba(113, 15, 229, 0.1); }
+    .border-secondary-light { border-color: rgba(174, 18, 138, 0.1); }
+    .border-tertiary-light { border-color: rgba(137, 69, 0, 0.1); }
+    .border-blue-light { border-color: rgba(59, 130, 246, 0.1); }
+    .border-purple-light { border-color: rgba(139, 92, 246, 0.1); }
+    .border-orange-light { border-color: rgba(249, 115, 22, 0.1); }
+    .border-green-light { border-color: rgba(34, 197, 94, 0.1); }
+    .border-indigo-light { border-color: rgba(99, 102, 241, 0.1); }
+    .border-pink-light { border-color: rgba(236, 72, 153, 0.1); }
+    .border-teal-light { border-color: rgba(20, 184, 166, 0.1); }
+    .border-emerald-light { border-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-solid { background-color: #710fe5; }
+    .bg-secondary-solid { background-color: #ae128a; }
+    .bg-tertiary-solid { background-color: #894500; }
+    .bg-blue-solid { background-color: #3b82f6; }
+    .bg-purple-solid { background-color: #8b5cf6; }
+    .bg-orange-solid { background-color: #f97316; }
+    .bg-green-solid { background-color: #22c55e; }
+    .bg-indigo-solid { background-color: #6366f1; }
+    .bg-pink-solid { background-color: #ec4899; }
+    .bg-teal-solid { background-color: #14b8a6; }
+    .bg-emerald-solid { background-color: #10b981; }
+
+    .text-primary { color: #710fe5; }
+    .text-secondary { color: #ae128a; }
+    .text-tertiary { color: #894500; }
+    .text-blue { color: #3b82f6; }
+    .text-purple { color: #8b5cf6; }
+    .text-orange { color: #f97316; }
+    .text-green { color: #22c55e; }
+    .text-indigo { color: #6366f1; }
+    .text-pink { color: #ec4899; }
+    .text-teal { color: #14b8a6; }
+    .text-emerald { color: #10b981; }
 </style>
 </head>
 <body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
 
-<!-- Animated background -->
 <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
     <div class="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] animate-pulse-slow"></div>
     <div class="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
@@ -171,9 +228,7 @@ tailwind.config = {
 
 <div class="flex h-screen overflow-hidden">
 
-    <!-- ===== SIDEBAR ===== -->
     <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
-        <!-- Logo -->
         <div class="flex items-center gap-3 px-3 py-4 mb-6">
             <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">change_history</span>
@@ -181,71 +236,63 @@ tailwind.config = {
             <span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Origami Privé</span>
         </div>
 
-        <!-- Navigation -->
         <nav class="flex-1 space-y-1">
-            <a href="#" class="sidebar-link active">
+            <a href="{% url 'authentication:dashboard' %}" class="sidebar-link active">
                 <span class="material-symbols-outlined text-[22px]">dashboard</span>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:profil' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">person</span>
                 <span>Mon Profil</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:enseignants' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">school</span>
                 <span>Mes Enseignants</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:seances' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">calendar_month</span>
                 <span>Mes Séances</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:forfait' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">sell</span>
                 <span>Mon Forfait</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:portefeuille' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">wallet</span>
                 <span>Mon Portefeuille</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:progression' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">trending_up</span>
                 <span>Ma Progression</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:avis' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">star</span>
                 <span>Avis Enseignants</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:notifications' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">notifications</span>
                 <span>Notifications</span>
-                <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
+                <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ notifications|length }}</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">calendar_today</span>
-                <span>Calendrier</span>
-            </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:parametres' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">settings</span>
                 <span>Paramètres</span>
             </a>
         </nav>
 
-        <!-- Déconnexion -->
         <div class="mt-auto pt-4 border-t border-outline-variant/30">
-            <a href="#" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
                 <span class="material-symbols-outlined text-[22px]">logout</span>
                 <span>Déconnexion</span>
             </a>
         </div>
     </aside>
 
-    <!-- ===== MAIN CONTENT ===== -->
     <main class="flex-1 overflow-y-auto p-8">
 
-        <!-- Header -->
         <div class="flex items-center justify-between mb-8">
             <div>
-                <h1 class="font-headline-lg text-headline-lg text-on-surface">Bonjour, Thomas 👋</h1>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface">Bonjour, {{ first_name|default:user.username }}</h1>
                 <p class="text-on-surface-variant body-sm">Bienvenue sur votre espace étudiant</p>
             </div>
             <div class="flex items-center gap-3">
@@ -254,19 +301,18 @@ tailwind.config = {
                     <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
                 <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
-                    TM
+                    {{ first_name|slice:":1"|upper }}{{ last_name|slice:":1"|upper|default:"U" }}
                 </div>
             </div>
         </div>
 
-        <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
                 <div class="flex items-center justify-between mb-3">
                     <span class="material-symbols-outlined text-[28px] text-primary">book</span>
                     <span class="text-xs font-bold text-primary-container bg-primary/10 px-3 py-1 rounded-full">En cours</span>
                 </div>
-                <p class="text-3xl font-bold text-on-surface">4</p>
+                <p class="text-3xl font-bold text-on-surface">{{ cours_actifs|default:0 }}</p>
                 <p class="text-sm text-on-surface-variant">Cours actifs</p>
             </div>
             <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
@@ -274,7 +320,7 @@ tailwind.config = {
                     <span class="material-symbols-outlined text-[28px] text-green-500">check_circle</span>
                     <span class="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">Terminés</span>
                 </div>
-                <p class="text-3xl font-bold text-on-surface">12</p>
+                <p class="text-3xl font-bold text-on-surface">{{ cours_termines|default:0 }}</p>
                 <p class="text-sm text-on-surface-variant">Cours complétés</p>
             </div>
             <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
@@ -282,7 +328,7 @@ tailwind.config = {
                     <span class="material-symbols-outlined text-[28px] text-orange-500">schedule</span>
                     <span class="text-xs font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Restant</span>
                 </div>
-                <p class="text-3xl font-bold text-on-surface">8h</p>
+                <p class="text-3xl font-bold text-on-surface">{{ heures_restantes|default:0 }}h</p>
                 <p class="text-sm text-on-surface-variant">Heures restantes</p>
             </div>
             <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
@@ -290,154 +336,110 @@ tailwind.config = {
                     <span class="material-symbols-outlined text-[28px] text-purple-500">stars</span>
                     <span class="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Moyenne</span>
                 </div>
-                <p class="text-3xl font-bold text-on-surface">16.5</p>
+                <p class="text-3xl font-bold text-on-surface">{{ moyenne_generale|default:0 }}</p>
                 <p class="text-sm text-on-surface-variant">Moyenne générale /20</p>
             </div>
         </div>
 
-        <!-- Grid: Cours + Prochaines séances -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            <!-- Cours en cours -->
             <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="font-title-md text-title-md text-on-surface">📚 Mes cours en cours</h2>
-                    <a href="#" class="text-sm text-primary font-semibold hover:underline">Voir tout →</a>
+                    <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">menu_book</span>
+                        Mes cours en cours
+                    </h2>
+                    <a href="#" class="text-sm text-primary font-semibold hover:underline">Voir tout <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
                 </div>
                 <div class="space-y-4">
+                    {% for cours in cours %}
                     <div class="flex items-center gap-4 p-4 bg-background rounded-xl border border-outline-variant/20">
-                        <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                            <span class="material-symbols-outlined">calculate</span>
+                        <div class="w-12 h-12 rounded-xl bg-{{ cours.couleur }}-light flex items-center justify-center text-{{ cours.couleur }}">
+                            <span class="material-symbols-outlined">{{ cours.icone }}</span>
                         </div>
                         <div class="flex-1">
-                            <h3 class="font-semibold text-on-surface">Mathématiques Avancées</h3>
-                            <p class="text-sm text-on-surface-variant">Prof. Martin • 4 séances restantes</p>
+                            <h3 class="font-semibold text-on-surface">{{ cours.nom }}</h3>
+                            <p class="text-sm text-on-surface-variant">{{ cours.professeur }} • {{ cours.seances_restantes }} séances restantes</p>
                             <div class="mt-2 flex items-center gap-3">
                                 <div class="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
-                                    <div class="h-full bg-primary-gradient rounded-full" style="width: 65%"></div>
+                                    <div class="h-full bg-{{ cours.couleur }}-solid rounded-full" style="width: {{ cours.progression }}%"></div>
                                 </div>
-                                <span class="text-xs font-medium text-primary">65%</span>
+                                <span class="text-xs font-medium text-{{ cours.couleur }}">{{ cours.progression }}%</span>
                             </div>
                         </div>
+                        {% if cours.progression >= 70 %}
                         <span class="badge-dot green"></span>
-                    </div>
-                    <div class="flex items-center gap-4 p-4 bg-background rounded-xl border border-outline-variant/20">
-                        <div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
-                            <span class="material-symbols-outlined">translate</span>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-semibold text-on-surface">Anglais des Affaires</h3>
-                            <p class="text-sm text-on-surface-variant">Prof. Dupont • 2 séances restantes</p>
-                            <div class="mt-2 flex items-center gap-3">
-                                <div class="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
-                                    <div class="h-full bg-secondary rounded-full" style="width: 40%"></div>
-                                </div>
-                                <span class="text-xs font-medium text-secondary">40%</span>
-                            </div>
-                        </div>
+                        {% elif cours.progression >= 40 %}
                         <span class="badge-dot orange"></span>
+                        {% else %}
+                        <span class="badge-dot red"></span>
+                        {% endif %}
                     </div>
-                    <div class="flex items-center gap-4 p-4 bg-background rounded-xl border border-outline-variant/20">
-                        <div class="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center text-tertiary">
-                            <span class="material-symbols-outlined">code</span>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-semibold text-on-surface">Développement Web</h3>
-                            <p class="text-sm text-on-surface-variant">Prof. Moreau • 3 séances restantes</p>
-                            <div class="mt-2 flex items-center gap-3">
-                                <div class="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
-                                    <div class="h-full bg-tertiary-container rounded-full" style="width: 80%"></div>
-                                </div>
-                                <span class="text-xs font-medium text-tertiary-container">80%</span>
-                            </div>
-                        </div>
-                        <span class="badge-dot green"></span>
-                    </div>
+                    {% empty %}
+                    <p class="text-center text-on-surface-variant py-8">Aucun cours en cours</p>
+                    {% endfor %}
                 </div>
             </div>
 
-            <!-- Prochaines séances -->
             <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
-                <h2 class="font-title-md text-title-md text-on-surface mb-4">📅 Prochaines séances</h2>
+                <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
+                    <span class="material-symbols-outlined text-primary">calendar_today</span>
+                    Prochaines séances
+                </h2>
                 <div class="space-y-4">
+                    {% for seance in prochaines_seances %}
                     <div class="flex items-start gap-3 p-3 bg-background rounded-xl border border-outline-variant/20">
-                        <div class="w-12 h-12 rounded-xl bg-primary/5 flex flex-col items-center justify-center text-primary border border-primary/10">
-                            <span class="text-[10px] font-bold uppercase">Lun</span>
-                            <span class="text-lg font-bold">15</span>
+                        <div class="w-12 h-12 rounded-xl bg-{{ seance.couleur }}-lighter flex flex-col items-center justify-center text-{{ seance.couleur }} border border-{{ seance.couleur }}-light">
+                            <span class="text-[10px] font-bold uppercase">{{ seance.jour }}</span>
+                            <span class="text-lg font-bold">{{ seance.date }}</span>
                         </div>
                         <div>
-                            <p class="font-semibold text-on-surface text-sm">Mathématiques</p>
-                            <p class="text-xs text-on-surface-variant">14:00 - 15:30</p>
-                            <p class="text-xs text-primary mt-0.5">Prof. Martin</p>
+                            <p class="font-semibold text-on-surface text-sm">{{ seance.matiere }}</p>
+                            <p class="text-xs text-on-surface-variant">{{ seance.heure }}</p>
+                            <p class="text-xs text-{{ seance.couleur }} mt-0.5">{{ seance.professeur }}</p>
                         </div>
                     </div>
-                    <div class="flex items-start gap-3 p-3 bg-background rounded-xl border border-outline-variant/20">
-                        <div class="w-12 h-12 rounded-xl bg-secondary/5 flex flex-col items-center justify-center text-secondary border border-secondary/10">
-                            <span class="text-[10px] font-bold uppercase">Mer</span>
-                            <span class="text-lg font-bold">17</span>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-on-surface text-sm">Anglais</p>
-                            <p class="text-xs text-on-surface-variant">10:00 - 11:30</p>
-                            <p class="text-xs text-secondary mt-0.5">Prof. Dupont</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3 p-3 bg-background rounded-xl border border-outline-variant/20">
-                        <div class="w-12 h-12 rounded-xl bg-tertiary/5 flex flex-col items-center justify-center text-tertiary border border-tertiary/10">
-                            <span class="text-[10px] font-bold uppercase">Ven</span>
-                            <span class="text-lg font-bold">19</span>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-on-surface text-sm">Développement Web</p>
-                            <p class="text-xs text-on-surface-variant">09:00 - 10:30</p>
-                            <p class="text-xs text-tertiary-container mt-0.5">Prof. Moreau</p>
-                        </div>
-                    </div>
+                    {% empty %}
+                    <p class="text-center text-on-surface-variant py-8">Aucune séance à venir</p>
+                    {% endfor %}
                 </div>
                 <a href="#" class="block text-center text-sm text-primary font-semibold mt-4 hover:underline">
-                    Voir tout le planning →
+                    Voir tout le planning <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </a>
             </div>
 
         </div>
 
-        <!-- Notifications et progression -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
 
-            <!-- Notifications récentes -->
             <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="font-title-md text-title-md text-on-surface">🔔 Notifications récentes</h2>
-                    <a href="#" class="text-sm text-primary font-semibold hover:underline">Voir tout</a>
+                    <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">notifications_active</span>
+                        Notifications récentes
+                    </h2>
+                    <a href="#" class="text-sm text-primary font-semibold hover:underline">Voir tout <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
                 </div>
                 <div class="space-y-3">
-                    <div class="flex items-start gap-3 p-3 bg-primary/5 rounded-xl border-l-4 border-primary">
-                        <span class="material-symbols-outlined text-primary">info</span>
+                    {% for notif in notifications %}
+                    <div class="flex items-start gap-3 p-3 {% if forloop.first %}bg-primary-lighter{% else %}bg-background{% endif %} rounded-xl border-l-4 border-{{ notif.couleur }}">
+                        <span class="material-symbols-outlined text-{{ notif.couleur }}">{{ notif.icone }}</span>
                         <div>
-                            <p class="text-sm text-on-surface">Votre cours de Mathématiques démarre dans 2 heures.</p>
-                            <p class="text-xs text-on-surface-variant mt-0.5">Il y a 15 minutes</p>
+                            <p class="text-sm text-on-surface">{{ notif.message }}</p>
+                            <p class="text-xs text-on-surface-variant mt-0.5">{{ notif.temps }}</p>
                         </div>
                     </div>
-                    <div class="flex items-start gap-3 p-3 bg-background rounded-xl border-l-4 border-secondary">
-                        <span class="material-symbols-outlined text-secondary">grade</span>
-                        <div>
-                            <p class="text-sm text-on-surface">Prof. Dupont a ajouté une note à votre devoir d'anglais.</p>
-                            <p class="text-xs text-on-surface-variant mt-0.5">Il y a 2 heures</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3 p-3 bg-background rounded-xl border-l-4 border-tertiary">
-                        <span class="material-symbols-outlined text-tertiary">schedule</span>
-                        <div>
-                            <p class="text-sm text-on-surface">Votre forfait expire dans 5 jours.</p>
-                            <p class="text-xs text-on-surface-variant mt-0.5">Il y a 1 jour</p>
-                        </div>
-                    </div>
+                    {% empty %}
+                    <p class="text-center text-on-surface-variant py-8">Aucune notification</p>
+                    {% endfor %}
                 </div>
             </div>
 
-            <!-- Progression globale -->
             <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
-                <h2 class="font-title-md text-title-md text-on-surface mb-4">📊 Progression globale</h2>
+                <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
+                    <span class="material-symbols-outlined text-primary">trending_up</span>
+                    Progression globale
+                </h2>
                 <div class="flex items-center justify-center mb-4">
                     <div class="relative w-36 h-36">
                         <svg class="w-36 h-36 transform -rotate-90" viewBox="0 0 100 100">
@@ -451,7 +453,7 @@ tailwind.config = {
                             </defs>
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="text-2xl font-bold text-on-surface">80%</span>
+                            <span class="text-2xl font-bold text-on-surface">{{ progression.pourcentage|default:0 }}%</span>
                             <span class="text-xs text-on-surface-variant">Progression</span>
                         </div>
                     </div>
@@ -459,19 +461,19 @@ tailwind.config = {
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span class="text-on-surface-variant">Cours complétés</span>
-                        <span class="font-semibold text-on-surface">12/15</span>
+                        <span class="font-semibold text-on-surface">{{ progression.cours_completes|default:0 }}/{{ progression.total_cours|default:0 }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-on-surface-variant">Quiz réussis</span>
-                        <span class="font-semibold text-on-surface">18/24</span>
+                        <span class="font-semibold text-on-surface">{{ progression.quiz_reussis|default:0 }}/{{ progression.total_quiz|default:0 }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-on-surface-variant">Heures de cours</span>
-                        <span class="font-semibold text-on-surface">32/40h</span>
+                        <span class="font-semibold text-on-surface">{{ progression.heures_effectuees|default:0 }}/{{ progression.heures_total|default:0 }}h</span>
                     </div>
                 </div>
                 <a href="#" class="block text-center text-sm text-primary font-semibold mt-4 hover:underline">
-                    Voir les détails →
+                    Voir les détails <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </a>
             </div>
 

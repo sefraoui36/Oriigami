@@ -1,21 +1,25 @@
+# clients/models.py
 from django.db import models
-from utilisateurs.models import Utilisateur
+from django.conf import settings  
 
 class Client(models.Model):
-    # Énumération pour distinguer le type de client
+   
     class TypeClient(models.TextChoices):
-        PARENT = 'parent', 'Parent'
+        PARENT = 'parent', 'Parent'       
         ETUDIANT = 'etudiant', 'Étudiant'
 
     id_client = models.AutoField(primary_key=True)
-    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name='clients')
+    utilisateur = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name='clients'
+    )
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     telephone = models.CharField(max_length=20)
     telephone2 = models.CharField(max_length=20, null=True, blank=True)
     adresse = models.TextField()
     
-    # Nouvel attribut pour la distinction
     type_client = models.CharField(
         max_length=10,
         choices=TypeClient.choices,
