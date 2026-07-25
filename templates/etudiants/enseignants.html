@@ -7,491 +7,468 @@
 <title>Mes Enseignants - Origami Privé</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
-<!-- Tailwind Configuration -->
 <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "inverse-primary": "#d4bbff",
-                    "surface-tint": "#7921ed",
-                    "outline": "#7c7387",
-                    "error-container": "#ffdad6",
-                    "secondary-fixed-dim": "#ffaede",
-                    "outline-variant": "#cdc2d8",
-                    "background": "#f8f9fa",
-                    "surface-container": "#edeeef",
-                    "tertiary-fixed-dim": "#ffb782",
-                    "secondary-fixed": "#ffd8ec",
-                    "tertiary": "#894500",
-                    "surface-dim": "#d9dadb",
-                    "surface-container-low": "#f3f4f5",
-                    "on-primary-fixed-variant": "#5d00c2",
-                    "on-tertiary-fixed": "#301400",
-                    "on-primary-container": "#faf1ff",
-                    "error": "#ba1a1a",
-                    "on-tertiary-container": "#fff2eb",
-                    "surface-container-lowest": "#ffffff",
-                    "primary-container": "#8b3dff",
-                    "on-tertiary-fixed-variant": "#703800",
-                    "on-primary": "#ffffff",
-                    "secondary-container": "#fe60cf",
-                    "surface": "#f8f9fa",
-                    "on-tertiary": "#ffffff",
-                    "on-background": "#191c1d",
-                    "inverse-on-surface": "#f0f1f2",
-                    "surface-container-high": "#e7e8e9",
-                    "inverse-surface": "#2e3132",
-                    "secondary": "#ae128a",
-                    "surface-container-highest": "#e1e3e4",
-                    "primary-fixed": "#ebdcff",
-                    "on-error-container": "#93000a",
-                    "on-surface": "#191c1d",
-                    "on-primary-fixed": "#270058",
-                    "primary": "#710fe5",
-                    "on-secondary-fixed": "#3b002d",
-                    "tertiary-container": "#ad5900",
-                    "on-surface-variant": "#4b4456",
-                    "primary-fixed-dim": "#d4bbff",
-                    "on-secondary": "#ffffff",
-                    "surface-variant": "#e1e3e4",
-                    "on-secondary-container": "#680052",
-                    "tertiary-fixed": "#ffdcc5",
-                    "surface-bright": "#f8f9fa",
-                    "on-secondary-fixed-variant": "#87006b",
-                    "on-error": "#ffffff"
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "on-surface-variant": "#4b4456",
+                "error": "#ba1a1a",
+                "tertiary-fixed-dim": "#ffb782",
+                "surface-dim": "#d9dadb",
+                "inverse-surface": "#2e3132",
+                "primary-container": "#8b3dff",
+                "background": "#f8f9fa",
+                "on-primary": "#ffffff",
+                "on-primary-fixed": "#270058",
+                "surface-container": "#edeeef",
+                "tertiary-container": "#ad5900",
+                "on-surface": "#191c1d",
+                "inverse-on-surface": "#f0f1f2",
+                "on-error-container": "#93000a",
+                "outline-variant": "#cdc2d8",
+                "surface-tint": "#7921ed",
+                "on-tertiary-fixed": "#301400",
+                "on-primary-fixed-variant": "#5d00c2",
+                "secondary": "#ae128a",
+                "secondary-fixed-dim": "#ffaede",
+                "on-secondary-fixed-variant": "#87006b",
+                "tertiary": "#894500",
+                "surface-container-high": "#e7e8e9",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#3b002d",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#ebdcff",
+                "on-primary-container": "#faf1ff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#fe60cf",
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#d4bbff",
+                "surface-container-low": "#f3f4f5",
+                "outline": "#7c7387",
+                "surface": "#f8f9fa",
+                "on-secondary-container": "#680052",
+                "tertiary-fixed": "#ffdcc5",
+                "inverse-primary": "#d4bbff",
+                "on-tertiary-fixed-variant": "#703800",
+                "primary": "#710fe5",
+                "on-error": "#ffffff",
+                "surface-variant": "#e1e3e4",
+                "surface-container-highest": "#e1e3e4",
+                "secondary-fixed": "#ffd8ec",
+                "on-tertiary-container": "#fff2eb",
+                "on-background": "#191c1d"
             },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
             },
-            "spacing": {
-                    "card-gap": "24px",
-                    "section-margin": "48px",
-                    "gutter": "24px",
-                    "container-padding": "32px",
-                    "base": "8px"
+            spacing: {
+                "container-padding": "32px",
+                "card-gap": "24px",
+                "gutter": "24px",
+                "base": "8px",
+                "section-margin": "48px"
             },
-            "fontFamily": {
-                    "headline-lg-mobile": ["Plus Jakarta Sans"],
-                    "body-lg": ["Plus Jakarta Sans"],
-                    "label-md": ["Inter"],
-                    "headline-lg": ["Plus Jakarta Sans"],
-                    "display-lg": ["Plus Jakarta Sans"],
-                    "title-md": ["Plus Jakarta Sans"],
-                    "body-sm": ["Plus Jakarta Sans"]
+            fontFamily: {
+                "headline-lg": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"],
+                "body-sm": ["Plus Jakarta Sans"],
+                "label-md": ["Inter"],
+                "title-md": ["Plus Jakarta Sans"],
+                "headline-lg-mobile": ["Plus Jakarta Sans"]
             },
-            "fontSize": {
-                    "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
-                    "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                    "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
-                    "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
-                    "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
-                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+            fontSize: {
+                "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
             }
-          },
         },
-      }
-    </script>
+    },
+}
+</script>
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(233, 236, 239, 1);
-        }
-        .gradient-button {
-            background: linear-gradient(135deg, #8B3DFF 0%, #FE60CF 100%);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .gradient-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.2);
-        }
-        .sidebar-active {
-            background-color: rgba(139, 61, 255, 0.1);
-            color: #710fe5;
-            border-left-width: 4px;
-            border-left-color: #710fe5;
-            font-weight: 600;
-        }
-    </style>
-</head>
-<body class="bg-background text-on-surface font-body-sm">
-<!-- SideNavBar Shell -->
-<aside class="w-[280px] h-screen fixed left-0 top-0 bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant dark:border-outline flex flex-col py-base z-50">
-<div class="px-gutter mb-8">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">change_history</span>
-</div>
-<div>
-<h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim leading-none">Origami Privé</h1>
-<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Education d'Excellence</p>
-</div>
-</div>
-</div>
-<nav class="flex-1 overflow-y-auto px-4 space-y-1">
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="dashboard.html">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="font-body-sm">Dashboard</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="profil.html">
-<span class="material-symbols-outlined">person</span>
-<span class="font-body-sm">Mon profil</span>
-</a>
-<a class="sidebar-active flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200" href="enseignants.html">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">supervisor_account</span>
-<span class="font-body-sm">Mes enseignants</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="seances.html">
-<span class="material-symbols-outlined">event_available</span>
-<span class="font-body-sm">Mes séances</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="forfait.html">
-<span class="material-symbols-outlined">inventory_2</span>
-<span class="font-body-sm">Mes forfaits</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="portefeuille.html">
-<span class="material-symbols-outlined">account_balance_wallet</span>
-<span class="font-body-sm">Mon portefeuille</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="progression.html">
-<span class="material-symbols-outlined">trending_up</span>
-<span class="font-body-sm">Ma progression</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="avis.html">
-<span class="material-symbols-outlined">star</span>
-<span class="font-body-sm">Avis enseignants</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="notifications.html">
-<span class="material-symbols-outlined">notifications</span>
-<span class="font-body-sm">Notifications</span>
-<span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
-</a>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    }
+    .sidebar-link {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #4b4456;
+        text-decoration: none;
+    }
+    .sidebar-link:hover {
+        background: rgba(113, 15, 229, 0.08);
+        color: #710fe5;
+    }
+    .sidebar-link.active {
+        background: rgba(113, 15, 229, 0.12);
+        color: #710fe5;
+        font-weight: 600;
+    }
+    .sidebar-link.active .material-symbols-outlined {
+        color: #710fe5;
+    }
+    .stat-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+    }
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+    }
+    .animate-pulse-slow {
+        animation: pulse-soft 4s ease-in-out infinite;
+    }
+    @keyframes pulse-soft {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+    }
+    .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 9999px;
+        display: inline-block;
+    }
+    .badge-dot.green { background: #10b981; }
+    .badge-dot.orange { background: #f59e0b; }
+    .badge-dot.red { background: #ef4444; }
+    .badge-dot.blue { background: #3b82f6; }
 
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="parametres.html">
-<span class="material-symbols-outlined">settings</span>
-<span class="font-body-sm">Paramètres</span>
-</a>
-</nav>
-<div class="px-4 mt-auto">
-<button class="w-full gradient-button text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2">
-<span class="material-symbols-outlined text-[20px]">add_circle</span>
-<span>Réserver une séance</span>
-</button>
+    .bg-primary-light { background-color: rgba(113, 15, 229, 0.1); }
+    .bg-secondary-light { background-color: rgba(174, 18, 138, 0.1); }
+    .bg-tertiary-light { background-color: rgba(137, 69, 0, 0.1); }
+    .bg-blue-light { background-color: rgba(59, 130, 246, 0.1); }
+    .bg-purple-light { background-color: rgba(139, 92, 246, 0.1); }
+    .bg-orange-light { background-color: rgba(249, 115, 22, 0.1); }
+    .bg-green-light { background-color: rgba(34, 197, 94, 0.1); }
+    .bg-indigo-light { background-color: rgba(99, 102, 241, 0.1); }
+    .bg-pink-light { background-color: rgba(236, 72, 153, 0.1); }
+    .bg-teal-light { background-color: rgba(20, 184, 166, 0.1); }
+    .bg-emerald-light { background-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-lighter { background-color: rgba(113, 15, 229, 0.05); }
+    .bg-secondary-lighter { background-color: rgba(174, 18, 138, 0.05); }
+    .bg-tertiary-lighter { background-color: rgba(137, 69, 0, 0.05); }
+    .bg-blue-lighter { background-color: rgba(59, 130, 246, 0.05); }
+    .bg-purple-lighter { background-color: rgba(139, 92, 246, 0.05); }
+    .bg-orange-lighter { background-color: rgba(249, 115, 22, 0.05); }
+    .bg-green-lighter { background-color: rgba(34, 197, 94, 0.05); }
+    .bg-indigo-lighter { background-color: rgba(99, 102, 241, 0.05); }
+    .bg-pink-lighter { background-color: rgba(236, 72, 153, 0.05); }
+    .bg-teal-lighter { background-color: rgba(20, 184, 166, 0.05); }
+    .bg-emerald-lighter { background-color: rgba(16, 185, 129, 0.05); }
+
+    .border-primary-light { border-color: rgba(113, 15, 229, 0.1); }
+    .border-secondary-light { border-color: rgba(174, 18, 138, 0.1); }
+    .border-tertiary-light { border-color: rgba(137, 69, 0, 0.1); }
+    .border-blue-light { border-color: rgba(59, 130, 246, 0.1); }
+    .border-purple-light { border-color: rgba(139, 92, 246, 0.1); }
+    .border-orange-light { border-color: rgba(249, 115, 22, 0.1); }
+    .border-green-light { border-color: rgba(34, 197, 94, 0.1); }
+    .border-indigo-light { border-color: rgba(99, 102, 241, 0.1); }
+    .border-pink-light { border-color: rgba(236, 72, 153, 0.1); }
+    .border-teal-light { border-color: rgba(20, 184, 166, 0.1); }
+    .border-emerald-light { border-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-solid { background-color: #710fe5; }
+    .bg-secondary-solid { background-color: #ae128a; }
+    .bg-tertiary-solid { background-color: #894500; }
+    .bg-blue-solid { background-color: #3b82f6; }
+    .bg-purple-solid { background-color: #8b5cf6; }
+    .bg-orange-solid { background-color: #f97316; }
+    .bg-green-solid { background-color: #22c55e; }
+    .bg-indigo-solid { background-color: #6366f1; }
+    .bg-pink-solid { background-color: #ec4899; }
+    .bg-teal-solid { background-color: #14b8a6; }
+    .bg-emerald-solid { background-color: #10b981; }
+
+    .text-primary { color: #710fe5; }
+    .text-secondary { color: #ae128a; }
+    .text-tertiary { color: #894500; }
+    .text-blue { color: #3b82f6; }
+    .text-purple { color: #8b5cf6; }
+    .text-orange { color: #f97316; }
+    .text-green { color: #22c55e; }
+    .text-indigo { color: #6366f1; }
+    .text-pink { color: #ec4899; }
+    .text-teal { color: #14b8a6; }
+    .text-emerald { color: #10b981; }
+
+    .teacher-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    }
+    .teacher-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+    }
+    .gradient-button {
+        background: linear-gradient(135deg, #8B3DFF 0%, #FE60CF 100%);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .gradient-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.2);
+    }
+</style>
+</head>
+<body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
+
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+    <div class="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] animate-pulse-slow"></div>
+    <div class="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
 </div>
-</aside>
-<!-- TopNavBar Shell -->
-<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant z-40 flex justify-between items-center px-gutter ml-[280px] shadow-sm">
-<div class="flex items-center gap-4 flex-1 max-w-xl">
-<div class="relative w-full group">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
-<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary/20 text-body-sm outline-none" placeholder="Rechercher un enseignant ou une matière..." type="text"/>
-</div>
-</div>
-<div class="flex items-center gap-6">
-<button class="relative p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all">
-<span class="material-symbols-outlined">notifications</span>
-<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full border-2 border-surface"></span>
-</button>
-<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all">
-<span class="material-symbols-outlined">help_outline</span>
-</button>
-<div class="h-8 w-px bg-outline-variant"></div>
-<div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
-<div class="text-right hidden md:block">
-<p class="font-semibold text-body-sm text-on-surface">Lucas Bernard</p>
-<p class="text-label-md text-on-surface-variant">Étudiant Premium</p>
-</div>
-<div class="w-10 h-10 rounded-full bg-primary-container/20 border-2 border-primary-container flex items-center justify-center">
-<span class="material-symbols-outlined text-primary text-[24px]" style="font-variation-settings: 'FILL' 1;">person</span>
-</div>
-</div>
-</div>
-</header>
-<!-- Main Content -->
-<main class="ml-[280px] pt-16 min-h-screen p-container-padding">
-<!-- Header Section with Filters -->
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-<div>
-<nav class="flex items-center gap-2 text-label-md text-outline mb-2">
-<span>Plateforme</span>
-<span class="material-symbols-outlined text-[14px]">chevron_right</span>
-<span class="text-primary font-medium">Mes Enseignants</span>
-</nav>
-<h2 class="font-headline-lg text-headline-lg text-on-surface">Mes Enseignants</h2>
-<p class="text-body-sm text-on-surface-variant">Gérez vos sessions et suivez votre progression avec vos tuteurs attitrés.</p>
-</div>
-<div class="flex items-center gap-3">
-<div class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded-xl border border-outline-variant">
-<span class="material-symbols-outlined text-outline text-[20px]">filter_list</span>
-<select class="bg-transparent border-none text-body-sm font-medium focus:ring-0 cursor-pointer">
-<option>Toutes les matières</option>
-<option>Mathématiques</option>
-<option>Physique-Chimie</option>
-<option>Anglais</option>
-<option>Français</option>
-</select>
-</div>
-<button class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded-xl border border-outline-variant text-body-sm font-medium hover:bg-surface-container-low transition-colors">
-<span class="material-symbols-outlined text-outline text-[20px]">sort</span>
-<span>Trier par</span>
-</button>
-</div>
-</div>
-<!-- Teacher Cards Grid -->
-<div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-card-gap">
-<!-- Teacher Card 1 -->
-<div class="glass-card rounded-2xl overflow-hidden flex flex-col group">
-<div class="p-6">
-<div class="flex gap-4">
-<div class="relative">
-<div class="w-20 h-20 rounded-2xl bg-primary-container/20 flex items-center justify-center border border-outline-variant shadow-sm">
-<span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">person</span>
-</div>
-<span class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></span>
-</div>
-<div class="flex-1">
-<div class="flex justify-between items-start">
-<div>
-<h3 class="font-title-md text-title-md text-on-surface">Dr. Sophie Martin</h3>
-<p class="text-primary font-medium text-body-sm">Mathématiques & Algèbre</p>
-</div>
-<div class="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg">
-<span class="material-symbols-outlined text-yellow-600 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-yellow-700 font-bold text-label-md">4.9</span>
-</div>
-</div>
-<div class="flex flex-wrap gap-2 mt-3">
-<span class="bg-surface-container-high text-on-surface-variant px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">work_history</span> 12 ans d'exp.
+
+<div class="flex h-screen overflow-hidden">
+
+    <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
+        <div class="flex items-center gap-3 px-3 py-4 mb-6">
+            <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">change_history</span>
+            </div>
+            <span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Origami Privé</span>
+        </div>
+
+        <nav class="flex-1 space-y-1">
+            <a href="{% url 'authentication:dashboard' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="{% url 'etudiants:profil' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">person</span>
+                <span>Mon Profil</span>
+            </a>
+            <a href="{% url 'etudiants:enseignants' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">school</span>
+                <span>Mes Enseignants</span>
+            </a>
+            <a href="{% url 'etudiants:seances' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">event</span>
+                <span>Mes Séances</span>
+            </a>
+            <a href="{% url 'etudiants:forfait' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">sell</span>
+                <span>Mon Forfait</span>
+            </a>
+            <a href="{% url 'etudiants:portefeuille' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+                <span>Mon Portefeuille</span>
+            </a>
+            <a href="{% url 'etudiants:progression' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">trending_up</span>
+                <span>Ma Progression</span>
+            </a>
+            <a href="{% url 'etudiants:avis' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">star</span>
+                <span>Avis Enseignants</span>
+            </a>
+            <a href="{% url 'etudiants:notifications' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">notifications</span>
+                <span>Notifications</span>
+                <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
+            </a>
+            <a href="{% url 'etudiants:parametres' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">settings</span>
+                <span>Paramètres</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto pt-4 border-t border-outline-variant/30">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+                <span class="material-symbols-outlined text-[22px]">logout</span>
+                <span>Déconnexion</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto p-8">
+
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">school</span>
+                    Mes Enseignants
+                </h1>
+                <p class="text-on-surface-variant body-sm">Gérez vos sessions et suivez votre progression avec vos tuteurs attitrés.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
+                    <span class="material-symbols-outlined text-[24px]">notifications</span>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
+                    {{ first_name|slice:":1"|upper }}{{ last_name|slice:":1"|upper|default:"U" }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Header Section with Filters -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+            <div>
+                <nav class="flex items-center gap-2 text-label-md text-outline mb-2">
+                    <span>Plateforme</span>
+                    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                    <span class="text-primary font-medium">Mes Enseignants</span>
+                </nav>
+                <p class="text-body-sm text-on-surface-variant">Gérez vos sessions et suivez votre progression avec vos tuteurs attitrés.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded-xl border border-outline-variant/30">
+                    <span class="material-symbols-outlined text-outline text-[20px]">filter_list</span>
+                    <select class="bg-transparent border-none text-body-sm font-medium focus:ring-0 cursor-pointer">
+                        <option>Toutes les matières</option>
+                        <option>Mathématiques</option>
+                        <option>Physique-Chimie</option>
+                        <option>Anglais</option>
+                        <option>Français</option>
+                    </select>
+                </div>
+                <button class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded-xl border border-outline-variant/30 text-body-sm font-medium hover:bg-surface-container-low transition-colors">
+                    <span class="material-symbols-outlined text-outline text-[20px]">sort</span>
+                    <span>Trier par</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Teacher Cards Grid -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6">
+            {% for enseignant in enseignants %}
+            <!-- Teacher Card -->
+            <div class="teacher-card rounded-2xl overflow-hidden flex flex-col">
+                <div class="p-6">
+                    <div class="flex gap-4">
+                        <div class="relative">
+                            <div class="w-20 h-20 rounded-2xl bg-primary-light flex items-center justify-center border border-outline-variant/30 shadow-sm">
+                                <span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">person</span>
+                            </div>
+                            {% if enseignant.seances_prevues > 0 %}
+                            <span class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></span>
+                            {% else %}
+                            <span class="absolute -bottom-1 -right-1 w-5 h-5 bg-orange-400 border-2 border-white rounded-full"></span>
+                            {% endif %}
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-title-md text-title-md text-on-surface">{{ enseignant.nom }}</h3>
+                                    <p class="text-primary font-medium text-body-sm">{{ enseignant.matiere }}</p>
+                                </div>
+                                <div class="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg">
+                                    <span class="material-symbols-outlined text-yellow-600 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="text-yellow-700 font-bold text-label-md">{{ enseignant.note }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-3">
+                                <span class="bg-surface-container-high text-on-surface-variant px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">work_history</span> {{ enseignant.experience }} ans d'exp.
                                 </span>
-<span class="bg-primary-container/10 text-primary px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">devices</span> Hybride
+                                <span class="bg-primary-container/10 text-primary px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">devices</span> {{ enseignant.matiere_personnalise|default:"Hybride" }}
                                 </span>
-</div>
-</div>
-</div>
-</div>
-<!-- Tracking Info -->
-<div class="bg-surface-container-low/50 px-6 py-4 border-t border-outline-variant space-y-3">
-<div class="flex justify-between items-center">
-<span class="text-label-md text-on-surface-variant font-medium">Forfait Actuel</span>
-<span class="text-body-sm font-semibold text-secondary">Expert 20h / mois</span>
-</div>
-<div class="space-y-1">
-<div class="flex justify-between text-label-md mb-1">
-<span class="text-on-surface-variant">Heures restantes</span>
-<span class="font-bold text-on-surface">8h / 20h</span>
-</div>
-<div class="w-full h-1.5 bg-outline-variant rounded-full overflow-hidden">
-<div class="h-full bg-primary rounded-full" style="width: 40%"></div>
-</div>
-</div>
-<div class="grid grid-cols-2 gap-4 pt-2">
-<div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/50">
-<p class="text-[10px] text-outline uppercase font-bold mb-1">Séances</p>
-<p class="text-body-sm font-bold">24 complétées</p>
-</div>
-<div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/50">
-<p class="text-[10px] text-outline uppercase font-bold mb-1">Prochaine</p>
-<p class="text-body-sm font-bold text-primary">Demain, 14:00</p>
-</div>
-</div>
-</div>
-<div class="p-4 flex gap-3 mt-auto">
-<button class="flex-1 border border-outline-variant hover:bg-surface-container-high py-2.5 rounded-xl font-semibold text-body-sm transition-all">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tracking Info -->
+                <div class="bg-surface-container-low/50 px-6 py-4 border-t border-outline-variant/30 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-label-md text-on-surface-variant font-medium">Forfait Actuel</span>
+                        <span class="text-body-sm font-semibold text-secondary">{{ enseignant.forfait_nom }} {{ enseignant.heures_total }}h / mois</span>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-label-md mb-1">
+                            <span class="text-on-surface-variant">Heures restantes</span>
+                            <span class="font-bold text-on-surface">{{ enseignant.heures_restantes|floatformat:0 }}h / {{ enseignant.heures_total }}h</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-outline-variant/30 rounded-full overflow-hidden">
+                            {% widthratio enseignant.heures_restantes enseignant.heures_total 100 as pourcentage %}
+                            <div class="h-full bg-primary rounded-full" style="width: {% if enseignant.heures_total > 0 %}{% widthratio enseignant.heures_restantes enseignant.heures_total 100 %}{% else %}0{% endif %}%"></div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 pt-2">
+                        <div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/30">
+                            <p class="text-[10px] text-outline uppercase font-bold mb-1">Séances</p>
+                            <p class="text-body-sm font-bold">{{ enseignant.seances_completees }} complétées</p>
+                        </div>
+                        <div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/30">
+                            <p class="text-[10px] text-outline uppercase font-bold mb-1">Prochaine</p>
+                            {% if enseignant.prochaine_seance %}
+                            <p class="text-body-sm font-bold text-primary">{{ enseignant.prochaine_seance.date|date:"d M" }}, {{ enseignant.prochaine_seance.heure|time:"H:i" }}</p>
+                            {% else %}
+                            <p class="text-body-sm font-bold text-on-surface-variant">Aucune</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 flex gap-3 mt-auto">
+                    <button class="flex-1 border border-outline-variant/30 hover:bg-surface-container-high py-2.5 rounded-xl font-semibold text-body-sm transition-all">
                         Voir l'historique
                     </button>
-<button class="flex-1 bg-on-surface text-surface py-2.5 rounded-xl font-semibold text-body-sm hover:opacity-90 transition-all">
+                    <button class="flex-1 bg-on-surface text-surface py-2.5 rounded-xl font-semibold text-body-sm hover:opacity-90 transition-all">
                         Voir le profil
                     </button>
-</div>
-</div>
-<!-- Teacher Card 2 -->
-<div class="glass-card rounded-2xl overflow-hidden flex flex-col group">
-<div class="p-6">
-<div class="flex gap-4">
-<div class="relative">
-<div class="w-20 h-20 rounded-2xl bg-secondary-container/20 flex items-center justify-center border border-outline-variant shadow-sm">
-<span class="material-symbols-outlined text-secondary text-[32px]" style="font-variation-settings: 'FILL' 1;">person</span>
-</div>
-<span class="absolute -bottom-1 -right-1 w-5 h-5 bg-orange-400 border-2 border-white rounded-full"></span>
-</div>
-<div class="flex-1">
-<div class="flex justify-between items-start">
-<div>
-<h3 class="font-title-md text-title-md text-on-surface">Julien Lefebvre</h3>
-<p class="text-primary font-medium text-body-sm">Physique-Chimie</p>
-</div>
-<div class="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg">
-<span class="material-symbols-outlined text-yellow-600 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-yellow-700 font-bold text-label-md">4.8</span>
-</div>
-</div>
-<div class="flex flex-wrap gap-2 mt-3">
-<span class="bg-surface-container-high text-on-surface-variant px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">work_history</span> 5 ans d'exp.
-                                </span>
-<span class="bg-secondary-container/10 text-secondary px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">language</span> En ligne
-                                </span>
-</div>
-</div>
-</div>
-</div>
-<!-- Tracking Info -->
-<div class="bg-surface-container-low/50 px-6 py-4 border-t border-outline-variant space-y-3">
-<div class="flex justify-between items-center">
-<span class="text-label-md text-on-surface-variant font-medium">Forfait Actuel</span>
-<span class="text-body-sm font-semibold text-secondary">Standard 10h / mois</span>
-</div>
-<div class="space-y-1">
-<div class="flex justify-between text-label-md mb-1">
-<span class="text-on-surface-variant">Heures restantes</span>
-<span class="font-bold text-on-surface">1h / 10h</span>
-</div>
-<div class="w-full h-1.5 bg-outline-variant rounded-full overflow-hidden">
-<div class="h-full bg-error rounded-full" style="width: 90%"></div>
-</div>
-</div>
-<div class="grid grid-cols-2 gap-4 pt-2">
-<div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/50">
-<p class="text-[10px] text-outline uppercase font-bold mb-1">Séances</p>
-<p class="text-body-sm font-bold">12 complétées</p>
-</div>
-<div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/50">
-<p class="text-[10px] text-outline uppercase font-bold mb-1">Dernière</p>
-<p class="text-body-sm font-bold text-on-surface-variant">12 Mai, 16:30</p>
-</div>
-</div>
-</div>
-<div class="p-4 flex gap-3 mt-auto">
-<button class="flex-1 border border-outline-variant hover:bg-surface-container-high py-2.5 rounded-xl font-semibold text-body-sm transition-all">
-                        Voir l'historique
-                    </button>
-<button class="flex-1 bg-on-surface text-surface py-2.5 rounded-xl font-semibold text-body-sm hover:opacity-90 transition-all">
-                        Voir le profil
-                    </button>
-</div>
-</div>
-<!-- Teacher Card 3 -->
-<div class="glass-card rounded-2xl overflow-hidden flex flex-col group">
-<div class="p-6">
-<div class="flex gap-4">
-<div class="relative">
-<div class="w-20 h-20 rounded-2xl bg-tertiary-container/20 flex items-center justify-center border border-outline-variant shadow-sm">
-<span class="material-symbols-outlined text-tertiary text-[32px]" style="font-variation-settings: 'FILL' 1;">person</span>
-</div>
-<span class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></span>
-</div>
-<div class="flex-1">
-<div class="flex justify-between items-start">
-<div>
-<h3 class="font-title-md text-title-md text-on-surface">Emma Thompson</h3>
-<p class="text-primary font-medium text-body-sm">Anglais Littéraire</p>
-</div>
-<div class="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg">
-<span class="material-symbols-outlined text-yellow-600 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-yellow-700 font-bold text-label-md">5.0</span>
-</div>
-</div>
-<div class="flex flex-wrap gap-2 mt-3">
-<span class="bg-surface-container-high text-on-surface-variant px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">work_history</span> 8 ans d'exp.
-                                </span>
-<span class="bg-tertiary-container/10 text-tertiary px-2 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">location_on</span> Présentiel
-                                </span>
-</div>
-</div>
-</div>
-</div>
-<!-- Tracking Info -->
-<div class="bg-surface-container-low/50 px-6 py-4 border-t border-outline-variant space-y-3">
-<div class="flex justify-between items-center">
-<span class="text-label-md text-on-surface-variant font-medium">Forfait Actuel</span>
-<span class="text-body-sm font-semibold text-secondary">Duo 5h / semaine</span>
-</div>
-<div class="space-y-1">
-<div class="flex justify-between text-label-md mb-1">
-<span class="text-on-surface-variant">Heures restantes</span>
-<span class="font-bold text-on-surface">4h / 5h</span>
-</div>
-<div class="w-full h-1.5 bg-outline-variant rounded-full overflow-hidden">
-<div class="h-full bg-primary rounded-full" style="width: 20%"></div>
-</div>
-</div>
-<div class="grid grid-cols-2 gap-4 pt-2">
-<div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/50">
-<p class="text-[10px] text-outline uppercase font-bold mb-1">Séances</p>
-<p class="text-body-sm font-bold">8 complétées</p>
-</div>
-<div class="bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/50">
-<p class="text-[10px] text-outline uppercase font-bold mb-1">Prochaine</p>
-<p class="text-body-sm font-bold text-primary">Ven 17, 10:00</p>
-</div>
-</div>
-</div>
-<div class="p-4 flex gap-3 mt-auto">
-<button class="flex-1 border border-outline-variant hover:bg-surface-container-high py-2.5 rounded-xl font-semibold text-body-sm transition-all">
-                        Voir l'historique
-                    </button>
-<button class="flex-1 bg-on-surface text-surface py-2.5 rounded-xl font-semibold text-body-sm hover:opacity-90 transition-all">
-                        Voir le profil
-                    </button>
-</div>
-</div>
-<!-- Empty State / Add New Card -->
-<div class="border-2 border-dashed border-outline-variant rounded-2xl flex flex-col items-center justify-center p-12 text-center group cursor-pointer hover:border-primary/40 transition-all hover:bg-surface-container-low/30">
-<div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-outline text-[32px] group-hover:text-primary transition-colors">person_add</span>
-</div>
-<h4 class="font-title-md text-title-md text-on-surface mb-1">Trouver un nouvel enseignant</h4>
-<p class="text-body-sm text-on-surface-variant max-w-[240px]">Explorez notre catalogue d'experts pour d'autres matières.</p>
-<button class="mt-6 text-primary font-bold text-body-sm flex items-center gap-2">
+                </div>
+            </div>
+            {% empty %}
+            <!-- Empty State -->
+            <div class="border-2 border-dashed border-outline-variant/30 rounded-2xl flex flex-col items-center justify-center p-12 text-center group cursor-pointer hover:border-primary/40 transition-all hover:bg-surface-container-low/30">
+                <div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined text-outline text-[32px] group-hover:text-primary transition-colors">person_add</span>
+                </div>
+                <h4 class="font-title-md text-title-md text-on-surface mb-1">Trouver un nouvel enseignant</h4>
+                <p class="text-body-sm text-on-surface-variant max-w-[240px]">Explorez notre catalogue d'experts pour d'autres matières.</p>
+                <button class="mt-6 text-primary font-bold text-body-sm flex items-center gap-2">
                     Parcourir le catalogue
                     <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</button>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination / Summary -->
+        <div class="mt-12 flex flex-col md:flex-row items-center justify-between gap-6 pt-6 border-t border-outline-variant/30">
+            <p class="text-body-sm text-on-surface-variant">Affichage de {{ total_enseignants }} enseignant(s) actif(s)</p>
+            <div class="flex items-center gap-2">
+                <button class="w-10 h-10 rounded-xl border border-outline-variant/30 flex items-center justify-center hover:bg-surface-container-low transition-colors disabled:opacity-30" disabled="">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold">1</button>
+                <button class="w-10 h-10 rounded-xl border border-outline-variant/30 flex items-center justify-center hover:bg-surface-container-low transition-colors">2</button>
+                <button class="w-10 h-10 rounded-xl border border-outline-variant/30 flex items-center justify-center hover:bg-surface-container-low transition-colors">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
 </div>
-</div>
-<!-- Pagination / Summary -->
-<div class="mt-12 flex flex-col md:flex-row items-center justify-between gap-6 pt-6 border-t border-outline-variant">
-<p class="text-body-sm text-on-surface-variant">Affichage de 3 enseignants actifs</p>
-<div class="flex items-center gap-2">
-<button class="w-10 h-10 rounded-xl border border-outline-variant flex items-center justify-center hover:bg-surface-container-low transition-colors disabled:opacity-30" disabled="">
-<span class="material-symbols-outlined">chevron_left</span>
-</button>
-<button class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold">1</button>
-<button class="w-10 h-10 rounded-xl border border-outline-variant flex items-center justify-center hover:bg-surface-container-low transition-colors">2</button>
-<button class="w-10 h-10 rounded-xl border border-outline-variant flex items-center justify-center hover:bg-surface-container-low transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</button>
-</div>
-</div>
-</main>
-<!-- Floating Action Button -->
-<button class="fixed bottom-8 right-8 w-16 h-16 gradient-button rounded-full text-white shadow-2xl flex items-center justify-center z-50 group">
-<span class="material-symbols-outlined text-[32px] group-hover:rotate-90 transition-transform">add</span>
-</button>
-<script>
-        // Simple micro-interaction for cards
-        document.querySelectorAll('.glass-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.boxShadow = '0px 10px 30px rgba(139, 61, 255, 0.08)';
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.boxShadow = 'none';
-            });
-        });
-    </script>
-</body></html>
+
+</body>
+</html>
