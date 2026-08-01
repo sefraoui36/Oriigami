@@ -425,3 +425,186 @@ def get_disponibilites_enseignant(enseignant):
         {'jour': 'Lundi - Jeudi', 'heure': '17:00 - 20:00'},
         {'jour': 'Samedi', 'heure': '09:00 - 13:00'},
     ]
+
+# clients/views.py (AJOUTER cette fonction)
+
+@login_required
+def liste_forfaits(request):
+    """Vue pour afficher les forfaits du parent et de ses enfants"""
+    from forfaits.models import Forfait
+    from django.db.models import Sum
+    
+    # Récupérer le client parent connecté
+    parent = Client.objects.filter(utilisateur=request.user, type_client='PARENT').first()
+    
+    if not parent:
+        messages.warning(request, "Vous n'avez pas encore de profil parent.")
+        return redirect('clients:creer_profil_parent')
+    
+    # Récupérer tous les enfants du parent
+    enfants = Client.objects.filter(parent=parent, type_client='ETUDIANT')
+    nombre_enfants = enfants.count()
+    
+    # Récupérer les forfaits du parent
+    forfaits_parent = Forfait.objects.filter(utilisateur=request.user)
+    
+    # Récupérer les forfaits des enfants (via les affectations ou directement)
+    forfaits_enfants = []
+    heures_total_parent = 0
+    heures_utilisees_parent = 0
+    
+    for enfant in enfants:
+        # Récupérer les forfaits de l'enfant (à adapter selon votre modèle)
+        # Exemple: forfaits_enfant = Forfait.objects.filter(enfant=enfant)
+        # Pour l'exemple, on utilise des données simulées
+        heures_total = 40
+        heures_restantes = 20
+        heures_utilisees = heures_total - heures_restantes
+        
+        forfaits_enfants.append({
+            'enfant': enfant,
+            'heures_total': heures_total,
+            'heures_restantes': heures_restantes,
+            'heures_utilisees': heures_utilisees,
+            'pourcentage': int((heures_utilisees / heures_total * 100)) if heures_total > 0 else 0,
+            'statut': 'Actif' if heures_restantes > 5 else 'Presque épuisé' if heures_restantes > 0 else 'Épuisé',
+            'couleur_statut': 'green' if heures_restantes > 5 else 'amber' if heures_restantes > 0 else 'red'
+        })
+        
+        heures_total_parent += heures_total
+        heures_utilisees_parent += heures_utilisees
+    
+    # Statistiques globales
+    pourcentage_global = int((heures_utilisees_parent / heures_total_parent * 100)) if heures_total_parent > 0 else 0
+    
+    # Forfaits disponibles (offres)
+    offres_forfaits = get_offres_forfaits()
+    
+    # Recommandation
+    recommandation = get_recommandation_forfait(forfaits_enfants)
+    
+    context = {
+        'parent': parent,
+        'enfants': enfants,
+        'forfaits_enfants': forfaits_enfants,
+        'nombre_enfants': nombre_enfants,
+        'heures_total': heures_total_parent,
+        'heures_utilisees': heures_utilisees_parent,
+        'heures_restantes': heures_total_parent - heures_utilisees_parent,
+        'pourcentage_global': pourcentage_global,
+        'offres_forfaits': offres_forfaits,
+        'recommandation': recommandation,
+        'user': request.user,
+    }
+    
+    return render(request, 'parent/forfaits.html', context)
+
+def get_offres_forfaits():
+    """Récupère les offres de forfaits disponibles"""
+    return [
+        {
+            'id': 1,
+            'nom': 'Pack Light',
+            'description': 'Idéal pour un soutien ponctuel',
+            'heures': 10,
+            'prix': 1200,
+            'prix_par_heure': 120,
+            'couleur': 'primary',
+            'icone': 'lightbulb',
+            'popularite': 'standard',
+            'features': ['10 Heures de cours', 'Tous niveaux']
+        },
+        {
+            'id': 2,
+            'nom': 'Pack Standard',
+            'description': 'Le meilleur équilibre progrès/prix',
+            'heures': 20,
+            'prix': 2200,
+            'prix_par_heure': 110,
+            'couleur': 'primary',
+            'icone': 'rocket_launch',
+            'popularite': 'populaire',
+            'features': ['20 Heures de cours', 'Rapport personnalisé']
+        },
+        {
+            'id': 3,
+            'nom': 'Pack Premium',
+            'description': 'Accompagnement intensif complet',
+            'heures': 40,
+            'prix': 4000,
+            'prix_par_heure': 100,
+            'couleur': 'secondary',
+            'icone': 'workspace_premium',
+            'popularite': 'premium',
+            'features': ['40 Heures de cours', 'Suivi personnalisé', 'Rapports détaillés']
+        }
+    ]
+
+def get_recommandation_forfait(forfaits_enfants):
+    """Génère une recommandation basée sur les forfaits des enfants"""
+    for f in forfaits_enfants:
+        if f['heures_restantes'] < 5 and f['heures_restantes'] > 0:
+            return {
+                'message': f"Le forfait de {f['enfant'].prenom} est presque épuisé ({f['heures_restantes']}h restantes). Pensez à le recharger.",
+                'type': 'warning',
+                'enfant': f['enfant'].prenom
+            }
+        elif f['heures_restantes'] <= 0:
+            return {
+                'message': f"Le forfait de {f['enfant'].prenom} est épuisé. Veuillez recharger pour continuer les cours.",
+                'type': 'danger',
+                'enfant': f['enfant'].prenom
+            }
+    return None
+
+# clients/views.py (AJOUTER cette fonction)
+
+@login_required
+def acheter_forfait(request):
+    """Acheter un forfait pour un enfant"""
+    if request.method != 'POST':
+        return redirect('clients:liste_forfaits')
+    
+    from forfaits.models import Forfait
+    
+    enfant_id = request.POST.get('enfant')
+    forfait_id = request.POST.get('forfait')
+    
+    if not enfant_id or not forfait_id:
+        messages.error(request, "Veuillez sélectionner un enfant et un forfait.")
+        return redirect('clients:liste_forfaits')
+    
+    # Récupérer l'enfant
+    enfant = Client.objects.filter(id_client=enfant_id, type_client='ETUDIANT').first()
+    if not enfant:
+        messages.error(request, "Enfant non trouvé.")
+        return redirect('clients:liste_forfaits')
+    
+    # Vérifier que l'enfant appartient bien au parent
+    parent = Client.objects.filter(utilisateur=request.user, type_client='PARENT').first()
+    if enfant.parent != parent:
+        messages.error(request, "Vous n'êtes pas autorisé à acheter un forfait pour cet enfant.")
+        return redirect('clients:liste_forfaits')
+    
+    # Récupérer les détails du forfait
+    offres = get_offres_forfaits()
+    offre = None
+    for o in offres:
+        if o['id'] == int(forfait_id):
+            offre = o
+            break
+    
+    if not offre:
+        messages.error(request, "Forfait non trouvé.")
+        return redirect('clients:liste_forfaits')
+    
+    # Créer le forfait
+    forfait = Forfait.objects.create(
+        utilisateur=request.user,
+        nombre_heure=offre['heures'],
+        prix=offre['prix'],
+        # Ajoutez d'autres champs selon votre modèle
+    )
+    
+    messages.success(request, f"Forfait {offre['nom']} acheté avec succès pour {enfant.prenom} !")
+    return redirect('clients:liste_forfaits')
