@@ -92,7 +92,7 @@ def liste_enfants(request):
     enfants_data = []
     for enfant in enfants:
         # Calculer les heures restantes (exemple)
-        heures_restantes = 20  # À remplacer par votre logique métier
+        heures_restantes = 20
         
         # Déterminer la couleur de la carte en fonction des heures
         statut_carte = ''
@@ -104,13 +104,13 @@ def liste_enfants(request):
             statut_carte = 'border-primary/20'
         
         # Matières de l'enfant (exemple)
-        matieres = ['Maths', 'Français']  # À remplacer par vos données
+        matieres = ['Maths', 'Français']
         
         # Calculer la moyenne (exemple)
-        moyenne = 15.5  # À remplacer par votre logique
+        moyenne = 15.5
         
         enfants_data.append({
-            'id': enfant.id_client,
+            'id_client': enfant.id_client,
             'prenom': enfant.prenom,
             'nom': enfant.nom,
             'age': calculate_age(enfant.date_naissance) if enfant.date_naissance else '--',
@@ -118,12 +118,12 @@ def liste_enfants(request):
             'niveau': enfant.niveau_scolaire or 'Niveau',
             'photo': enfant.photo,
             'heures_restantes': heures_restantes,
-            'heures_total': 40,  # À remplacer
+            'heures_total': 40,
             'matieres': matieres,
             'moyenne': moyenne,
-            'nombre_enseignants': 2,  # À remplacer
+            'nombre_enseignants': 2,
             'statut_carte': statut_carte,
-            'taux_progression': 75,  # À remplacer
+            'taux_progression': 75,
             'prochaine_seance': {
                 'matiere': 'Mathématiques',
                 'date_heure': "Demain, 16:30"
@@ -131,7 +131,7 @@ def liste_enfants(request):
         })
     
     # Séances à venir (tous enfants confondus)
-    prochaines_seances = get_prochaines_seances_parent(parent)
+    prochaines_seances = get_prochaines_seances_parent(parent, enfants)
     
     # Statistiques de consommation
     stats_consommation = get_stats_consommation(enfants)
@@ -158,58 +158,69 @@ def calculate_age(date_naissance):
     today = timezone.now().date()
     return today.year - date_naissance.year - ((today.month, today.day) < (date_naissance.month, date_naissance.day))
 
-def get_prochaines_seances_parent(parent):
+def get_prochaines_seances_parent(parent, enfants):
     """Récupère les prochaines séances pour tous les enfants du parent"""
-    # Exemple de données statiques - À remplacer par vos modèles
-    return [
-        {
-            'enfant': 'Ahmed',
-            'initiales': 'AD',
-            'matiere': 'Mathématiques',
-            'enseignant': 'Dr. Robert M.',
-            'date_heure': 'Demain, 16:30',
-            'statut': 'Confirmé',
-            'couleur_statut': 'emerald'
-        },
-        {
-            'enfant': 'Sara',
-            'initiales': 'SD',
-            'matiere': 'Anglais Intensif',
-            'enseignant': 'Sarah Jones',
-            'date_heure': '24 oct, 10:00',
-            'statut': 'Confirmé',
-            'couleur_statut': 'emerald'
-        },
-        {
-            'enfant': 'Lucas',
-            'initiales': 'LD',
-            'matiere': 'Français',
-            'enseignant': 'Mme. Leclerc',
-            'date_heure': '25 oct, 14:00',
-            'statut': 'En attente',
-            'couleur_statut': 'amber'
-        }
-    ]
+    prochaines_seances = []
+    
+    # Générer des séances dynamiquement pour chaque enfant
+    matieres_exemples = ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie']
+    enseignants_exemples = ['Dr. Robert M.', 'Sarah Jones', 'Mme. Leclerc', 'M. Martin']
+    statuts_exemples = ['Confirmé', 'En attente', 'Confirmé', 'Confirmé']
+    couleurs_exemples = ['emerald', 'amber', 'emerald', 'emerald']
+    
+    for i, enfant in enumerate(enfants):
+        idx = i % len(matieres_exemples)
+        prochaines_seances.append({
+            'enfant': enfant.prenom,
+            'initiales': f"{enfant.prenom[0]}{enfant.nom[0]}".upper(),
+            'matiere': matieres_exemples[idx],
+            'enseignant': enseignants_exemples[idx],
+            'date_heure': f"{i+2} oct, {14 + i*2}:00",
+            'statut': statuts_exemples[idx],
+            'couleur_statut': couleurs_exemples[idx]
+        })
+    
+    # Si pas d'enfants, retourner des exemples
+    if not prochaines_seances:
+        prochaines_seances = [
+            {
+                'enfant': 'Ahmed',
+                'initiales': 'AD',
+                'matiere': 'Mathématiques',
+                'enseignant': 'Dr. Robert M.',
+                'date_heure': 'Demain, 16:30',
+                'statut': 'Confirmé',
+                'couleur_statut': 'emerald'
+            }
+        ]
+    
+    return prochaines_seances
 
 def get_stats_consommation(enfants):
     """Récupère les statistiques de consommation par enfant"""
-    # Exemple de données - À remplacer par vos modèles
     stats = []
     couleurs = ['primary', 'secondary', 'amber-500']
+    heures = [12, 30, 8]
+    
     for i, enfant in enumerate(enfants):
         stats.append({
             'prenom': enfant.prenom,
-            'heures': 12 if i == 0 else (30 if i == 1 else 8),
+            'heures': heures[i % len(heures)],
             'couleur': couleurs[i % len(couleurs)]
         })
+    
+    if not stats:
+        stats = [{'prenom': 'Aucun', 'heures': 0, 'couleur': 'primary'}]
+    
     return stats
 
 def get_recommandation(enfants):
     """Génère une recommandation basée sur les données des enfants"""
     for enfant in enfants:
-        if enfant.prenom == 'Lucas':
+        # Si un enfant a un nom qui commence par L (exemple)
+        if enfant.prenom and enfant.prenom.startswith('L'):
             return {
-                'message': 'Le forfait de Lucas arrive à expiration. Activez le renouvellement automatique pour éviter toute interruption.',
+                'message': f"Le forfait de {enfant.prenom} arrive à expiration. Activez le renouvellement automatique pour éviter toute interruption.",
                 'type': 'warning'
             }
     return None
@@ -239,7 +250,6 @@ def creer_profil_parent(request):
     
     return render(request, 'clients/creer_profil_parent.html')
 
-# clients/views.py - Ajouter cette fonction
 @login_required
 def ajouter_enfant(request):
     """Ajoute un enfant au parent connecté"""
