@@ -120,6 +120,10 @@ tailwind.config = {
         font-variation-settings: 'FILL' 1;
         color: #ffb782;
     }
+    .star-empty {
+        font-variation-settings: 'FILL' 0;
+        color: #cdc2d8;
+    }
     .sidebar-link {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
@@ -161,6 +165,29 @@ tailwind.config = {
         background: #cdc2d8;
         border-radius: 10px;
     }
+    .modal {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .modal-backdrop {
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+    }
+    .rating-star {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 40px;
+    }
+    .rating-star:hover {
+        transform: scale(1.2);
+    }
+    .rating-star.active {
+        font-variation-settings: 'FILL' 1;
+        color: #ffb782;
+    }
+    .btn-filter.active {
+        background: #710fe5;
+        color: white;
+    }
 </style>
 </head>
 <body class="bg-background text-on-surface font-body-lg antialiased overflow-hidden h-screen">
@@ -179,45 +206,44 @@ tailwind.config = {
 
         <!-- Navigation -->
         <nav class="flex-1 space-y-1">
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'authentication:dashboard' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">dashboard</span>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:profil' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">person</span>
                 <span>Mon Profil</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:enseignants' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">school</span>
                 <span>Mes Enseignants</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+            <a href="{% url 'etudiants:seances' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">event</span>
                 <span>Mes Séances</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:forfait' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">sell</span>
                 <span>Mon Forfait</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:portefeuille' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
                 <span>Mon Portefeuille</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:progression' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">trending_up</span>
                 <span>Ma Progression</span>
             </a>
-            <a href="#" class="sidebar-link active">
-                <span class="material-symbols-outlined text-[22px]">star</span>
+            <a href="{% url 'etudiants:avis' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">star</span>
                 <span>Avis Enseignants</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:notifications' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">notifications</span>
                 <span>Notifications</span>
                 <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
             </a>
-           
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:parametres' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">settings</span>
                 <span>Paramètres</span>
             </a>
@@ -225,7 +251,7 @@ tailwind.config = {
 
         <!-- Déconnexion -->
         <div class="mt-auto pt-4 border-t border-outline-variant/30">
-            <a href="#" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
                 <span class="material-symbols-outlined text-[22px]">logout</span>
                 <span>Déconnexion</span>
             </a>
@@ -235,10 +261,24 @@ tailwind.config = {
     <!-- ===== MAIN CONTENT ===== -->
     <main class="flex-1 overflow-y-auto p-8">
 
+        <!-- Messages -->
+        {% if messages %}
+            <div class="mb-6 space-y-3">
+                {% for message in messages %}
+                    <div class="p-4 rounded-xl {% if message.tags == 'success' %}bg-green-50 border border-green-200 text-green-800{% elif message.tags == 'error' %}bg-red-50 border border-red-200 text-red-800{% else %}bg-blue-50 border border-blue-200 text-blue-800{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <!-- Header -->
         <div class="flex items-center justify-between mb-8">
             <div>
-                <h1 class="font-headline-lg text-headline-lg text-primary">⭐ Avis Enseignants</h1>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">star</span>
+                    Avis Enseignants
+                </h1>
                 <p class="text-on-surface-variant body-sm">Partagez votre expérience et aidez les autres étudiants</p>
             </div>
             <div class="flex items-center gap-3">
@@ -247,7 +287,7 @@ tailwind.config = {
                     <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
                 <div class="w-10 h-10 rounded-full gradient-button flex items-center justify-center text-white font-semibold shadow-lg">
-                    TM
+                    {{ first_name|slice:":1"|upper }}{{ last_name|slice:":1"|upper|default:"U" }}
                 </div>
             </div>
         </div>
@@ -257,23 +297,27 @@ tailwind.config = {
             <div class="glass-card p-6 rounded-xl relative overflow-hidden flex flex-col justify-center border-l-4 border-primary">
                 <p class="text-label-md font-label-md text-outline uppercase mb-2">Satisfaction Globale</p>
                 <div class="flex items-baseline gap-2">
-                    <span class="text-display-lg font-display-lg text-primary">4.8</span>
+                    <span class="text-display-lg font-display-lg text-primary">{{ note_moyenne|default:"0.0" }}</span>
                     <span class="text-headline-lg-mobile text-outline">/ 5</span>
                 </div>
                 <div class="flex gap-1 mt-2">
-                    <span class="material-symbols-outlined star-active">star</span>
-                    <span class="material-symbols-outlined star-active">star</span>
-                    <span class="material-symbols-outlined star-active">star</span>
-                    <span class="material-symbols-outlined star-active">star</span>
-                    <span class="material-symbols-outlined star-active">star_half</span>
+                    {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= note_moyenne|floatformat:"0"|add:"0" %}
+                            <span class="material-symbols-outlined star-active">star</span>
+                        {% elif forloop.counter <= note_moyenne|add:"0.5" %}
+                            <span class="material-symbols-outlined star-active">star_half</span>
+                        {% else %}
+                            <span class="material-symbols-outlined star-empty">star</span>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
             <div class="glass-card p-6 rounded-xl">
                 <p class="text-label-md font-label-md text-outline uppercase mb-4">Total des avis laissés</p>
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-headline-lg font-headline-lg text-on-surface">12 <span class="text-body-sm font-normal text-outline">avis</span></p>
-                        <p class="text-body-sm text-secondary font-medium mt-1">+2 ce mois-ci</p>
+                        <p class="text-headline-lg font-headline-lg text-on-surface">{{ total_avis|default:"0" }} <span class="text-body-sm font-normal text-outline">avis</span></p>
+                        <p class="text-body-sm text-secondary font-medium mt-1">{{ enseignants_a_noter|length }} enseignant(s) à noter</p>
                     </div>
                     <div class="w-14 h-14 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
                         <span class="material-symbols-outlined text-3xl">rate_review</span>
@@ -284,7 +328,7 @@ tailwind.config = {
                 <p class="text-label-md font-label-md text-outline uppercase mb-4">Moyenne de Progression</p>
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-headline-lg font-headline-lg text-on-surface">+15%</p>
+                        <p class="text-headline-lg font-headline-lg text-on-surface">{% if a_ete_ameliore %}+15%{% else %}0%{% endif %}</p>
                         <p class="text-body-sm text-outline mt-1">Senti. d'amélioration</p>
                     </div>
                     <div class="w-14 h-14 rounded-full bg-tertiary-container/10 flex items-center justify-center text-tertiary-container">
@@ -297,102 +341,282 @@ tailwind.config = {
         <!-- Teacher Reviews -->
         <div>
             <div class="flex items-center justify-between mb-6">
-                <h3 class="font-title-md text-title-md text-on-surface">Vos enseignants récents</h3>
+                <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">school</span>
+                    Vos enseignants récents
+                </h3>
                 <div class="flex gap-2">
-                    <button class="px-4 py-2 rounded-lg bg-surface-container-high text-body-sm font-semibold text-primary">Tous</button>
-                    <button class="px-4 py-2 rounded-lg text-body-sm font-medium text-on-surface-variant hover:bg-surface-container-low">À noter</button>
-                    <button class="px-4 py-2 rounded-lg text-body-sm font-medium text-on-surface-variant hover:bg-surface-container-low">Déjà notés</button>
+                    <button class="px-4 py-2 rounded-lg bg-primary text-white text-body-sm font-semibold btn-filter active" data-filter="all">Tous</button>
+                    <button class="px-4 py-2 rounded-lg text-body-sm font-medium text-on-surface-variant hover:bg-surface-container-low btn-filter" data-filter="unrated">À noter</button>
+                    <button class="px-4 py-2 rounded-lg text-body-sm font-medium text-on-surface-variant hover:bg-surface-container-low btn-filter" data-filter="rated">Déjà notés</button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                <!-- Teacher 1: Not Rated -->
-                <div class="glass-card p-6 rounded-2xl flex flex-col h-full border-2 border-dashed border-primary/20 bg-primary/5">
-                    <div class="flex gap-4 items-start mb-6">
-                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
-                            <img class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=Dr.+Sophie+Martin&background=710fe5&color=fff&size=128&bold=true" alt="Dr. Sophie Martin"/>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-title-md text-on-surface">Dr. Sophie Martin</h4>
-                            <p class="text-label-md text-primary font-bold uppercase tracking-tight">Mathématiques / Expert</p>
-                            <div class="flex items-center gap-2 mt-1 text-body-sm text-outline">
-                                <span class="material-symbols-outlined text-sm">schedule</span>
-                                <span>Dernière séance: 12 Oct 2023</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="avis-container">
+                
+                <!-- Enseignants à noter -->
+                {% for enseignant in enseignants_a_noter %}
+                    <div class="glass-card p-6 rounded-2xl flex flex-col h-full border-2 border-dashed border-primary/20 bg-primary/5 avis-item" data-rated="false">
+                        <div class="flex gap-4 items-start mb-6">
+                            <div class="w-16 h-16 rounded-xl bg-primary-light flex items-center justify-center shadow-md border-2 border-primary/20">
+                                <span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">person</span>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-title-md text-on-surface">{{ enseignant.nom }}</h4>
+                                <p class="text-label-md text-primary font-bold uppercase tracking-tight">{{ enseignant.matiere }}</p>
+                                <div class="flex items-center gap-2 mt-1 text-body-sm text-outline">
+                                    <span class="material-symbols-outlined text-sm">schedule</span>
+                                    <span>Dernière séance: {{ enseignant.derniere_seance|date:"d M Y"|default:"Non programmée" }}</span>
+                                </div>
                             </div>
                         </div>
+                        <div class="bg-white/60 rounded-xl p-4 mb-6 flex-1 border border-outline-variant/30 italic text-body-sm text-on-surface-variant text-center flex flex-col justify-center">
+                            "Vous n'avez pas encore laissé d'avis pour cette enseignante. Votre retour est précieux."
+                        </div>
+                        <button onclick="ouvrirFormulaireAvis({{ enseignant.id }}, '{{ enseignant.nom }}', '{{ enseignant.matiere }}', {{ enseignant.affectation_id }})" 
+                                class="gradient-button w-full py-3 rounded-xl text-white font-bold text-body-sm shadow-md flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">edit_square</span>
+                            Laisser un avis
+                        </button>
                     </div>
-                    <div class="bg-white/60 rounded-xl p-4 mb-6 flex-1 border border-outline-variant/30 italic text-body-sm text-on-surface-variant text-center flex flex-col justify-center">
-                        "Vous n'avez pas encore laissé d'avis pour cette enseignante. Votre retour est précieux."
+                {% empty %}
+                    <!-- Message si aucun enseignant à noter -->
+                    <div class="col-span-full text-center py-12">
+                        <div class="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
+                            <span class="material-symbols-outlined text-green-500 text-[48px]">check_circle</span>
+                        </div>
+                        <h3 class="text-title-md font-title-md text-on-surface">Tous vos enseignants sont notés !</h3>
+                        <p class="text-body-sm text-on-surface-variant">Vous avez laissé un avis pour tous vos enseignants.</p>
                     </div>
-                    <button class="gradient-button w-full py-3 rounded-xl text-white font-bold text-body-sm shadow-md flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined">edit_square</span>
-                        Laisser un avis
-                    </button>
-                </div>
+                {% endfor %}
 
-                <!-- Teacher 2: Rated -->
-                <div class="glass-card p-6 rounded-2xl flex flex-col h-full">
-                    <div class="flex gap-4 items-start mb-4">
-                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
-                            <img class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=Jean-Pierre+Durand&background=ae128a&color=fff&size=128&bold=true" alt="Jean-Pierre Durand"/>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-title-md text-on-surface">Jean-Pierre Durand</h4>
-                            <p class="text-label-md text-primary font-bold uppercase tracking-tight">Histoire &amp; Géo</p>
-                            <div class="flex gap-0.5 mt-2">
-                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
-                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
-                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
-                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
-                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
+                <!-- Avis existants -->
+                {% for avis in avis_existants %}
+                    <div class="glass-card p-6 rounded-2xl flex flex-col h-full avis-item" data-rated="true">
+                        <div class="flex gap-4 items-start mb-4">
+                            <div class="w-16 h-16 rounded-xl bg-secondary-light flex items-center justify-center shadow-md border-2 border-secondary/20">
+                                <span class="material-symbols-outlined text-secondary text-[32px]" style="font-variation-settings: 'FILL' 1;">person</span>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-title-md text-on-surface">{{ avis.enseignant_nom }}</h4>
+                                <p class="text-label-md text-primary font-bold uppercase tracking-tight">{{ avis.matiere }}</p>
+                                <div class="flex gap-0.5 mt-2">
+                                    {% for i in "12345"|make_list %}
+                                        {% if forloop.counter <= avis.note %}
+                                            <span class="material-symbols-outlined star-active text-[18px]">star</span>
+                                        {% else %}
+                                            <span class="material-symbols-outlined star-empty text-[18px]">star</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="bg-surface-container-low rounded-xl p-4 mb-6 flex-1 border border-outline-variant/30">
-                        <p class="text-body-sm text-on-surface-variant line-clamp-4">
-                            "Excellent pédagogue. Jean-Pierre a su redonner le goût de l'histoire à mon fils grâce à des exemples concrets et une narration captivante. Nous recommandons vivement !"
-                        </p>
-                    </div>
-                    <div class="flex items-center justify-between text-label-md text-outline">
-                        <span>Posté le 05 Oct 2023</span>
-                        <button class="text-primary hover:underline font-semibold">Modifier</button>
-                    </div>
-                </div>
-
-                <!-- Teacher 3: Rated -->
-                <div class="glass-card p-6 rounded-2xl flex flex-col h-full">
-                    <div class="flex gap-4 items-start mb-4">
-                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
-                            <img class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=Lucas+Bernard&background=ad5900&color=fff&size=128&bold=true" alt="Lucas Bernard"/>
+                        <div class="bg-surface-container-low rounded-xl p-4 mb-6 flex-1 border border-outline-variant/30">
+                            <p class="text-body-sm text-on-surface-variant line-clamp-4">{{ avis.commentaire }}</p>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="font-title-md text-on-surface">Lucas Bernard</h4>
-                            <p class="text-label-md text-primary font-bold uppercase tracking-tight">Anglais / TOEFL</p>
-                            <div class="flex gap-0.5 mt-2">
-                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
-                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
-                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
-                                <span class="material-symbols-outlined star-active text-[18px]">star</span>
-                                <span class="material-symbols-outlined text-outline text-[18px]">star</span>
+                        <div class="flex items-center justify-between text-label-md text-outline">
+                            <span>Posté le {{ avis.date_creation|date:"d M Y" }}</span>
+                            <button onclick="modifierAvis({{ avis.id }}, {{ avis.enseignant_id }}, '{{ avis.enseignant_nom }}', '{{ avis.matiere }}', {{ avis.note }}, '{{ avis.commentaire }}', {{ avis.affectation_id }})" 
+                                    class="text-primary hover:underline font-semibold">
+                                Modifier
+                            </button>
+                        </div>
+                    </div>
+                {% empty %}
+                    <!-- Message si aucun avis -->
+                    {% if not enseignants_a_noter %}
+                        <div class="col-span-full text-center py-12">
+                            <div class="w-20 h-20 rounded-full bg-surface-container-high flex items-center justify-center mx-auto mb-4">
+                                <span class="material-symbols-outlined text-on-surface-variant text-[48px]">rate_review</span>
                             </div>
+                            <h3 class="text-title-md font-title-md text-on-surface">Aucun avis</h3>
+                            <p class="text-body-sm text-on-surface-variant">Vous n'avez pas encore d'enseignants assignés.</p>
                         </div>
-                    </div>
-                    <div class="bg-surface-container-low rounded-xl p-4 mb-6 flex-1 border border-outline-variant/30">
-                        <p class="text-body-sm text-on-surface-variant line-clamp-4">
-                            "Méthode interactive très efficace pour préparer le TOEFL. Lucas est très ponctuel et dynamique. Petit bémol sur les supports de cours qui pourraient être plus variés."
-                        </p>
-                    </div>
-                    <div class="flex items-center justify-between text-label-md text-outline">
-                        <span>Posté le 28 Sep 2023</span>
-                        <button class="text-primary hover:underline font-semibold">Modifier</button>
-                    </div>
-                </div>
+                    {% endif %}
+                {% endfor %}
+                
             </div>
         </div>
 
     </main>
 
 </div>
+
+<!-- ===== MODAL AJOUT/MODIFICATION AVIS ===== -->
+<div id="avisModal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none modal">
+    <div class="absolute inset-0 modal-backdrop" onclick="fermerModal()"></div>
+    <div class="bg-white rounded-3xl max-w-2xl w-full mx-4 p-8 relative z-10 shadow-2xl transform transition-all scale-95">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">edit_square</span>
+                <span id="modalTitle">Laisser un avis</span>
+            </h3>
+            <button onclick="fermerModal()" class="p-2 rounded-full hover:bg-surface-container-high transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        
+        <form method="post" id="avisForm">
+            {% csrf_token %}
+            <input type="hidden" name="enseignant_id" id="enseignant_id">
+            <input type="hidden" name="affectation_id" id="affectation_id">
+            
+            <div class="mb-6">
+                <div class="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl">
+                    <div class="w-12 h-12 rounded-full bg-primary-light flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary">person</span>
+                    </div>
+                    <div>
+                        <p class="font-body-lg font-bold text-on-surface" id="enseignantNom">-</p>
+                        <p class="text-label-md text-outline" id="enseignantMatiere">-</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <label class="font-label-md text-on-surface-variant block mb-2">Votre note</label>
+                <div class="flex gap-2" id="ratingStars">
+                    {% for i in "12345"|make_list %}
+                        <span class="material-symbols-outlined rating-star star-empty" data-value="{{ forloop.counter }}" onclick="setRating({{ forloop.counter }})">star</span>
+                    {% endfor %}
+                </div>
+                <input type="hidden" name="note" id="note_input" value="0">
+            </div>
+            
+            <div class="mb-6">
+                <label class="font-label-md text-on-surface-variant block mb-2">Votre commentaire</label>
+                {{ form.commentaire }}
+            </div>
+            
+            <div class="flex items-center justify-end gap-4">
+                <button type="button" onclick="fermerModal()" class="px-6 py-3 text-on-surface-variant font-bold hover:bg-surface-container-high rounded-xl transition-all">Annuler</button>
+                <button type="submit" class="px-8 py-3 gradient-button text-white rounded-xl font-bold shadow-lg shadow-primary/20">
+                    <span id="submitButtonText">Envoyer l'avis</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Filtrage des avis
+    document.querySelectorAll('.btn-filter').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.btn-filter').forEach(b => {
+                b.classList.remove('bg-primary', 'text-white');
+                b.classList.add('text-on-surface-variant');
+            });
+            this.classList.add('bg-primary', 'text-white');
+            this.classList.remove('text-on-surface-variant');
+            
+            const filter = this.dataset.filter;
+            const items = document.querySelectorAll('.avis-item');
+            
+            items.forEach(item => {
+                if (filter === 'all') {
+                    item.style.display = 'flex';
+                } else if (filter === 'rated') {
+                    item.style.display = item.dataset.rated === 'true' ? 'flex' : 'none';
+                } else if (filter === 'unrated') {
+                    item.style.display = item.dataset.rated === 'false' ? 'flex' : 'none';
+                }
+            });
+        });
+    });
+
+    // Gestion du rating
+    let ratingValue = 0;
+    
+    function setRating(value) {
+        ratingValue = value;
+        document.getElementById('note_input').value = value;
+        
+        document.querySelectorAll('.rating-star').forEach(star => {
+            const starValue = parseInt(star.dataset.value);
+            if (starValue <= value) {
+                star.classList.add('star-active');
+                star.classList.remove('star-empty');
+            } else {
+                star.classList.remove('star-active');
+                star.classList.add('star-empty');
+            }
+        });
+    }
+
+    // Ouvrir le modal pour laisser un avis
+    function ouvrirFormulaireAvis(enseignantId, nom, matiere, affectationId) {
+        document.getElementById('modalTitle').textContent = 'Laisser un avis';
+        document.getElementById('submitButtonText').textContent = 'Envoyer l\'avis';
+        document.getElementById('enseignant_id').value = enseignantId;
+        document.getElementById('affectation_id').value = affectationId;
+        document.getElementById('enseignantNom').textContent = nom;
+        document.getElementById('enseignantMatiere').textContent = matiere;
+        
+        // Réinitialiser le rating
+        ratingValue = 0;
+        document.getElementById('note_input').value = 0;
+        document.querySelectorAll('.rating-star').forEach(star => {
+            star.classList.remove('star-active');
+            star.classList.add('star-empty');
+        });
+        
+        // Réinitialiser le commentaire
+        document.querySelector('#avisForm textarea[name="commentaire"]').value = '';
+        
+        // Afficher le modal
+        document.getElementById('avisModal').classList.remove('opacity-0', 'pointer-events-none');
+        document.getElementById('avisModal').querySelector('.bg-white').classList.remove('scale-95');
+        document.getElementById('avisModal').querySelector('.bg-white').classList.add('scale-100');
+    }
+
+    // Modifier un avis existant
+    function modifierAvis(avisId, enseignantId, nom, matiere, note, commentaire, affectationId) {
+        document.getElementById('modalTitle').textContent = 'Modifier votre avis';
+        document.getElementById('submitButtonText').textContent = 'Mettre à jour';
+        document.getElementById('enseignant_id').value = enseignantId;
+        document.getElementById('affectation_id').value = affectationId;
+        document.getElementById('enseignantNom').textContent = nom;
+        document.getElementById('enseignantMatiere').textContent = matiere;
+        
+        // Définir le rating
+        setRating(note);
+        
+        // Définir le commentaire
+        document.querySelector('#avisForm textarea[name="commentaire"]').value = commentaire;
+        
+        // Ajouter un champ caché pour l'ID de l'avis (pour la modification)
+        let existingInput = document.getElementById('avis_id');
+        if (!existingInput) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'avis_id';
+            input.id = 'avis_id';
+            input.value = avisId;
+            document.getElementById('avisForm').appendChild(input);
+        } else {
+            existingInput.value = avisId;
+        }
+        
+        // Afficher le modal
+        document.getElementById('avisModal').classList.remove('opacity-0', 'pointer-events-none');
+        document.getElementById('avisModal').querySelector('.bg-white').classList.remove('scale-95');
+        document.getElementById('avisModal').querySelector('.bg-white').classList.add('scale-100');
+    }
+
+    // Fermer le modal
+    function fermerModal() {
+        document.getElementById('avisModal').classList.add('opacity-0', 'pointer-events-none');
+        document.getElementById('avisModal').querySelector('.bg-white').classList.remove('scale-100');
+        document.getElementById('avisModal').querySelector('.bg-white').classList.add('scale-95');
+    }
+
+    // Fermer le modal en appuyant sur Echap
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            fermerModal();
+        }
+    });
+</script>
 
 </body>
 </html>

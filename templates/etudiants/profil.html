@@ -153,6 +153,8 @@ tailwind.config = {
         box-shadow: 0 0 0 4px rgba(113, 15, 229, 0.1);
         border-color: #710fe5;
     }
+    .bg-error\/20 { background-color: rgba(186, 26, 26, 0.2); }
+    .border-error\/20 { border-color: rgba(186, 26, 26, 0.2); }
 </style>
 </head>
 <body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
@@ -177,45 +179,44 @@ tailwind.config = {
 
         <!-- Navigation -->
         <nav class="flex-1 space-y-1">
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'authentication:dashboard' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">dashboard</span>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="sidebar-link active">
-                <span class="material-symbols-outlined text-[22px]">person</span>
+            <a href="{% url 'etudiants:profil' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">person</span>
                 <span>Mon Profil</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:enseignants' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">school</span>
                 <span>Mes Enseignants</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+            <a href="{% url 'etudiants:seances' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">event</span>
                 <span>Mes Séances</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:forfait' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">sell</span>
                 <span>Mon Forfait</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">wallet</span>
+            <a href="{% url 'etudiants:portefeuille' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
                 <span>Mon Portefeuille</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:progression' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">trending_up</span>
                 <span>Ma Progression</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:avis' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">star</span>
                 <span>Avis Enseignants</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:notifications' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">notifications</span>
                 <span>Notifications</span>
                 <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
             </a>
-          
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:parametres' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">settings</span>
                 <span>Paramètres</span>
             </a>
@@ -223,7 +224,7 @@ tailwind.config = {
 
         <!-- Déconnexion -->
         <div class="mt-auto pt-4 border-t border-outline-variant/30">
-            <a href="#" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
                 <span class="material-symbols-outlined text-[22px]">logout</span>
                 <span>Déconnexion</span>
             </a>
@@ -236,7 +237,10 @@ tailwind.config = {
         <!-- Header -->
         <div class="flex items-center justify-between mb-8">
             <div>
-                <h1 class="font-headline-lg text-headline-lg text-on-surface">👤 Mon Profil</h1>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">person</span>
+                    Mon Profil
+                </h1>
                 <p class="text-on-surface-variant body-sm">Gérez vos informations personnelles</p>
             </div>
             <div class="flex items-center gap-3">
@@ -245,7 +249,7 @@ tailwind.config = {
                     <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
                 <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
-                    TM
+                    {{ first_name|slice:":1"|upper }}{{ last_name|slice:":1"|upper|default:"U" }}
                 </div>
             </div>
         </div>
@@ -255,8 +259,8 @@ tailwind.config = {
             <!-- Bannière -->
             <div class="h-32 bg-gradient-to-r from-primary/20 to-secondary/20 relative">
                 <div class="absolute -bottom-12 left-8">
-                    <div class="w-28 h-28 rounded-2xl bg-white border-4 border-white shadow-lg overflow-hidden">
-                        <img src="https://ui-avatars.com/api/?name=Thomas+Martin&background=710fe5&color=fff&size=128&bold=true" alt="Avatar" class="w-full h-full object-cover">
+                    <div class="w-28 h-28 rounded-2xl bg-white border-4 border-white shadow-lg overflow-hidden flex items-center justify-center bg-primary-gradient text-white text-4xl font-bold">
+                        {{ first_name|slice:":1"|upper }}{{ last_name|slice:":1"|upper|default:"U" }}
                     </div>
                 </div>
             </div>
@@ -265,14 +269,15 @@ tailwind.config = {
             <div class="pt-16 px-8 pb-8">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
-                        <h2 class="text-2xl font-bold text-on-surface">Thomas Martin</h2>
+                        <h2 class="text-2xl font-bold text-on-surface">{{ first_name|default:"Thomas" }} {{ last_name|default:"Martin" }}</h2>
                         <p class="text-on-surface-variant">Étudiant • Membre depuis janvier 2024</p>
                     </div>
                     <div class="flex gap-3 mt-4 md:mt-0">
-                        <button class="px-4 py-2 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors">
+                        <button class="px-4 py-2 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors flex items-center gap-1">
                             <span class="material-symbols-outlined text-[18px]">edit</span>
+                            Modifier
                         </button>
-                        <button class="px-6 py-2 bg-primary-gradient text-white rounded-lg hover:opacity-90 transition-opacity">
+                        <button class="px-6 py-2 bg-primary-gradient text-white rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1">
                             <span class="material-symbols-outlined text-[18px]">save</span>
                             Enregistrer
                         </button>
@@ -283,35 +288,41 @@ tailwind.config = {
 
         <!-- Formulaire profil -->
         <div class="mt-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-8">
-            <h3 class="font-title-md text-title-md text-on-surface mb-6">Informations personnelles</h3>
+            <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-6">
+                <span class="material-symbols-outlined text-primary">info</span>
+                Informations personnelles
+            </h3>
             
             <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-medium text-on-surface-variant mb-1">Prénom</label>
-                    <input type="text" value="Thomas" class="form-input w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary outline-none">
+                    <input type="text" value="{{ first_name|default:'Thomas' }}" class="form-input w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-on-surface-variant mb-1">Nom</label>
-                    <input type="text" value="Martin" class="form-input w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary outline-none">
+                    <input type="text" value="{{ last_name|default:'Martin' }}" class="form-input w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-on-surface-variant mb-1">Email</label>
-                    <input type="email" value="thomas.martin@email.com" class="form-input w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary outline-none">
+                    <input type="email" value="{{ user.email|default:'thomas.martin@email.com' }}" class="form-input w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-on-surface-variant mb-1">Téléphone</label>
-                    <input type="tel" value="+33 6 12 34 56 78" class="form-input w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary outline-none">
+                    <input type="tel" value="{{ user.telephone|default:'+33 6 12 34 56 78' }}" class="form-input w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary outline-none">
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-on-surface-variant mb-1">Adresse</label>
-                    <input type="text" value="12 Rue de la Paix, 75001 Paris" class="form-input w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary outline-none">
+                    <input type="text" value="{{ user.adresse_actuelle|default:'12 Rue de la Paix, 75001 Paris' }}" class="form-input w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary outline-none">
                 </div>
             </form>
         </div>
 
         <!-- Sécurité -->
         <div class="mt-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-8">
-            <h3 class="font-title-md text-title-md text-on-surface mb-6">🔒 Sécurité</h3>
+            <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-6">
+                <span class="material-symbols-outlined text-primary">lock</span>
+                Sécurité
+            </h3>
             <div class="space-y-4">
                 <div class="flex items-center justify-between p-4 bg-background rounded-xl border border-outline-variant/20">
                     <div>
@@ -334,11 +345,14 @@ tailwind.config = {
         </div>
 
         <!-- Suppression compte -->
-        <div class="mt-6 p-6 bg-error-container/20 rounded-2xl border border-error/20">
+        <div class="mt-6 p-6 bg-error/10 rounded-2xl border border-error/20">
             <div class="flex items-center justify-between">
-                <div>
-                    <h4 class="font-semibold text-error">⚠️ Zone dangereuse</h4>
-                    <p class="text-sm text-on-surface-variant">Cette action est irréversible</p>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-error">warning</span>
+                    <div>
+                        <h4 class="font-semibold text-error">Zone dangereuse</h4>
+                        <p class="text-sm text-on-surface-variant">Cette action est irréversible</p>
+                    </div>
                 </div>
                 <button class="px-6 py-2 bg-error text-white rounded-lg hover:bg-error/90 transition-colors">
                     Supprimer mon compte

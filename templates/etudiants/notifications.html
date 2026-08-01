@@ -8,383 +8,460 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .notification-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .notification-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.08);
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cdc2d8;
-            border-radius: 10px;
-        }
-        .sidebar-active {
-            background-color: rgba(139, 61, 255, 0.1);
-            color: #710fe5;
-            border-left-width: 4px;
-            border-left-color: #710fe5;
-            font-weight: 600;
-        }
-        .gradient-button {
-            background: linear-gradient(135deg, #8B3DFF 0%, #FE60CF 100%);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .gradient-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.2);
-        }
-    </style>
 <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "primary-fixed-dim": "#d4bbff",
-                        "outline": "#7c7387",
-                        "tertiary-fixed": "#ffdcc5",
-                        "surface-container-highest": "#e1e3e4",
-                        "secondary-container": "#fe60cf",
-                        "error-container": "#ffdad6",
-                        "on-primary": "#ffffff",
-                        "on-primary-fixed": "#270058",
-                        "primary-container": "#8b3dff",
-                        "on-tertiary-fixed": "#301400",
-                        "primary": "#710fe5",
-                        "primary-fixed": "#ebdcff",
-                        "surface-variant": "#e1e3e4",
-                        "secondary": "#ae128a",
-                        "on-primary-fixed-variant": "#5d00c2",
-                        "tertiary-container": "#ad5900",
-                        "on-secondary": "#ffffff",
-                        "inverse-on-surface": "#f0f1f2",
-                        "on-secondary-container": "#680052",
-                        "surface-dim": "#d9dadb",
-                        "secondary-fixed": "#ffd8ec",
-                        "on-error": "#ffffff",
-                        "surface-container": "#edeeef",
-                        "tertiary-fixed-dim": "#ffb782",
-                        "surface-bright": "#f8f9fa",
-                        "surface": "#f8f9fa",
-                        "on-primary-container": "#faf1ff",
-                        "on-tertiary-fixed-variant": "#703800",
-                        "on-tertiary-container": "#fff2eb",
-                        "background": "#f8f9fa",
-                        "on-error-container": "#93000a",
-                        "secondary-fixed-dim": "#ffaede",
-                        "on-secondary-fixed": "#3b002d",
-                        "surface-container-lowest": "#ffffff",
-                        "tertiary": "#894500",
-                        "on-secondary-fixed-variant": "#87006b",
-                        "surface-container-low": "#f3f4f5",
-                        "on-tertiary": "#ffffff",
-                        "on-surface-variant": "#4b4456",
-                        "on-background": "#191c1d",
-                        "outline-variant": "#cdc2d8",
-                        "inverse-surface": "#2e3132",
-                        "surface-container-high": "#e7e8e9",
-                        "error": "#ba1a1a",
-                        "surface-tint": "#7921ed",
-                        "on-surface": "#191c1d",
-                        "inverse-primary": "#d4bbff"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "container-padding": "32px",
-                        "card-gap": "24px",
-                        "section-margin": "48px",
-                        "base": "8px",
-                        "gutter": "24px"
-                    },
-                    "fontFamily": {
-                        "headline-lg-mobile": ["Plus Jakarta Sans"],
-                        "body-sm": ["Plus Jakarta Sans"],
-                        "title-md": ["Plus Jakarta Sans"],
-                        "label-md": ["Inter"],
-                        "body-lg": ["Plus Jakarta Sans"],
-                        "headline-lg": ["Plus Jakarta Sans"],
-                        "display-lg": ["Plus Jakarta Sans"]
-                    },
-                    "fontSize": {
-                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
-                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
-                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
-                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
-                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
-                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
-                    }
-                },
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "on-surface-variant": "#4b4456",
+                "error": "#ba1a1a",
+                "tertiary-fixed-dim": "#ffb782",
+                "surface-dim": "#d9dadb",
+                "inverse-surface": "#2e3132",
+                "primary-container": "#8b3dff",
+                "background": "#f8f9fa",
+                "on-primary": "#ffffff",
+                "on-primary-fixed": "#270058",
+                "surface-container": "#edeeef",
+                "tertiary-container": "#ad5900",
+                "on-surface": "#191c1d",
+                "inverse-on-surface": "#f0f1f2",
+                "on-error-container": "#93000a",
+                "outline-variant": "#cdc2d8",
+                "surface-tint": "#7921ed",
+                "on-tertiary-fixed": "#301400",
+                "on-primary-fixed-variant": "#5d00c2",
+                "secondary": "#ae128a",
+                "secondary-fixed-dim": "#ffaede",
+                "on-secondary-fixed-variant": "#87006b",
+                "tertiary": "#894500",
+                "surface-container-high": "#e7e8e9",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#3b002d",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#ebdcff",
+                "on-primary-container": "#faf1ff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#fe60cf",
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#d4bbff",
+                "surface-container-low": "#f3f4f5",
+                "outline": "#7c7387",
+                "surface": "#f8f9fa",
+                "on-secondary-container": "#680052",
+                "tertiary-fixed": "#ffdcc5",
+                "inverse-primary": "#d4bbff",
+                "on-tertiary-fixed-variant": "#703800",
+                "primary": "#710fe5",
+                "on-error": "#ffffff",
+                "surface-variant": "#e1e3e4",
+                "surface-container-highest": "#e1e3e4",
+                "secondary-fixed": "#ffd8ec",
+                "on-tertiary-container": "#fff2eb",
+                "on-background": "#191c1d"
             },
-        }
-    </script>
-</head>
-<body class="bg-background text-on-surface">
-<!-- SideNavBar -->
-<aside class="w-[280px] h-screen fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant flex flex-col py-base z-50">
-<div class="px-gutter mb-8">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">change_history</span>
-</div>
-<div>
-<h1 class="font-headline-lg text-headline-lg font-bold text-primary leading-none">Origami Privé</h1>
-<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Education d'Excellence</p>
-</div>
-</div>
-</div>
-<nav class="flex-1 overflow-y-auto px-4 space-y-1 custom-scrollbar">
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="dashboard.html">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="font-body-sm text-body-sm">Dashboard</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="profil.html">
-<span class="material-symbols-outlined">person</span>
-<span class="font-body-sm text-body-sm">Mon profil</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="enseignants.html">
-<span class="material-symbols-outlined">supervisor_account</span>
-<span class="font-body-sm text-body-sm">Mes enseignants</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="seances.html">
-<span class="material-symbols-outlined">event_available</span>
-<span class="font-body-sm text-body-sm">Mes séances</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="forfait.html">
-<span class="material-symbols-outlined">inventory_2</span>
-<span class="font-body-sm text-body-sm">Mes forfaits</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="portefeuille.html">
-<span class="material-symbols-outlined">account_balance_wallet</span>
-<span class="font-body-sm text-body-sm">Mon portefeuille</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="progression.html">
-<span class="material-symbols-outlined">trending_up</span>
-<span class="font-body-sm text-body-sm">Ma progression</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="avis.html">
-<span class="material-symbols-outlined">star</span>
-<span class="font-body-sm text-body-sm">Avis enseignants</span>
-</a>
-<!-- Active Notification Tab -->
-<a class="sidebar-active flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200" href="notifications.html">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications</span>
-<span class="font-body-sm text-body-sm">Notifications</span>
-<span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
-</a>
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            spacing: {
+                "container-padding": "32px",
+                "card-gap": "24px",
+                "gutter": "24px",
+                "base": "8px",
+                "section-margin": "48px"
+            },
+            fontFamily: {
+                "headline-lg": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"],
+                "body-sm": ["Plus Jakarta Sans"],
+                "label-md": ["Inter"],
+                "title-md": ["Plus Jakarta Sans"],
+                "headline-lg-mobile": ["Plus Jakarta Sans"]
+            },
+            fontSize: {
+                "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+        },
+    },
+}
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    }
+    .sidebar-link {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #4b4456;
+        text-decoration: none;
+    }
+    .sidebar-link:hover {
+        background: rgba(113, 15, 229, 0.08);
+        color: #710fe5;
+    }
+    .sidebar-link.active {
+        background: rgba(113, 15, 229, 0.12);
+        color: #710fe5;
+        font-weight: 600;
+    }
+    .sidebar-link.active .material-symbols-outlined {
+        color: #710fe5;
+    }
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+    }
+    .animate-pulse-slow {
+        animation: pulse-soft 4s ease-in-out infinite;
+    }
+    @keyframes pulse-soft {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+    }
+    .notification-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .notification-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.08);
+    }
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #cdc2d8;
+        border-radius: 10px;
+    }
 
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="parametres.html">
-<span class="material-symbols-outlined">settings</span>
-<span class="font-body-sm text-body-sm">Paramètres</span>
-</a>
-</nav>
-<div class="px-4 mt-auto">
-<button class="w-full gradient-button text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2">
-<span class="material-symbols-outlined text-[20px]">add_circle</span>
-<span class="text-sm">Réserver une séance</span>
-</button>
+    .bg-primary-light { background-color: rgba(113, 15, 229, 0.1); }
+    .bg-secondary-light { background-color: rgba(174, 18, 138, 0.1); }
+    .bg-tertiary-light { background-color: rgba(137, 69, 0, 0.1); }
+    .bg-blue-light { background-color: rgba(59, 130, 246, 0.1); }
+    .bg-purple-light { background-color: rgba(139, 92, 246, 0.1); }
+    .bg-orange-light { background-color: rgba(249, 115, 22, 0.1); }
+    .bg-green-light { background-color: rgba(34, 197, 94, 0.1); }
+    .bg-indigo-light { background-color: rgba(99, 102, 241, 0.1); }
+    .bg-pink-light { background-color: rgba(236, 72, 153, 0.1); }
+    .bg-teal-light { background-color: rgba(20, 184, 166, 0.1); }
+    .bg-emerald-light { background-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-lighter { background-color: rgba(113, 15, 229, 0.05); }
+    .bg-secondary-lighter { background-color: rgba(174, 18, 138, 0.05); }
+    .bg-tertiary-lighter { background-color: rgba(137, 69, 0, 0.05); }
+    .bg-blue-lighter { background-color: rgba(59, 130, 246, 0.05); }
+    .bg-purple-lighter { background-color: rgba(139, 92, 246, 0.05); }
+    .bg-orange-lighter { background-color: rgba(249, 115, 22, 0.05); }
+    .bg-green-lighter { background-color: rgba(34, 197, 94, 0.05); }
+    .bg-indigo-lighter { background-color: rgba(99, 102, 241, 0.05); }
+    .bg-pink-lighter { background-color: rgba(236, 72, 153, 0.05); }
+    .bg-teal-lighter { background-color: rgba(20, 184, 166, 0.05); }
+    .bg-emerald-lighter { background-color: rgba(16, 185, 129, 0.05); }
+
+    .border-primary-light { border-color: rgba(113, 15, 229, 0.1); }
+    .border-secondary-light { border-color: rgba(174, 18, 138, 0.1); }
+    .border-tertiary-light { border-color: rgba(137, 69, 0, 0.1); }
+    .border-blue-light { border-color: rgba(59, 130, 246, 0.1); }
+    .border-purple-light { border-color: rgba(139, 92, 246, 0.1); }
+    .border-orange-light { border-color: rgba(249, 115, 22, 0.1); }
+    .border-green-light { border-color: rgba(34, 197, 94, 0.1); }
+    .border-indigo-light { border-color: rgba(99, 102, 241, 0.1); }
+    .border-pink-light { border-color: rgba(236, 72, 153, 0.1); }
+    .border-teal-light { border-color: rgba(20, 184, 166, 0.1); }
+    .border-emerald-light { border-color: rgba(16, 185, 129, 0.1); }
+
+    .text-primary { color: #710fe5; }
+    .text-secondary { color: #ae128a; }
+    .text-tertiary { color: #894500; }
+    .text-blue { color: #3b82f6; }
+    .text-purple { color: #8b5cf6; }
+    .text-orange { color: #f97316; }
+    .text-green { color: #22c55e; }
+    .text-indigo { color: #6366f1; }
+    .text-pink { color: #ec4899; }
+    .text-teal { color: #14b8a6; }
+    .text-emerald { color: #10b981; }
+
+    .tab-btn.active {
+        color: #710fe5;
+        border-bottom: 2px solid #710fe5;
+        font-weight: 700;
+    }
+</style>
+</head>
+<body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
+
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+    <div class="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] animate-pulse-slow"></div>
+    <div class="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
 </div>
-<div class="px-4 py-4 border-t border-outline-variant mt-4">
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-error hover:bg-error-container/20 transition-colors" href="#">
-<span class="material-symbols-outlined">logout</span>
-<span class="font-body-sm text-body-sm">Déconnexion</span>
-</a>
-</div>
-</aside>
-<!-- TopNavBar -->
-<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-gutter z-40 ml-[280px]">
-<div class="flex items-center gap-4 flex-1">
-<div class="relative w-full max-w-md">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full focus:ring-2 focus:ring-primary/20 text-body-sm font-body-sm outline-none" placeholder="Rechercher une notification..." type="text"/>
-</div>
-</div>
-<div class="flex items-center gap-4">
-<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-low transition-all">
-<span class="material-symbols-outlined text-on-surface-variant">help_outline</span>
-</button>
-<div class="h-8 w-px bg-outline-variant mx-2"></div>
-<div class="flex items-center gap-3 cursor-pointer">
-<div class="text-right hidden sm:block">
-<p class="text-label-md font-label-md text-on-surface font-semibold">Jean Dupont</p>
-<p class="text-[10px] text-on-surface-variant">Parent d'élève</p>
-</div>
-<div class="w-10 h-10 rounded-full bg-primary-container/20 border-2 border-primary-container flex items-center justify-center">
-<span class="material-symbols-outlined text-primary text-[24px]" style="font-variation-settings: 'FILL' 1;">person</span>
-</div>
-</div>
-</div>
-</header>
-<!-- Main Content -->
-<main class="ml-[280px] pt-16 pb-12 px-gutter min-h-screen">
-<div class="max-w-5xl mx-auto">
-<!-- Page Header -->
-<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-<div>
-<h2 class="font-headline-lg text-headline-lg text-primary mb-1">Centre de notifications</h2>
-<p class="text-on-surface-variant font-body-lg text-body-lg">Restez informé de l'évolution scolaire de vos enfants.</p>
-</div>
-<div class="flex items-center gap-3">
-<button class="flex items-center gap-2 px-4 py-2 text-on-surface-variant hover:text-primary font-label-md text-label-md transition-colors">
-<span class="material-symbols-outlined text-[18px]">done_all</span>
-                        Tout marquer comme lu
+
+<div class="flex h-screen overflow-hidden">
+
+    <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
+        <div class="flex items-center gap-3 px-3 py-4 mb-6">
+            <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">change_history</span>
+            </div>
+            <span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Origami Privé</span>
+        </div>
+
+        <nav class="flex-1 space-y-1">
+            <a href="{% url 'authentication:dashboard' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="{% url 'etudiants:profil' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">person</span>
+                <span>Mon Profil</span>
+            </a>
+            <a href="{% url 'etudiants:enseignants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">school</span>
+                <span>Mes Enseignants</span>
+            </a>
+            <a href="{% url 'etudiants:seances' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">event</span>
+                <span>Mes Séances</span>
+            </a>
+            <a href="{% url 'etudiants:forfait' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">sell</span>
+                <span>Mon Forfait</span>
+            </a>
+            <a href="{% url 'etudiants:portefeuille' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+                <span>Mon Portefeuille</span>
+            </a>
+            <a href="{% url 'etudiants:progression' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">trending_up</span>
+                <span>Ma Progression</span>
+            </a>
+            <a href="{% url 'etudiants:avis' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">star</span>
+                <span>Avis Enseignants</span>
+            </a>
+            <a href="{% url 'etudiants:notifications' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">notifications</span>
+                <span>Notifications</span>
+                {% if notifications_non_lues > 0 %}
+                    <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ notifications_non_lues }}</span>
+                {% endif %}
+            </a>
+            <a href="{% url 'etudiants:parametres' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">settings</span>
+                <span>Paramètres</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto pt-4 border-t border-outline-variant/30">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+                <span class="material-symbols-outlined text-[22px]">logout</span>
+                <span>Déconnexion</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto p-8">
+
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">notifications</span>
+                    Centre de notifications
+                </h1>
+                <p class="text-on-surface-variant body-sm">Restez informé de l'évolution scolaire de vos enfants.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
+                        <span class="material-symbols-outlined text-[24px]">notifications</span>
+                        {% if notifications_non_lues > 0 %}
+                            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                        {% endif %}
                     </button>
-<button class="flex items-center gap-2 px-4 py-2 text-error hover:bg-error-container/10 rounded-lg font-label-md text-label-md transition-colors">
-<span class="material-symbols-outlined text-[18px]">delete</span>
-                        Tout supprimer
-                    </button>
-</div>
-</div>
-<!-- Filter Tabs -->
-<div class="flex items-center gap-2 mb-8 border-b border-outline-variant overflow-x-auto pb-px">
-<button class="px-6 py-3 text-primary font-bold border-b-2 border-primary whitespace-nowrap">Tous (12)</button>
-<button class="px-6 py-3 text-on-surface-variant hover:text-on-surface font-label-md transition-all whitespace-nowrap">Non lus</button>
-<button class="px-6 py-3 text-on-surface-variant hover:text-on-surface font-label-md transition-all whitespace-nowrap">Séances</button>
-<button class="px-6 py-3 text-on-surface-variant hover:text-on-surface font-label-md transition-all whitespace-nowrap">Paiements</button>
-<button class="px-6 py-3 text-on-surface-variant hover:text-on-surface font-label-md transition-all whitespace-nowrap">Messages</button>
-</div>
-<!-- Notifications List -->
-<div class="space-y-4">
-<!-- Session Notification (Unread) -->
-<div class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant flex gap-5 relative group">
-<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-primary rounded-r-full"></div>
-<div class="w-12 h-12 rounded-xl bg-primary-container/10 flex items-center justify-center flex-shrink-0">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
-</div>
-<div class="flex-1">
-<div class="flex items-start justify-between mb-1">
-<h3 class="text-title-md font-title-md text-on-surface">Nouvelle séance programmée</h3>
-<span class="text-label-md text-on-surface-variant">Il y a 5 min</span>
-</div>
-<p class="text-body-sm text-on-surface-variant mb-4">Une séance de Mathématiques avec M. Lefebvre a été confirmée pour demain à 16h00 pour Sarah.</p>
-<div class="flex items-center gap-3">
-<button class="px-4 py-2 bg-primary-fixed text-on-primary-fixed text-label-md font-semibold rounded-lg hover:bg-primary-fixed-dim transition-colors">Détails de la séance</button>
-<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
-<span class="material-symbols-outlined text-[20px]">more_horiz</span>
-</button>
-</div>
-</div>
-<div class="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-</div>
-<!-- Payment Notification -->
-<div class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant flex gap-5 group">
-<div class="w-12 h-12 rounded-xl bg-tertiary-container/10 flex items-center justify-center flex-shrink-0">
-<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">payments</span>
-</div>
-<div class="flex-1">
-<div class="flex items-start justify-between mb-1">
-<h3 class="text-title-md font-title-md text-on-surface">Paiement reçu</h3>
-<span class="text-label-md text-on-surface-variant">Il y a 2 heures</span>
-</div>
-<p class="text-body-sm text-on-surface-variant mb-4">Votre paiement de 240,00€ pour le forfait "Excellence" a été validé avec succès. Votre facture est disponible.</p>
-<div class="flex items-center gap-3">
-<button class="px-4 py-2 bg-surface-container-high text-on-surface text-label-md font-semibold rounded-lg hover:bg-surface-variant transition-colors">Télécharger la facture</button>
-</div>
-</div>
-</div>
-<!-- Teacher Note Notification (Unread) -->
-<div class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant flex gap-5 relative group">
-<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-primary rounded-r-full"></div>
-<div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center flex-shrink-0">
-<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">reviews</span>
-</div>
-<div class="flex-1">
-<div class="flex items-start justify-between mb-1">
-<h3 class="text-title-md font-title-md text-on-surface">Commentaire de l'enseignant</h3>
-<span class="text-label-md text-on-surface-variant">Il y a 5 heures</span>
-</div>
-<p class="text-body-sm text-on-surface-variant mb-4">Mme. Durand a laissé une note de progression pour le cours d'Anglais de Lucas : "Excellents résultats sur le dernier test de grammaire."</p>
-<div class="flex items-center gap-3">
-<button class="px-4 py-2 bg-primary-fixed text-on-primary-fixed text-label-md font-semibold rounded-lg hover:bg-primary-fixed-dim transition-colors">Voir la progression</button>
-</div>
-</div>
-</div>
-<!-- System Notification -->
-<div class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant flex gap-5 group">
-<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center flex-shrink-0">
-<span class="material-symbols-outlined text-on-surface-variant">settings</span>
-</div>
-<div class="flex-1">
-<div class="flex items-start justify-between mb-1">
-<h3 class="text-title-md font-title-md text-on-surface">Mise à jour du profil</h3>
-<span class="text-label-md text-on-surface-variant">Hier, 18:30</span>
-</div>
-<p class="text-body-sm text-on-surface-variant">Votre adresse e-mail de contact secondaire a été mise à jour avec succès.</p>
-</div>
-</div>
-<!-- Session Reminder -->
-<div class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant flex gap-5 group">
-<div class="w-12 h-12 rounded-xl bg-primary-container/10 flex items-center justify-center flex-shrink-0">
-<span class="material-symbols-outlined text-primary">alarm</span>
-</div>
-<div class="flex-1">
-<div class="flex items-start justify-between mb-1">
-<h3 class="text-title-md font-title-md text-on-surface">Rappel : Séance dans 2 heures</h3>
-<span class="text-label-md text-on-surface-variant">Hier, 10:00</span>
-</div>
-<p class="text-body-sm text-on-surface-variant mb-4">N'oubliez pas la séance de Physique-Chimie prévue pour Sarah à 14h00.</p>
-<div class="flex items-center gap-3">
-<button class="px-4 py-2 bg-surface-container-high text-on-surface text-label-md font-semibold rounded-lg hover:bg-surface-variant transition-colors">Lancer le cours en ligne</button>
-</div>
-</div>
-</div>
-</div>
-<!-- Pagination / Load More -->
-<div class="mt-12 flex justify-center">
-<button class="px-8 py-3 rounded-full border border-primary text-primary font-semibold hover:bg-primary-container/5 active:scale-95 transition-all">
+                </div>
+                <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
+                    {{ first_name|slice:":1"|upper }}{{ last_name|slice:":1"|upper|default:"U" }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex items-center gap-2 mb-8 border-b border-outline-variant/30 overflow-x-auto pb-px">
+            <button class="px-6 py-3 text-primary font-bold border-b-2 border-primary tab-btn active whitespace-nowrap" data-filter="all">
+                Tous ({{ total_notifications }})
+            </button>
+            <button class="px-6 py-3 text-on-surface-variant hover:text-on-surface font-label-md transition-all whitespace-nowrap tab-btn" data-filter="unread">
+                Non lus ({{ notifications_non_lues }})
+            </button>
+            <button class="px-6 py-3 text-on-surface-variant hover:text-on-surface font-label-md transition-all whitespace-nowrap tab-btn" data-filter="seance">
+                Séances ({{ seances_notifications|length }})
+            </button>
+            <button class="px-6 py-3 text-on-surface-variant hover:text-on-surface font-label-md transition-all whitespace-nowrap tab-btn" data-filter="paiement">
+                Paiements ({{ paiements_notifications|length }})
+            </button>
+            <button class="px-6 py-3 text-on-surface-variant hover:text-on-surface font-label-md transition-all whitespace-nowrap tab-btn" data-filter="message">
+                Messages ({{ messages_notifications|length }})
+            </button>
+        </div>
+
+        <!-- Notifications List -->
+        <div class="space-y-4" id="notifications-list">
+            {% if notifications %}
+                {% for notification in notifications %}
+                    <div class="notification-card {% if not notification.lue %}bg-surface-container-lowest{% else %}bg-surface-container/50{% endif %} rounded-2xl p-6 border border-outline-variant/30 flex gap-5 relative notification-item" data-type="{{ notification.type }}">
+                        <!-- Barre de couleur pour les notifications non lues -->
+                        {% if not notification.lue %}
+                            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-primary rounded-r-full"></div>
+                        {% endif %}
+                        
+                        <!-- Icône dynamique -->
+                        <div class="w-12 h-12 rounded-xl 
+                            {% if notification.type == 'seance' or notification.type == 'cours' or notification.type == 'rappel' %}bg-primary-light
+                            {% elif notification.type == 'paiement' %}bg-tertiary-light
+                            {% elif notification.type == 'message' or notification.type == 'commentaire' %}bg-secondary-light
+                            {% else %}bg-surface-container{% endif %} 
+                            flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined 
+                                {% if notification.type == 'seance' or notification.type == 'cours' %}text-primary
+                                {% elif notification.type == 'rappel' %}text-primary
+                                {% elif notification.type == 'paiement' %}text-tertiary
+                                {% elif notification.type == 'message' or notification.type == 'commentaire' %}text-secondary
+                                {% else %}text-on-surface-variant{% endif %}" 
+                                style="font-variation-settings: 'FILL' 1;">
+                                {% if notification.type == 'seance' or notification.type == 'cours' %}calendar_month
+                                {% elif notification.type == 'rappel' %}alarm
+                                {% elif notification.type == 'paiement' %}payments
+                                {% elif notification.type == 'message' %}chat
+                                {% elif notification.type == 'commentaire' %}reviews
+                                {% else %}notifications{% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="flex-1">
+                            <div class="flex items-start justify-between mb-1">
+                                <h3 class="text-title-md font-title-md text-on-surface">{{ notification.titre }}</h3>
+                                <span class="text-label-md text-on-surface-variant">{{ notification.date_envoi|timesince }}</span>
+                            </div>
+                            <p class="text-body-sm text-on-surface-variant mb-4">{{ notification.message }}</p>
+                            
+                            {% if notification.url_action and notification.texte_action %}
+                                <div class="flex items-center gap-3">
+                                    <a href="{{ notification.url_action }}" 
+                                       class="px-4 py-2 {% if notification.type == 'seance' or notification.type == 'cours' or notification.type == 'rappel' %}bg-primary-light text-primary{% else %}bg-surface-container text-on-surface{% endif %} text-label-md font-semibold rounded-lg hover:bg-primary/20 transition-colors">
+                                        {{ notification.texte_action }}
+                                    </a>
+                                    {% if not notification.lue %}
+                                        <button onclick="marquerCommeLue({{ notification.id_notification }})" 
+                                                class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined text-[20px]">done</span>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- Message quand il n'y a pas de notifications -->
+                <div class="text-center py-16">
+                    <div class="w-20 h-20 rounded-full bg-surface-container-high flex items-center justify-center mx-auto mb-4">
+                        <span class="material-symbols-outlined text-[48px] text-on-surface-variant">notifications_off</span>
+                    </div>
+                    <h3 class="text-title-md font-title-md text-on-surface">Aucune notification</h3>
+                    <p class="text-body-sm text-on-surface-variant">Vous n'avez pas encore de notifications.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if notifications|length >= 10 %}
+            <!-- Pagination / Load More -->
+            <div class="mt-12 flex justify-center">
+                <button class="px-8 py-3 rounded-full border border-primary text-primary font-semibold hover:bg-primary/5 active:scale-95 transition-all">
                     Charger les notifications plus anciennes
                 </button>
-</div>
-</div>
-</main>
-<!-- Floating Atmosphere -->
-<div class="fixed inset-0 pointer-events-none -z-10 opacity-30 overflow-hidden">
-<div class="absolute top-[-10%] right-[-5%] w-[40%] h-[60%] rounded-full bg-primary/10 blur-[100px]"></div>
-<div class="absolute bottom-[-10%] left-[-5%] w-[40%] h-[60%] rounded-full bg-secondary/10 blur-[100px]"></div>
-</div>
-<script>
-        // Micro-interactions
-        document.querySelectorAll('.notification-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                const indicator = card.querySelector('.absolute.right-4');
-                if(indicator) indicator.style.opacity = '1';
-            });
-        });
+            </div>
+        {% endif %}
 
-        // Simple filter logic simulation
-        const buttons = document.querySelectorAll('.flex.items-center.gap-2.mb-8 button');
-        buttons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                buttons.forEach(b => {
-                    b.classList.remove('text-primary', 'font-bold', 'border-b-2', 'border-primary');
-                    b.classList.add('text-on-surface-variant');
-                });
-                btn.classList.add('text-primary', 'font-bold', 'border-b-2', 'border-primary');
-                btn.classList.remove('text-on-surface-variant');
+    </main>
+
+</div>
+
+<script>
+    // Filtrage des notifications par onglet
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Retirer la classe active de tous les boutons
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('active');
+                b.classList.remove('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                b.classList.add('text-on-surface-variant');
+            });
+            
+            // Ajouter la classe active au bouton cliqué
+            this.classList.add('active', 'text-primary', 'font-bold', 'border-b-2', 'border-primary');
+            this.classList.remove('text-on-surface-variant');
+            
+            const filter = this.dataset.filter;
+            const items = document.querySelectorAll('.notification-item');
+            
+            items.forEach(item => {
+                if (filter === 'all') {
+                    item.style.display = 'flex';
+                } else if (filter === 'unread') {
+                    // Vérifier si la notification a la barre de couleur primaire (non lue)
+                    const hasUnreadBar = item.querySelector('.absolute.left-0.w-1.h-12.bg-primary');
+                    item.style.display = hasUnreadBar ? 'flex' : 'none';
+                } else {
+                    const type = item.dataset.type;
+                    item.style.display = type === filter ? 'flex' : 'none';
+                }
             });
         });
-    </script>
-</body></html>
+    });
+
+    // Fonction pour marquer une notification comme lue
+    function marquerCommeLue(id) {
+        fetch(`/api/notifications/${id}/marquer-lue/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Recharger la page pour mettre à jour le compteur
+                location.reload();
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
+    }
+</script>
+
+</body>
+</html>

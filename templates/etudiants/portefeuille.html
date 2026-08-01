@@ -1,4 +1,4 @@
-<!-- templates/etudiants/monportefeuille.html -->
+<!-- templates/etudiants/portefeuille.html -->
 <!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
@@ -129,48 +129,44 @@ tailwind.config = {
 
         <!-- Navigation -->
         <nav class="flex-1 space-y-1">
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'authentication:dashboard' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">dashboard</span>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:profil' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">person</span>
                 <span>Mon Profil</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:enseignants' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">school</span>
                 <span>Mes Enseignants</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+            <a href="{% url 'etudiants:seances' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">event</span>
                 <span>Mes Séances</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:forfait' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">sell</span>
                 <span>Mon Forfait</span>
             </a>
-            <a href="#" class="sidebar-link active">
-                <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+            <a href="{% url 'etudiants:portefeuille' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
                 <span>Mon Portefeuille</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:progression' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">trending_up</span>
                 <span>Ma Progression</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:avis' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">star</span>
                 <span>Avis Enseignants</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:notifications' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">notifications</span>
                 <span>Notifications</span>
                 <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">calendar_today</span>
-                <span>Calendrier</span>
-            </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:parametres' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">settings</span>
                 <span>Paramètres</span>
             </a>
@@ -178,7 +174,7 @@ tailwind.config = {
 
         <!-- Déconnexion -->
         <div class="mt-auto pt-4 border-t border-outline-variant/30">
-            <a href="#" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
                 <span class="material-symbols-outlined text-[22px]">logout</span>
                 <span>Déconnexion</span>
             </a>
@@ -191,7 +187,10 @@ tailwind.config = {
         <!-- Header -->
         <div class="flex items-center justify-between mb-8">
             <div>
-                <h1 class="font-headline-lg text-headline-lg text-primary">💰 Mon Portefeuille</h1>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+                    Mon Portefeuille
+                </h1>
                 <p class="text-on-surface-variant body-sm">Gérez votre solde et suivez vos transactions</p>
             </div>
             <div class="flex items-center gap-3">
@@ -200,7 +199,7 @@ tailwind.config = {
                     <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
                 <div class="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-white font-semibold shadow-lg">
-                    TM
+                    {{ first_name|slice:":1"|upper }}{{ last_name|slice:":1"|upper|default:"U" }}
                 </div>
             </div>
         </div>
@@ -213,7 +212,7 @@ tailwind.config = {
                 <div class="relative z-10 flex justify-between items-start">
                     <div>
                         <p class="font-label-md text-label-md uppercase tracking-[0.2em] opacity-80">Solde Actuel</p>
-                        <h2 class="font-display-lg text-[48px] font-bold mt-2">2,800.00 MAD</h2>
+                        <h2 class="font-display-lg text-[48px] font-bold mt-2">{{ solde|floatformat:2 }} MAD</h2>
                     </div>
                     <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4 flex items-center justify-center">
                         <span class="material-symbols-outlined text-4xl">account_balance_wallet</span>
@@ -222,22 +221,22 @@ tailwind.config = {
                 <div class="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-white/20">
                     <div>
                         <p class="text-[10px] uppercase opacity-70 mb-1">ID Portefeuille</p>
-                        <p class="font-bold">#OP-99283</p>
+                        <p class="font-bold">{{ id_portefeuille }}</p>
                     </div>
                     <div>
                         <p class="text-[10px] uppercase opacity-70 mb-1">Statut</p>
                         <div class="flex items-center gap-2">
                             <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                            <p class="font-bold">Actif</p>
+                            <p class="font-bold">{{ statut }}</p>
                         </div>
                     </div>
                     <div>
                         <p class="text-[10px] uppercase opacity-70 mb-1">Dernière mise à jour</p>
-                        <p class="font-bold">Aujourd'hui</p>
+                        <p class="font-bold">{{ dernier_update }}</p>
                     </div>
                     <div>
                         <p class="text-[10px] uppercase opacity-70 mb-1">Validité</p>
-                        <p class="font-bold">Illimitée</p>
+                        <p class="font-bold">{{ validite }}</p>
                     </div>
                 </div>
             </div>
@@ -285,7 +284,7 @@ tailwind.config = {
                 </div>
                 <div>
                     <p class="text-on-surface-variant text-sm font-label-md">Total Rechargé</p>
-                    <p class="text-xl font-bold">15,000 MAD</p>
+                    <p class="text-xl font-bold">{{ total_recharge|floatformat:0 }} MAD</p>
                 </div>
             </div>
             <div class="glass-card rounded-3xl p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-all">
@@ -294,7 +293,7 @@ tailwind.config = {
                 </div>
                 <div>
                     <p class="text-on-surface-variant text-sm font-label-md">Total Dépensé</p>
-                    <p class="text-xl font-bold">12,200 MAD</p>
+                    <p class="text-xl font-bold">{{ total_depense|floatformat:0 }} MAD</p>
                 </div>
             </div>
             <div class="glass-card rounded-3xl p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-all">
@@ -302,8 +301,8 @@ tailwind.config = {
                     <span class="material-symbols-outlined">history</span>
                 </div>
                 <div>
-                    <p class="text-on-surface-variant text-sm font-label-md">Dernière Transaction</p>
-                    <p class="text-xl font-bold text-green-600">+500 MAD</p>
+                    <p class="text-on-surface-variant text-sm font-label-md">Total Transactions</p>
+                    <p class="text-xl font-bold">{{ total_transactions }}</p>
                 </div>
             </div>
             <div class="glass-card rounded-3xl p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-all">
@@ -312,7 +311,7 @@ tailwind.config = {
                 </div>
                 <div>
                     <p class="text-on-surface-variant text-sm font-label-md">Total Heures</p>
-                    <p class="text-xl font-bold">120h</p>
+                    <p class="text-xl font-bold">{{ total_heures }}h</p>
                 </div>
             </div>
         </div>
@@ -321,7 +320,10 @@ tailwind.config = {
         <div class="glass-card rounded-[32px] overflow-hidden shadow-sm border border-surface-variant mt-6">
             <div class="p-8 border-b border-surface-variant flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h3 class="font-title-md text-title-md">Transactions Récentes</h3>
+                    <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">receipt_long</span>
+                        Transactions Récentes
+                    </h3>
                     <p class="text-sm text-on-surface-variant mt-1">Historique complet de vos activités financières</p>
                 </div>
                 <div class="flex w-full md:w-auto gap-2">
@@ -347,69 +349,70 @@ tailwind.config = {
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-surface-variant">
+                        {% for transaction in transactions %}
                         <tr class="hover:bg-primary/5 transition-colors group">
                             <td class="px-8 py-5">
-                                <p class="font-bold text-sm">15 Oct, 2023</p>
-                                <p class="text-[10px] text-on-surface-variant">14:20</p>
+                                <p class="font-bold text-sm">{{ transaction.date_demande|date:"d M, Y" }}</p>
+                                <p class="text-[10px] text-on-surface-variant">{{ transaction.date_demande|time:"H:i" }}</p>
                             </td>
                             <td class="px-8 py-5">
-                                <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700 uppercase">Recharge</span>
+                                {% if transaction.type_demande == 'recharge' %}
+                                <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700 uppercase flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">add_circle</span>
+                                    Recharge
+                                </span>
+                                {% elif transaction.type_demande == 'paiement' %}
+                                <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700 uppercase flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">payments</span>
+                                    Paiement
+                                </span>
+                                {% else %}
+                                <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-gray-100 text-gray-700 uppercase flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">pending</span>
+                                    {{ transaction.type_demande }}
+                                </span>
+                                {% endif %}
                             </td>
-                            <td class="px-8 py-5"><p class="font-medium text-sm text-on-surface">Ajout de fonds</p></td>
-                            <td class="px-8 py-5 text-right font-bold text-green-600">+500.00 MAD</td>
-                            <td class="px-8 py-5 text-sm">Carte Visa •••• 4492</td>
+                            <td class="px-8 py-5"><p class="font-medium text-sm text-on-surface">{{ transaction.raison|default:"Transaction" }}</p></td>
+                            <td class="px-8 py-5 text-right font-bold {% if transaction.type_demande == 'recharge' %}text-green-600{% else %}text-error{% endif %}">
+                                {% if transaction.type_demande == 'recharge' %}+{% else %}-{% endif %}{{ transaction.montant|floatformat:2 }} MAD
+                            </td>
+                            <td class="px-8 py-5 text-sm">{{ transaction.compte_bancaire.nom_banque|default:"Carte Visa" }}</td>
                             <td class="px-8 py-5">
+                                {% if transaction.statut == 'complete' %}
                                 <div class="flex items-center gap-2 text-green-600 font-bold text-xs">
                                     <span class="material-symbols-outlined text-sm">check_circle</span>
                                     Complété
                                 </div>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-primary/5 transition-colors group">
-                            <td class="px-8 py-5">
-                                <p class="font-bold text-sm">12 Oct, 2023</p>
-                                <p class="text-[10px] text-on-surface-variant">09:15</p>
-                            </td>
-                            <td class="px-8 py-5">
-                                <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700 uppercase">Paiement</span>
-                            </td>
-                            <td class="px-8 py-5"><p class="font-medium text-sm text-on-surface">Forfait Maths Expert</p></td>
-                            <td class="px-8 py-5 text-right font-bold text-error">-2,400.00 MAD</td>
-                            <td class="px-8 py-5 text-sm">Solde Portefeuille</td>
-                            <td class="px-8 py-5">
-                                <div class="flex items-center gap-2 text-green-600 font-bold text-xs">
-                                    <span class="material-symbols-outlined text-sm">check_circle</span>
-                                    Complété
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-primary/5 transition-colors group">
-                            <td class="px-8 py-5">
-                                <p class="font-bold text-sm">10 Oct, 2023</p>
-                                <p class="text-[10px] text-on-surface-variant">18:45</p>
-                            </td>
-                            <td class="px-8 py-5">
-                                <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 uppercase">En attente</span>
-                            </td>
-                            <td class="px-8 py-5"><p class="font-medium text-sm text-on-surface">Recharge manuelle</p></td>
-                            <td class="px-8 py-5 text-right font-bold text-on-surface">+1,000.00 MAD</td>
-                            <td class="px-8 py-5 text-sm">Virement Bancaire</td>
-                            <td class="px-8 py-5">
+                                {% elif transaction.statut == 'pending' %}
                                 <div class="flex items-center gap-2 text-amber-600 font-bold text-xs">
                                     <span class="material-symbols-outlined text-sm">pending</span>
                                     En attente
                                 </div>
+                                {% else %}
+                                <div class="flex items-center gap-2 text-red-600 font-bold text-xs">
+                                    <span class="material-symbols-outlined text-sm">cancel</span>
+                                    {{ transaction.statut }}
+                                </div>
+                                {% endif %}
                             </td>
                         </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="px-8 py-12 text-center text-on-surface-variant">
+                                <span class="material-symbols-outlined text-4xl text-on-surface-variant/30">receipt_long</span>
+                                <p class="mt-2">Aucune transaction</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
             <div class="p-6 bg-surface-container-low flex justify-between items-center">
-                <p class="text-xs text-on-surface-variant">Affichage de 3 sur 24 transactions</p>
+                <p class="text-xs text-on-surface-variant">Affichage de {{ total_transactions }} transaction(s)</p>
                 <div class="flex gap-2">
                     <button class="px-4 py-2 border border-surface-variant rounded-xl hover:bg-surface-container transition-colors disabled:opacity-50" disabled>Précédent</button>
                     <button class="px-4 py-2 border border-surface-variant rounded-xl hover:bg-surface-container transition-colors font-bold text-primary">1</button>
-                    <button class="px-4 py-2 border border-surface-variant rounded-xl hover:bg-surface-container transition-colors">2</button>
                     <button class="px-4 py-2 border border-surface-variant rounded-xl hover:bg-surface-container transition-colors">Suivant</button>
                 </div>
             </div>

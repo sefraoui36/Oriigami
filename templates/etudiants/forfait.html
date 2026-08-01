@@ -173,45 +173,44 @@ tailwind.config = {
 
         <!-- Navigation -->
         <nav class="flex-1 space-y-1">
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'authentication:dashboard' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">dashboard</span>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:profil' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">person</span>
                 <span>Mon Profil</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:enseignants' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">school</span>
                 <span>Mes Enseignants</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+            <a href="{% url 'etudiants:seances' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">event</span>
                 <span>Mes Séances</span>
             </a>
-            <a href="#" class="sidebar-link active">
-                <span class="material-symbols-outlined text-[22px]">sell</span>
+            <a href="{% url 'etudiants:forfait' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">sell</span>
                 <span>Mon Forfait</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:portefeuille' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
                 <span>Mon Portefeuille</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:progression' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">trending_up</span>
                 <span>Ma Progression</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:avis' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">star</span>
                 <span>Avis Enseignants</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:notifications' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">notifications</span>
                 <span>Notifications</span>
                 <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
             </a>
-           
-            <a href="#" class="sidebar-link">
+            <a href="{% url 'etudiants:parametres' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">settings</span>
                 <span>Paramètres</span>
             </a>
@@ -219,7 +218,7 @@ tailwind.config = {
 
         <!-- Déconnexion -->
         <div class="mt-auto pt-4 border-t border-outline-variant/30">
-            <a href="#" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
                 <span class="material-symbols-outlined text-[22px]">logout</span>
                 <span>Déconnexion</span>
             </a>
@@ -232,7 +231,10 @@ tailwind.config = {
         <!-- Header -->
         <div class="flex items-center justify-between mb-8">
             <div>
-                <h1 class="font-headline-lg text-headline-lg text-primary">📦 Mon Forfait</h1>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">sell</span>
+                    Mon Forfait
+                </h1>
                 <p class="text-on-surface-variant body-sm">Gérez votre forfait et suivez votre consommation</p>
             </div>
             <div class="flex items-center gap-3">
@@ -241,7 +243,7 @@ tailwind.config = {
                     <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
                 <div class="w-10 h-10 rounded-full gradient-btn flex items-center justify-center text-white font-semibold shadow-lg">
-                    TM
+                    {{ first_name|slice:":1"|upper }}{{ last_name|slice:":1"|upper|default:"U" }}
                 </div>
             </div>
         </div>
@@ -256,7 +258,7 @@ tailwind.config = {
                     <span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Type</span>
                 </div>
                 <p class="text-on-surface-variant text-sm mb-1">Forfait Actif</p>
-                <p class="font-title-md text-title-md">Premium Maths</p>
+                <p class="font-title-md text-title-md">{{ forfait_nom }}</p>
             </div>
             <div class="glass-card p-6 rounded-2xl shadow-sm">
                 <div class="flex items-center justify-between mb-4">
@@ -266,7 +268,7 @@ tailwind.config = {
                     <span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Restant</span>
                 </div>
                 <p class="text-on-surface-variant text-sm mb-1">Heures Restantes</p>
-                <p class="font-title-md text-title-md">12h <span class="text-sm font-normal text-on-surface-variant">/ 20h</span></p>
+                <p class="font-title-md text-title-md">{{ heures_restantes }}h <span class="text-sm font-normal text-on-surface-variant">/ {{ forfait_heures }}h</span></p>
             </div>
             <div class="glass-card p-6 rounded-2xl shadow-sm">
                 <div class="flex items-center justify-between mb-4">
@@ -276,7 +278,7 @@ tailwind.config = {
                     <span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Consommé</span>
                 </div>
                 <p class="text-on-surface-variant text-sm mb-1">Total Heures</p>
-                <p class="font-title-md text-title-md">08h <span class="text-sm font-normal text-on-surface-variant">utilisées</span></p>
+                <p class="font-title-md text-title-md">{{ heures_utilisees }}h <span class="text-sm font-normal text-on-surface-variant">utilisées</span></p>
             </div>
             <div class="glass-card p-6 rounded-2xl shadow-sm">
                 <div class="flex items-center justify-between mb-4">
@@ -286,7 +288,7 @@ tailwind.config = {
                     <span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Paiement</span>
                 </div>
                 <p class="text-on-surface-variant text-sm mb-1">Statut</p>
-                <p class="font-title-md text-title-md text-[#087f5b]">Payé</p>
+                <p class="font-title-md text-title-md text-[#087f5b]">{{ statut_paiement }}</p>
             </div>
         </div>
 
@@ -297,41 +299,48 @@ tailwind.config = {
                 <div class="flex justify-between items-start mb-8">
                     <div>
                         <h3 class="font-title-md text-title-md text-on-surface">Détails du Forfait</h3>
-                        <p class="text-on-surface-variant text-sm">Acheté le 12 Septembre 2023</p>
+                        <p class="text-on-surface-variant text-sm">
+                            {% if date_achat %}Acheté le {{ date_achat|date:"d F Y" }}{% else %}Aucune date d'achat{% endif %}
+                        </p>
                     </div>
                     <div class="bg-primary/5 px-4 py-2 rounded-xl">
-                        <p class="text-xs font-semibold text-primary">ID: #PKG-8829</p>
+                        <p class="text-xs font-semibold text-primary">{{ id_forfait }}</p>
                     </div>
                 </div>
                 <div class="space-y-6 flex-1">
                     <div>
                         <div class="flex justify-between items-center mb-3">
                             <span class="font-semibold">Progression de la consommation</span>
-                            <span class="text-primary font-bold">40%</span>
+                            <span class="text-primary font-bold">{{ pourcentage }}%</span>
                         </div>
                         <div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
-                            <div class="h-full bg-primary rounded-full" style="width: 40%"></div>
+                            <div class="h-full bg-primary rounded-full" style="width: {{ pourcentage }}%"></div>
                         </div>
                         <div class="flex justify-between mt-2 text-xs text-on-surface-variant">
-                            <span>8h effectuées</span>
-                            <span>12h restantes</span>
+                            <span>{{ heures_utilisees }}h effectuées</span>
+                            <span>{{ heures_restantes }}h restantes</span>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-surface-container rounded-2xl">
                         <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-primary">
-                                <img class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=Dr.+Sophie+Martin&background=710fe5&color=fff&size=128&bold=true" alt="Dr. Sophie Martin"/>
+                            <div class="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary">
+                                <span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">person</span>
                             </div>
                             <div>
                                 <p class="text-xs text-on-surface-variant uppercase tracking-tighter font-bold">Enseignant Dédié</p>
-                                <p class="font-bold text-on-surface">Dr. Sophie Martin</p>
-                                <p class="text-xs text-primary">Expert en Mathématiques</p>
+                                <p class="font-bold text-on-surface">{{ enseignant_nom }}</p>
+                                <p class="text-xs text-primary">Expert en {{ enseignant_matiere }}</p>
                             </div>
                         </div>
                         <div class="flex flex-col justify-center border-l border-outline-variant pl-6">
                             <p class="text-xs text-on-surface-variant uppercase tracking-tighter font-bold">Prochaine séance</p>
-                            <p class="font-bold text-on-surface">Jeudi 19 Octobre, 16:30</p>
+                            {% if prochaine_seance %}
+                            <p class="font-bold text-on-surface">{{ prochaine_seance.date|date:"l d F" }}, {{ prochaine_seance.heure|time:"H:i" }}</p>
                             <p class="text-xs text-on-surface-variant">Lieu: Visioconférence</p>
+                            {% else %}
+                            <p class="font-bold text-on-surface">Aucune séance prévue</p>
+                            <p class="text-xs text-on-surface-variant">Planifiez votre prochaine séance</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -360,7 +369,7 @@ tailwind.config = {
                         <span class="text-[10px] text-on-surface-variant">Sep</span>
                     </div>
                     <div class="flex flex-col items-center gap-2 group cursor-pointer w-full">
-                        <div class="w-8 bg-primary rounded-t-lg shadow-[0_0_15px_rgba(139,61,255,0.3)]" style="height: 55%"></div>
+                        <div class="w-8 bg-primary rounded-t-lg shadow-[0_0_15px_rgba(139,61,255,0.3)]" style="height: {{ pourcentage }}%"></div>
                         <span class="text-[10px] text-primary font-bold">Oct</span>
                     </div>
                     <div class="flex flex-col items-center gap-2 group cursor-pointer w-full opacity-30">
@@ -375,20 +384,26 @@ tailwind.config = {
                 <div class="mt-8 space-y-4">
                     <div class="flex justify-between items-center text-sm">
                         <span class="text-on-surface-variant">Moyenne hebdomadaire</span>
-                        <span class="font-bold">2.5 Heures</span>
+                        <span class="font-bold">
+                            {% if forfait_heures > 0 and date_achat %}
+                                {{ forfait_heures|divisibleby:4|floatformat:1 }} Heures
+                            {% else %}
+                                2.5 Heures
+                            {% endif %}
+                        </span>
                     </div>
                     <div class="flex justify-between items-center text-sm">
                         <span class="text-on-surface-variant">Tendance</span>
                         <span class="text-green-600 flex items-center gap-1 font-bold">
                             <span class="material-symbols-outlined text-sm">trending_up</span>
-                            +12%
+                            +{{ pourcentage }}%
                         </span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Session History -->
+        <!-- ===== HISTORIQUE DES SÉANCES (DYNAMIQUE) ===== -->
         <section class="mt-6 space-y-4">
             <div class="flex justify-between items-center">
                 <h3 class="font-title-md text-title-md text-on-surface">Historique des séances</h3>
@@ -416,16 +431,31 @@ tailwind.config = {
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-outline-variant">
+                        {% for seance in historique_seances %}
                         <tr class="hover:bg-primary/5 transition-colors group">
                             <td class="px-6 py-4">
-                                <p class="font-semibold">12 Octobre 2023</p>
-                                <p class="text-xs text-on-surface-variant">16:30 - 18:30</p>
+                                <p class="font-semibold">{{ seance.date|date:"d M Y" }}</p>
+                                <p class="text-xs text-on-surface-variant">{{ seance.heure|time:"H:i" }}</p>
                             </td>
-                            <td class="px-6 py-4 text-on-surface font-medium">Mathématiques</td>
-                            <td class="px-6 py-4">Dr. Sophie Martin</td>
-                            <td class="px-6 py-4 text-on-surface-variant">2.0 Heures</td>
+                            <td class="px-6 py-4 text-on-surface font-medium">{{ seance.affectation.matiere }}</td>
                             <td class="px-6 py-4">
+                                {% if seance.affectation.rh %}
+                                    {{ seance.affectation.rh.utilisateur.first_name }} {{ seance.affectation.rh.utilisateur.last_name }}
+                                {% else %}
+                                    Non assigné
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-on-surface-variant">{{ seance.duree }}</td>
+                            <td class="px-6 py-4">
+                                {% if seance.statut == 'termine' %}
                                 <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#e6fcf5] text-[#087f5b]">Effectuée</span>
+                                {% elif seance.statut == 'prevue' %}
+                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700">À venir</span>
+                                {% elif seance.statut == 'annule' %}
+                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">Annulée</span>
+                                {% else %}
+                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700">{{ seance.statut }}</span>
+                                {% endif %}
                             </td>
                             <td class="px-6 py-4">
                                 <button class="p-2 text-primary hover:bg-primary/10 rounded-full transition-all">
@@ -433,44 +463,17 @@ tailwind.config = {
                                 </button>
                             </td>
                         </tr>
-                        <tr class="hover:bg-primary/5 transition-colors group">
-                            <td class="px-6 py-4">
-                                <p class="font-semibold">05 Octobre 2023</p>
-                                <p class="text-xs text-on-surface-variant">16:30 - 18:30</p>
-                            </td>
-                            <td class="px-6 py-4 text-on-surface font-medium">Mathématiques</td>
-                            <td class="px-6 py-4">Dr. Sophie Martin</td>
-                            <td class="px-6 py-4 text-on-surface-variant">2.0 Heures</td>
-                            <td class="px-6 py-4">
-                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#e6fcf5] text-[#087f5b]">Effectuée</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <button class="p-2 text-primary hover:bg-primary/10 rounded-full transition-all">
-                                    <span class="material-symbols-outlined">description</span>
-                                </button>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-8 text-center text-on-surface-variant">
+                                Aucune séance dans l'historique
                             </td>
                         </tr>
-                        <tr class="hover:bg-primary/5 transition-colors group">
-                            <td class="px-6 py-4">
-                                <p class="font-semibold">28 Septembre 2023</p>
-                                <p class="text-xs text-on-surface-variant">16:00 - 18:00</p>
-                            </td>
-                            <td class="px-6 py-4 text-on-surface font-medium">Mathématiques</td>
-                            <td class="px-6 py-4">Dr. Sophie Martin</td>
-                            <td class="px-6 py-4 text-on-surface-variant">2.0 Heures</td>
-                            <td class="px-6 py-4">
-                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#e6fcf5] text-[#087f5b]">Effectuée</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <button class="p-2 text-primary hover:bg-primary/10 rounded-full transition-all">
-                                    <span class="material-symbols-outlined">description</span>
-                                </button>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
                 <div class="px-6 py-4 bg-surface-container/30 border-t border-outline-variant flex justify-between items-center">
-                    <p class="text-xs text-on-surface-variant italic">Affichage de 3 séances sur 4 réalisées ce mois-ci</p>
+                    <p class="text-xs text-on-surface-variant italic">Affichage de {{ historique_seances|length }} séances</p>
                     <div class="flex gap-1">
                         <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant bg-white disabled:opacity-50" disabled>
                             <span class="material-symbols-outlined text-sm">chevron_left</span>
@@ -484,7 +487,7 @@ tailwind.config = {
             </div>
         </section>
 
-        <!-- Payment Info Grid -->
+        <!-- ===== INFORMATIONS DE PAIEMENT ===== -->
         <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <div class="glass-card p-6 rounded-2xl shadow-sm">
                 <h3 class="font-title-md text-title-md text-on-surface mb-6 flex items-center gap-2">
@@ -496,27 +499,40 @@ tailwind.config = {
                         <span class="text-on-surface-variant">Mode de règlement</span>
                         <span class="font-semibold flex items-center gap-2">
                             Visa •••• 4242
-                            <img alt="Visa" class="h-3 opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkRbCPIMQb_C6lce-ovDeOWBEchHEvqHSDD0V7HFL67NsoJvHlQyhIiGvFxWgwIgL9viS6IIsZ4joG4uQArmcyW-uaQT1cjhYeonN7NHDE4T5iVozl_r6nVv6TP70MeX0KlEw8qZwRkptfBcK0sUYBp4RjICDHZkUGhmB0U7cLw-pD34rZf_oEDyjwWdwyidWgH9GMU7OZxCAoJAz4wSdzdF2suUyumG2Suw4XaLai5W-uGC-KDvU9Ow"/>
+                            <span class="material-symbols-outlined text-sm text-blue-600">credit_card</span>
                         </span>
                     </div>
                     <div class="flex justify-between py-3 border-b border-outline-variant/30">
                         <span class="text-on-surface-variant">Montant du forfait</span>
-                        <span class="font-semibold">840,00 €</span>
+                        <span class="font-semibold">{{ montant|floatformat:2 }} €</span>
                     </div>
                     <div class="flex justify-between py-3 border-b border-outline-variant/30">
                         <span class="text-on-surface-variant">Échéances restantes</span>
-                        <span class="font-semibold">0 / 3 payées</span>
+                        <span class="font-semibold">{{ paiements|length }} / 3 payées</span>
                     </div>
                     <div class="flex justify-between py-3">
                         <span class="text-on-surface-variant">Prochain prélèvement</span>
-                        <span class="font-semibold">Terminé</span>
+                        <span class="font-semibold">
+                            {% if statut_paiement == "Payé" %}Terminé{% else %}En attente{% endif %}
+                        </span>
                     </div>
+                    {% if paiements %}
+                    <div class="mt-4 p-3 bg-surface-container rounded-xl">
+                        <p class="text-xs font-semibold text-on-surface-variant">Dernier paiement</p>
+                        <p class="text-sm font-bold text-on-surface">{{ paiements.0.montant|floatformat:2 }} €</p>
+                        <p class="text-xs text-on-surface-variant">{{ paiements.0.date_demande|date:"d M Y" }}</p>
+                        <p class="text-xs text-green-600">{{ paiements.0.statut }}</p>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="glass-card p-6 rounded-2xl shadow-sm bg-primary/5 border-primary/20">
                 <div class="h-full flex flex-col justify-between">
                     <div>
-                        <h3 class="font-title-md text-title-md text-primary mb-2">Besoin d'aide ?</h3>
+                        <h3 class="font-title-md text-title-md text-primary mb-2 flex items-center gap-2">
+                            <span class="material-symbols-outlined">help</span>
+                            Besoin d'aide ?
+                        </h3>
                         <p class="text-sm text-on-surface-variant leading-relaxed">
                             Si vous rencontrez un problème avec votre forfait ou vos heures consommées, notre équipe pédagogique est à votre écoute pour ajuster votre parcours d'excellence.
                         </p>

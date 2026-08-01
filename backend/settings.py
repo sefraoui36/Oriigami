@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'charges',
     'statistiques',
     'authentication',
+    'avis',
 ]
 
 AUTH_USER_MODEL = 'authentication.Utilisateur'
