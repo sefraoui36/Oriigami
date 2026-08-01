@@ -1,5 +1,6 @@
+# authentication/views.py
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Sum, Avg
@@ -17,15 +18,64 @@ from datetime import timedelta
 
 def inscription(request):
     if request.user.is_authenticated:
-        return redirect('authentication:dashboard')
+        # Rediriger vers le bon dashboard - utilise filter().first()
+        try:
+            client = Client.objects.filter(utilisateur=request.user).first()
+            if client and client.type_client == 'PARENT':
+                return redirect('clients:dashboard_parent')
+            else:
+                return redirect('authentication:dashboard')
+        except:
+            return redirect('authentication:dashboard')
         
     if request.method == 'POST':
         form = InscriptionForm(request.POST)
         if form.is_valid():
             user = form.save()
+            
+            # Récupérer le type de client depuis le formulaire
+            type_client = request.POST.get('type_client', 'parent').upper()
+            
+            # Créer le client
+            client = Client.objects.create(
+                utilisateur=user,
+                nom=form.cleaned_data['nom'],
+                prenom=form.cleaned_data['prenom'],
+                telephone=form.cleaned_data.get('telephone', ''),
+                adresse=form.cleaned_data.get('adresse', ''),
+                type_client=type_client
+            )
+            
+            # Si c'est un parent, créer les enfants
+            if type_client == 'PARENT':
+                noms_enfants = request.POST.getlist('nom_enfant[]')
+                prenoms_enfants = request.POST.getlist('prenom_enfant[]')
+                niveaux_enfants = request.POST.getlist('niveau_enfant[]')
+                etablissements_enfants = request.POST.getlist('etablissement_enfant[]')
+                
+                for i in range(len(noms_enfants)):
+                    if noms_enfants[i] and prenoms_enfants[i]:
+                        Client.objects.create(
+                            utilisateur=user,
+                            type_client='ETUDIANT',
+                            nom=noms_enfants[i],
+                            prenom=prenoms_enfants[i],
+                            telephone='',
+                            adresse='',
+                            parent=client,
+                            niveau_scolaire=niveaux_enfants[i] if i < len(niveaux_enfants) else '',
+                            etablissement=etablissements_enfants[i] if i < len(etablissements_enfants) else ''
+                        )
+            
+            # Connecter l'utilisateur
             login(request, user)
             messages.success(request, "Inscription réussie ! Bienvenue sur Origami Privé.")
-            return redirect('authentication:dashboard')
+            
+            # Rediriger vers le bon dashboard
+            if type_client == 'PARENT':
+                return redirect('clients:dashboard_parent')
+            else:
+                return redirect('authentication:dashboard')
         else:
             for field, errors in form.errors.items():
                 for error in errors:
@@ -37,7 +87,15 @@ def inscription(request):
 
 def connexion(request):
     if request.user.is_authenticated:
-        return redirect('authentication:dashboard')
+        # Rediriger vers le bon dashboard - utilise filter().first()
+        try:
+            client = Client.objects.filter(utilisateur=request.user).first()
+            if client and client.type_client == 'PARENT':
+                return redirect('clients:dashboard_parent')
+            else:
+                return redirect('authentication:dashboard')
+        except:
+            return redirect('authentication:dashboard')
         
     if request.method == 'POST':
         form = ConnexionForm(request, data=request.POST)
@@ -45,7 +103,16 @@ def connexion(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, f"Bonjour {user.first_name} ! Content de vous revoir.")
-            return redirect('authentication:dashboard')
+            
+            # Rediriger vers le bon dashboard - utilise filter().first()
+            try:
+                client = Client.objects.filter(utilisateur=user).first()
+                if client and client.type_client == 'PARENT':
+                    return redirect('clients:dashboard_parent')
+                else:
+                    return redirect('authentication:dashboard')
+            except:
+                return redirect('authentication:dashboard')
         else:
             messages.error(request, "Email ou mot de passe incorrect.")
     else:
@@ -63,10 +130,8 @@ def deconnexion(request):
 def dashboard(request):
     user = request.user
     
-    try:
-        client = Client.objects.get(utilisateur=user)
-    except Client.DoesNotExist:
-        client = None
+    # Utiliser filter().first() au lieu de get()
+    client = Client.objects.filter(utilisateur=user).first()
     
     etudiant = None
     if client:
@@ -179,11 +244,11 @@ def dashboard(request):
     try:
         notifications = Notification.objects.filter(
             utilisateur=user,
-            lecture=False
+            lue=False  # Changé de lecture à lue
         ).order_by('-date_envoi')[:3]
         
         for notif in notifications:
-            delta = timezone.now().date() - notif.date_envoi
+            delta = timezone.now().date() - notif.date_envoi.date() if hasattr(notif.date_envoi, 'date') else timezone.now().date() - notif.date_envoi
             if delta.days == 0:
                 temps = "Aujourd'hui"
             elif delta.days == 1:
@@ -194,7 +259,7 @@ def dashboard(request):
                 temps = notif.date_envoi.strftime('%d/%m/%Y')
             
             notifications_list.append({
-                'message': notif.message[:100],
+                'message': notif.message[:100] if hasattr(notif, 'message') else str(notif),
                 'temps': temps,
                 'icone': 'notifications',
                 'couleur': 'primary'
@@ -226,7 +291,14 @@ def dashboard(request):
             for s in seances.filter(statut='termine'):
                 if s.duree:
                     try:
-                        heures += float(s.duree.replace('h', '').strip())
+                        # Extraire les heures de la durée (ex: "1h30" -> 1.5)
+                        duree_str = s.duree.replace('h', '').strip()
+                        if 'min' in duree_str:
+                            parts = duree_str.split('h')
+                            if len(parts) == 2:
+                                heures += float(parts[0]) + float(parts[1].replace('min', '')) / 60
+                        else:
+                            heures += float(duree_str)
                     except:
                         pass
             progression['heures_effectuees'] = int(heures)
@@ -271,9 +343,10 @@ def get_matiere_icone(matiere):
         'musique': 'music_note',
         'sport': 'sports',
     }
-    for key, icon in icones.items():
-        if key in matiere.lower():
-            return icon
+    if matiere:
+        for key, icon in icones.items():
+            if key in matiere.lower():
+                return icon
     return 'school'
 
 def get_matiere_couleur(matiere):
@@ -293,7 +366,8 @@ def get_matiere_couleur(matiere):
         'musique': 'teal',
         'sport': 'emerald',
     }
-    for key, color in couleurs.items():
-        if key in matiere.lower():
-            return color
+    if matiere:
+        for key, color in couleurs.items():
+            if key in matiere.lower():
+                return color
     return 'primary'

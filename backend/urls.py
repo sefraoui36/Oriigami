@@ -7,8 +7,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', lambda request: redirect('authentication:connexion')),  # Changé: redirige vers connexion
+    path('', lambda request: redirect('authentication:connexion')),
     path('', include('authentication.urls')),
+    path('clients/', include('clients.urls')),
     path('etudiants/', include('etudiants.urls')),
     path('portefeuilles/', include('portefeuilles.urls')),
 ]
