@@ -12,5 +12,6 @@ urlpatterns = [
     path('forfaits/', views.liste_forfaits, name='liste_forfaits'),
     path('seances/', views.liste_seances, name='liste_seances'),
     path('forfaits/acheter/', views.acheter_forfait, name='acheter_forfait'),
+    path('profil/', views.profil_parent, name='profil_parent'),
     path('creer-profil-parent/', views.creer_profil_parent, name='creer_profil_parent'),
 ]

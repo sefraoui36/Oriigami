@@ -861,3 +861,175 @@ def get_matiere_couleur(matiere):
             if key in matiere.lower():
                 return color
     return 'primary'
+
+# clients/views.py (AJOUTER cette fonction)
+
+@login_required
+def profil_parent(request):
+    """Vue pour afficher et modifier le profil du parent"""
+    from django.contrib.auth import update_session_auth_hash
+    from django.contrib.auth.forms import PasswordChangeForm
+    
+    # Récupérer le client parent connecté
+    client = Client.objects.filter(utilisateur=request.user, type_client='PARENT').first()
+    
+    if not client:
+        messages.warning(request, "Vous n'avez pas encore de profil parent. Veuillez en créer un.")
+        return redirect('clients:creer_profil_parent')
+    
+    # Récupérer les enfants du parent
+    enfants = Client.objects.filter(parent=client, type_client='ETUDIANT')
+    
+    # Récupérer les forfaits actifs (à adapter)
+    from forfaits.models import Forfait
+    forfaits_actifs = Forfait.objects.filter(utilisateur=request.user).count()
+    
+    # Récupérer le solde du portefeuille
+    solde_portefeuille = 0
+    try:
+        from portefeuilles.models import Portefeuille
+        portefeuille = Portefeuille.objects.filter(utilisateur=request.user).first()
+        if portefeuille:
+            solde_portefeuille = portefeuille.solde
+    except:
+        pass
+    
+    # Heures restantes (à adapter)
+    heures_restantes = 42
+    heures_total = 60
+    
+    # Dernières transactions (à adapter)
+    dernieres_transactions = []
+    try:
+        from portefeuilles.models import Transaction
+        transactions = Transaction.objects.filter(
+            portefeuille__utilisateur=request.user
+        ).order_by('-date_creation')[:3]
+        for t in transactions:
+            dernieres_transactions.append({
+                'date': t.date_creation.strftime('%d %b %Y'),
+                'description': t.description,
+                'montant': f"{t.montant:.2f} €",
+                'statut': 'Payé' if t.statut == 'COMPLETE' else 'En attente'
+            })
+    except:
+        pass
+    
+    # Prochain cours
+    prochain_cours = None
+    try:
+        from seances.models import Seance
+        from affectations.models import Affectation
+        from datetime import datetime, timedelta
+        
+        affectations = Affectation.objects.filter(
+            client__in=enfants,
+            statut_affectation='active'
+        )
+        prochaine_seance = Seance.objects.filter(
+            affectation__in=affectations,
+            date__gte=datetime.now().date(),
+            statut='prevue'
+        ).order_by('date', 'heure').first()
+        
+        if prochaine_seance:
+            enseignant = None
+            if prochaine_seance.affectation and prochaine_seance.affectation.rh:
+                from enseignants.models import Enseignant
+                enseignant = Enseignant.objects.filter(
+                    utilisateur=prochaine_seance.affectation.rh.utilisateur
+                ).first()
+            
+            prochain_cours = {
+                'enseignant': f"{enseignant.utilisateur.first_name} {enseignant.utilisateur.last_name}" if enseignant and enseignant.utilisateur else 'Enseignant',
+                'matiere': prochaine_seance.affectation.matiere if prochaine_seance.affectation else 'Cours',
+                'enfant': prochaine_seance.affectation.client.prenom if prochaine_seance.affectation and prochaine_seance.affectation.client else 'Enfant',
+                'date': prochaine_seance.date.strftime('%d/%m/%Y'),
+                'heure': prochaine_seance.heure.strftime('%H:%M') if prochaine_seance.heure else '--:--',
+                'duree': prochaine_seance.duree or '1h00'
+            }
+    except:
+        pass
+    
+    # Gestion du formulaire de modification du profil
+    if request.method == 'POST':
+        # Récupérer les données modifiées
+        nom = request.POST.get('nom')
+        prenom = request.POST.get('prenom')
+        telephone = request.POST.get('telephone')
+        adresse = request.POST.get('adresse')
+        date_naissance = request.POST.get('date_naissance')
+        
+        # Mettre à jour le client
+        if nom:
+            client.nom = nom
+        if prenom:
+            client.prenom = prenom
+        if telephone:
+            client.telephone = telephone
+        if adresse:
+            client.adresse = adresse
+        if date_naissance:
+            client.date_naissance = date_naissance
+        
+        client.save()
+        
+        # Mettre à jour l'utilisateur
+        user = request.user
+        if prenom:
+            user.first_name = prenom
+        if nom:
+            user.last_name = nom
+        user.save()
+        
+        messages.success(request, "Votre profil a été mis à jour avec succès !")
+        return redirect('clients:profil_parent')
+    
+    # Données pour le template
+    enfants_data = []
+    for enfant in enfants:
+        # Récupérer les matières de l'enfant (à adapter)
+        matieres = []
+        try:
+            from affectations.models import Affectation
+            affectations = Affectation.objects.filter(
+                client=enfant,
+                statut_affectation='active'
+            )
+            for aff in affectations:
+                if aff.matiere:
+                    matieres.append(aff.matiere)
+        except:
+            pass
+        
+        enfants_data.append({
+            'id': enfant.id_client,
+            'prenom': enfant.prenom,
+            'nom': enfant.nom,
+            'niveau': enfant.niveau_scolaire or 'Niveau',
+            'matieres': matieres[:3] if matieres else ['Mathématiques', 'Français'],
+            'statut': 'Actif'
+        })
+    
+    # Préférences du système
+    preferences = {
+        'langue': 'Français',
+        'fuseau_horaire': 'Europe/Paris (UTC+1)',
+        'format_date': 'DD/MM/YYYY'
+    }
+    
+    context = {
+        'client': client,
+        'user': request.user,
+        'enfants': enfants_data,
+        'forfaits_actifs': forfaits_actifs,
+        'solde_portefeuille': solde_portefeuille,
+        'heures_restantes': heures_restantes,
+        'heures_total': heures_total,
+        'dernieres_transactions': dernieres_transactions,
+        'prochain_cours': prochain_cours,
+        'preferences': preferences,
+        'nombre_enfants': len(enfants_data),
+    }
+    
+    return render(request, 'parent/profil.html', context)
