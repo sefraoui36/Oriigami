@@ -1033,3 +1033,141 @@ def profil_parent(request):
     }
     
     return render(request, 'parent/profil.html', context)
+
+    # clients/views.py (AJOUTER cette fonction)
+
+@login_required
+def liste_paiements(request):
+    """Vue pour afficher les paiements du parent"""
+    from portefeuilles.models import Portefeuille, Transaction
+    from forfaits.models import Forfait
+    from affectations.models import Affectation
+    from django.db.models import Sum, Q
+    from datetime import datetime, timedelta
+    import calendar
+    
+    # Récupérer le client parent connecté
+    parent = Client.objects.filter(utilisateur=request.user, type_client='PARENT').first()
+    
+    if not parent:
+        messages.warning(request, "Vous n'avez pas encore de profil parent.")
+        return redirect('clients:creer_profil_parent')
+    
+    # Récupérer tous les enfants du parent
+    enfants = Client.objects.filter(parent=parent, type_client='ETUDIANT')
+    
+    # Récupérer le portefeuille
+    portefeuille = Portefeuille.objects.filter(utilisateur=request.user).first()
+    solde_portefeuille = portefeuille.solde if portefeuille else 0
+    
+    # Récupérer toutes les transactions
+    transactions = Transaction.objects.filter(portefeuille__utilisateur=request.user).order_by('-date_creation')
+    
+    # Calculer les totaux
+    total_paye = transactions.filter(statut='COMPLETE').aggregate(
+        total=Sum('montant')
+    )['total'] or 0
+    
+    total_attente = transactions.filter(statut='EN_ATTENTE').aggregate(
+        total=Sum('montant')
+    )['total'] or 0
+    
+    # Forfaits actifs
+    forfaits_actifs = Forfait.objects.filter(utilisateur=request.user).count()
+    
+    # Préparer les données des transactions pour le template
+    transactions_data = []
+    for t in transactions[:20]:  # Limiter aux 20 dernières
+        # Trouver l'enfant associé (si possible)
+        enfant_nom = "N/A"
+        try:
+            # Essayer de trouver l'enfant via la description
+            for enfant in enfants:
+                if enfant.prenom in t.description or enfant.nom in t.description:
+                    enfant_nom = enfant.prenom
+                    break
+        except:
+            pass
+        
+        statut_display = t.get_statut_display() if hasattr(t, 'get_statut_display') else t.statut
+        statut_class = 'green' if t.statut == 'COMPLETE' else 'amber' if t.statut == 'EN_ATTENTE' else 'red'
+        
+        transactions_data.append({
+            'id': t.id,
+            'date': t.date_creation.strftime('%d %b %Y'),
+            'enfant': enfant_nom,
+            'description': t.description,
+            'montant': t.montant,
+            'montant_formatted': f"{t.montant:,.0f} DH".replace(',', ' '),
+            'methode': t.methode_paiement or 'Carte Bancaire',
+            'statut': statut_display,
+            'statut_class': statut_class,
+            'reference': t.reference,
+        })
+    
+    # Statistiques par enfant
+    stats_enfants = []
+    for enfant in enfants:
+        # Compter les transactions pour cet enfant
+        transactions_enfant = [t for t in transactions_data if t['enfant'] == enfant.prenom]
+        total_enfant = sum([t['montant'] for t in transactions_enfant if 'Payé' in t['statut'] or 'Complété' in t['statut']])
+        
+        # Compter les forfaits actifs de l'enfant
+        try:
+            affectations = Affectation.objects.filter(client=enfant, statut_affectation='active')
+            forfaits_enfant = affectations.count()
+        except:
+            forfaits_enfant = 0
+        
+        stats_enfants.append({
+            'id': enfant.id_client,
+            'prenom': enfant.prenom,
+            'nom': enfant.nom,
+            'photo': enfant.photo,
+            'total_paye': total_enfant,
+            'total_formatted': f"{total_enfant:,.0f} DH".replace(',', ' '),
+            'forfaits_actifs': forfaits_enfant,
+            'prochaine_echeance': (datetime.now() + timedelta(days=15)).strftime('%d %b %Y') if forfaits_enfant > 0 else '--',
+            'niveau': enfant.niveau_scolaire or 'N/A',
+            'etablissement': enfant.etablissement or 'N/A',
+        })
+    
+    # Données pour le graphique (6 derniers mois)
+    mois_labels = []
+    mois_donnees = []
+    aujourdhui = datetime.now()
+    for i in range(5, -1, -1):
+        mois = aujourdhui - timedelta(days=30*i)
+        mois_labels.append(mois.strftime('%b'))
+        # Compter les transactions pour ce mois
+        debut_mois = mois.replace(day=1)
+        fin_mois = (debut_mois + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+        total_mois = transactions.filter(
+            date_creation__gte=debut_mois,
+            date_creation__lte=fin_mois,
+            statut='COMPLETE'
+        ).aggregate(total=Sum('montant'))['total'] or 0
+        mois_donnees.append(float(total_mois))
+    
+    # Hauteurs pour le graphique (en pourcentage)
+    max_donnee = max(mois_donnees) if mois_donnees else 1
+    hauteurs_graphique = [(d / max_donnee * 80 + 10) if max_donnee > 0 else 10 for d in mois_donnees]
+    
+    context = {
+        'parent': parent,
+        'enfants': enfants,
+        'transactions': transactions_data,
+        'total_paye': total_paye,
+        'total_paye_formatted': f"{total_paye:,.0f} DH".replace(',', ' '),
+        'total_attente': total_attente,
+        'total_attente_formatted': f"{total_attente:,.0f} DH".replace(',', ' '),
+        'forfaits_actifs': forfaits_actifs,
+        'solde_portefeuille': solde_portefeuille,
+        'solde_formatted': f"{solde_portefeuille:,.0f} DH".replace(',', ' '),
+        'stats_enfants': stats_enfants,
+        'mois_labels': mois_labels,
+        'hauteurs_graphique': hauteurs_graphique,
+        'user': request.user,
+    }
+    
+    return render(request, 'parent/paiements.html', context)
