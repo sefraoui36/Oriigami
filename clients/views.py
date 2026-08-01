@@ -288,3 +288,140 @@ def ajouter_enfant(request):
     
     messages.success(request, f"{prenom} {nom} a été ajouté avec succès !")
     return redirect('clients:liste_enfants')
+
+# clients/views.py (AJOUTER cette fonction)
+
+@login_required
+def liste_enseignants(request):
+    """Vue pour afficher la liste des enseignants des enfants du parent"""
+    # Récupérer le client parent connecté
+    parent = Client.objects.filter(utilisateur=request.user, type_client='PARENT').first()
+    
+    if not parent:
+        messages.warning(request, "Vous n'avez pas encore de profil parent.")
+        return redirect('clients:creer_profil_parent')
+    
+    # Récupérer tous les enfants du parent
+    enfants = Client.objects.filter(parent=parent, type_client='ETUDIANT')
+    nombre_enfants = enfants.count()
+    
+    # Récupérer les enseignants via les affectations
+    from enseignants.models import Enseignant
+    from affectations.models import Affectation
+    from seances.models import Seance
+    
+    # Statistiques globales
+    enseignants_actifs = Enseignant.objects.filter(
+        utilisateur__in=Affectation.objects.filter(
+            client__in=enfants,
+            statut_affectation='active'
+        ).values('rh__utilisateur')
+    ).distinct().count()
+    
+    matieres_distinctes = Affectation.objects.filter(
+        client__in=enfants,
+        statut_affectation='active'
+    ).values_list('matiere', flat=True).distinct().count()
+    
+    seances_semaine = Seance.objects.filter(
+        affectation__client__in=enfants,
+        date__gte=timezone.now().date(),
+        date__lte=timezone.now().date() + timedelta(days=7),
+        statut='prevue'
+    ).count()
+    
+    # Structure de données pour les enfants et leurs enseignants
+    enfants_enseignants = []
+    
+    for enfant in enfants:
+        # Récupérer les affectations actives de l'enfant
+        affectations = Affectation.objects.filter(
+            client=enfant,
+            statut_affectation='active'
+        ).select_related('rh', 'rh__utilisateur')
+        
+        enseignants_list = []
+        for aff in affectations:
+            if aff.rh and aff.rh.utilisateur:
+                enseignant = Enseignant.objects.filter(utilisateur=aff.rh.utilisateur).first()
+                if enseignant:
+                    # Récupérer la prochaine séance
+                    prochaine_seance = Seance.objects.filter(
+                        affectation=aff,
+                        statut='prevue',
+                        date__gte=timezone.now().date()
+                    ).order_by('date', 'heure').first()
+                    
+                    # Compter les séances totales et terminées
+                    total_seances = Seance.objects.filter(affectation=aff).count()
+                    seances_terminees = Seance.objects.filter(affectation=aff, statut='termine').count()
+                    
+                    # Heures restantes (à adapter selon votre logique)
+                    heures_restantes = aff.heures_restantes if aff.heures_restantes else 0
+                    
+                    enseignants_list.append({
+                        'id': enseignant.id,
+                        'nom': enseignant.utilisateur.last_name or 'Enseignant',
+                        'prenom': enseignant.utilisateur.first_name or '',
+                        'nom_complet': f"{enseignant.utilisateur.first_name} {enseignant.utilisateur.last_name}".strip(),
+                        'matiere': aff.matiere or 'Cours',
+                        'photo': enseignant.utilisateur.photo if hasattr(enseignant.utilisateur, 'photo') else None,
+                        'statut': 'Actif' if aff.statut_affectation == 'active' else 'Inactif',
+                        'heures_restantes': heures_restantes,
+                        'total_seances': total_seances,
+                        'seances_terminees': seances_terminees,
+                        'prochaine_seance': prochaine_seance,
+                        'prochaine_date': prochaine_seance.date.strftime('%d/%m') if prochaine_seance else 'Aucune',
+                        'prochaine_heure': prochaine_seance.heure.strftime('%H:%M') if prochaine_seance and prochaine_seance.heure else '--:--',
+                        'progression': int((seances_terminees / total_seances * 100)) if total_seances > 0 else 0,
+                        'experience': enseignant.experience if hasattr(enseignant, 'experience') else 'Non spécifié',
+                        'diplome': enseignant.diplome if hasattr(enseignant, 'diplome') else 'Non spécifié',
+                        'disponibilites': get_disponibilites_enseignant(enseignant),
+                        'enfants_suivis': [enfant.prenom],
+                    })
+        
+        enfants_enseignants.append({
+            'id': enfant.id_client,
+            'prenom': enfant.prenom,
+            'nom': enfant.nom,
+            'photo': enfant.photo,
+            'niveau': enfant.niveau_scolaire or 'Niveau',
+            'nombre_enseignants': len(enseignants_list),
+            'enseignants': enseignants_list
+        })
+    
+    # Tous les enseignants pour la vue détaillée
+    tous_enseignants = []
+    for item in enfants_enseignants:
+        for enseignant in item['enseignants']:
+            enseignant['enfant'] = item['prenom']
+            tous_enseignants.append(enseignant)
+    
+    context = {
+        'parent': parent,
+        'enfants_enseignants': enfants_enseignants,
+        'tous_enseignants': tous_enseignants,
+        'enseignants_actifs': enseignants_actifs,
+        'matieres_count': matieres_distinctes,
+        'enfants_count': nombre_enfants,
+        'seances_semaine': seances_semaine,
+        'user': request.user,
+    }
+    
+    return render(request, 'parent/enseignants.html', context)
+
+def get_disponibilites_enseignant(enseignant):
+    """Récupère les disponibilités d'un enseignant"""
+    # À adapter selon votre modèle de disponibilités
+    from disponibilites.models import Disponibilite
+    try:
+        disponibilites = Disponibilite.objects.filter(enseignant=enseignant)
+        if disponibilites.exists():
+            return disponibilites
+    except:
+        pass
+    # Disponibilités par défaut
+    return [
+        {'jour': 'Lundi - Jeudi', 'heure': '17:00 - 20:00'},
+        {'jour': 'Samedi', 'heure': '09:00 - 13:00'},
+    ]
