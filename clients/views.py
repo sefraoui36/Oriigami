@@ -608,3 +608,256 @@ def acheter_forfait(request):
     
     messages.success(request, f"Forfait {offre['nom']} acheté avec succès pour {enfant.prenom} !")
     return redirect('clients:liste_forfaits')
+
+# clients/views.py (AJOUTER cette fonction)
+
+@login_required
+def liste_seances(request):
+    """Vue pour afficher les séances des enfants du parent"""
+    from seances.models import Seance
+    from affectations.models import Affectation
+    from enseignants.models import Enseignant
+    from django.utils import timezone
+    from datetime import datetime, timedelta
+    import calendar
+    
+    # Récupérer le client parent connecté
+    parent = Client.objects.filter(utilisateur=request.user, type_client='PARENT').first()
+    
+    if not parent:
+        messages.warning(request, "Vous n'avez pas encore de profil parent.")
+        return redirect('clients:creer_profil_parent')
+    
+    # Récupérer tous les enfants du parent
+    enfants = Client.objects.filter(parent=parent, type_client='ETUDIANT')
+    
+    # Récupérer toutes les séances des enfants
+    affectations = Affectation.objects.filter(
+        client__in=enfants,
+        statut_affectation='active'
+    )
+    
+    seances = Seance.objects.filter(
+        affectation__in=affectations
+    ).order_by('date', 'heure')
+    
+    # Séances à venir (à partir d'aujourd'hui)
+    aujourdhui = timezone.now().date()
+    seances_a_venir = seances.filter(date__gte=aujourdhui, statut__in=['prevue', 'en_cours'])
+    
+    # Séances passées
+    seances_passees = seances.filter(date__lt=aujourdhui, statut='termine')
+    
+    # Statistiques
+    total_seances = seances.count()
+    seances_semaine = seances.filter(
+        date__gte=aujourdhui,
+        date__lte=aujourdhui + timedelta(days=7)
+    ).count()
+    
+    # Données pour le calendrier
+    mois_courant = timezone.now().month
+    annee_courante = timezone.now().year
+    jours_semaine = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
+    
+    # Générer les jours du mois
+    calendrier_mois = []
+    for jour in range(1, calendar.monthrange(annee_courante, mois_courant)[1] + 1):
+        date_jour = datetime(annee_courante, mois_courant, jour).date()
+        seances_jour = seances.filter(date=date_jour)
+        calendrier_mois.append({
+            'jour': jour,
+            'date': date_jour,
+            'est_aujourdhui': date_jour == aujourdhui,
+            'a_seances': seances_jour.exists(),
+            'seances': seances_jour
+        })
+    
+    # Préparer les données des séances pour le template
+    seances_data = []
+    for seance in seances_a_venir[:10]:  # Limiter aux 10 prochaines
+        enfant = seance.affectation.client if seance.affectation else None
+        enseignant = None
+        if seance.affectation and seance.affectation.rh:
+            enseignant = Enseignant.objects.filter(utilisateur=seance.affectation.rh.utilisateur).first()
+        
+        # Déterminer le statut de la séance
+        statut_display = seance.get_statut_display() if hasattr(seance, 'get_statut_display') else seance.statut
+        couleur_statut = 'green' if seance.statut == 'termine' else 'orange' if seance.statut == 'prevue' else 'blue'
+        
+        # Vérifier si c'est une recommandation IA
+        est_ia = seance.est_ia if hasattr(seance, 'est_ia') else False
+        
+        # Matière
+        matiere = seance.affectation.matiere if seance.affectation else 'Cours'
+        
+        # Durée
+        duree = seance.duree or '1h00'
+        
+        # Enseignant
+        nom_enseignant = "Enseignant"
+        if enseignant and enseignant.utilisateur:
+            nom_enseignant = f"{enseignant.utilisateur.first_name} {enseignant.utilisateur.last_name}".strip() or "Enseignant"
+        
+        seances_data.append({
+            'id': seance.id,
+            'enfant': enfant.prenom if enfant else 'Inconnu',
+            'enfant_initial': enfant.prenom[0].upper() if enfant else '?',
+            'matiere': matiere,
+            'matiere_icone': get_matiere_icone(matiere),
+            'couleur_matiere': get_matiere_couleur(matiere),
+            'enseignant': nom_enseignant,
+            'enseignant_photo': enseignant.utilisateur.photo if enseignant and hasattr(enseignant.utilisateur, 'photo') else None,
+            'date': seance.date.strftime('%d/%m/%Y'),
+            'date_affichage': get_date_affichage(seance.date),
+            'heure': seance.heure.strftime('%H:%M') if seance.heure else '--:--',
+            'heure_fin': (seance.heure + timedelta(hours=1)).strftime('%H:%M') if seance.heure else '--:--',
+            'duree': duree,
+            'statut': statut_display,
+            'couleur_statut': couleur_statut,
+            'est_ia': est_ia,
+            'mode': 'En visio' if seance.en_visio else 'Domicile',
+            'mode_icone': 'videocam' if seance.en_visio else 'location_on',
+            'lieu': seance.lieu or ('Lien visio' if seance.en_visio else 'À définir'),
+            'est_termine': seance.statut == 'termine',
+            'peut_rejoindre': seance.statut in ['prevue', 'en_cours'],
+            'peut_modifier': seance.statut in ['prevue', 'en_attente'],
+            'peut_annuler': seance.statut in ['prevue', 'en_attente'],
+            'seance_id': seance.id,
+        })
+    
+    # Séances passées pour l'historique
+    historique_data = []
+    for seance in seances_passees[:5]:
+        enfant = seance.affectation.client if seance.affectation else None
+        enseignant = None
+        if seance.affectation and seance.affectation.rh:
+            enseignant = Enseignant.objects.filter(utilisateur=seance.affectation.rh.utilisateur).first()
+        
+        matiere = seance.affectation.matiere if seance.affectation else 'Cours'
+        nom_enseignant = "Enseignant"
+        if enseignant and enseignant.utilisateur:
+            nom_enseignant = f"{enseignant.utilisateur.first_name} {enseignant.utilisateur.last_name}".strip() or "Enseignant"
+        
+        historique_data.append({
+            'matiere': matiere,
+            'matiere_icone': get_matiere_icone(matiere),
+            'couleur_matiere': get_matiere_couleur(matiere),
+            'enfant': enfant.prenom if enfant else 'Inconnu',
+            'enseignant': nom_enseignant,
+            'date': seance.date.strftime('%d %b.'),
+            'heure': seance.heure.strftime('%H:%M') if seance.heure else '--:--',
+            'duree': seance.duree or '1h00',
+            'statut': 'Complétée',
+            'peut_voir_rapport': True,
+        })
+    
+    # Timeline de la journée
+    timeline_data = []
+    today_seances = seances.filter(date=aujourdhui).order_by('heure')
+    for seance in today_seances:
+        enfant = seance.affectation.client if seance.affectation else None
+        matiere = seance.affectation.matiere if seance.affectation else 'Cours'
+        enseignant = None
+        if seance.affectation and seance.affectation.rh:
+            enseignant = Enseignant.objects.filter(utilisateur=seance.affectation.rh.utilisateur).first()
+        
+        nom_enseignant = "Enseignant"
+        if enseignant and enseignant.utilisateur:
+            nom_enseignant = f"{enseignant.utilisateur.first_name} {enseignant.utilisateur.last_name}".strip() or "Enseignant"
+        
+        timeline_data.append({
+            'heure': seance.heure.strftime('%H:%M') if seance.heure else '--:--',
+            'duree': seance.duree or '1h00',
+            'matiere': matiere,
+            'enfant': enfant.prenom if enfant else 'Inconnu',
+            'enseignant': nom_enseignant,
+            'couleur': get_matiere_couleur(matiere),
+            'est_termine': seance.statut == 'termine',
+        })
+    
+    # Optimisation IA (simulée)
+    optimisation = {
+        'score': 92,
+        'message': 'Votre planning actuel est optimisé. Cependant, 2 créneaux pourraient être regroupés pour économiser du temps de transport.'
+    }
+    
+    context = {
+        'parent': parent,
+        'enfants': enfants,
+        'seances': seances_data,
+        'seances_semaine': seances_semaine,
+        'total_seances': total_seances,
+        'calendrier_mois': calendrier_mois,
+        'jour_semaine': jours_semaine,
+        'mois_courant': mois_courant,
+        'annee_courante': annee_courante,
+        'aujourdhui': aujourdhui,
+        'timeline_data': timeline_data,
+        'historique_data': historique_data,
+        'optimisation': optimisation,
+        'user': request.user,
+    }
+    
+    return render(request, 'parent/seances.html', context)
+
+def get_date_affichage(date):
+    """Retourne une date formatée pour l'affichage"""
+    aujourdhui = timezone.now().date()
+    if date == aujourdhui:
+        return "Aujourd'hui"
+    elif date == aujourdhui + timedelta(days=1):
+        return "Demain"
+    elif date < aujourdhui:
+        return "Passé"
+    else:
+        jours_semaine = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
+        return jours_semaine[date.weekday()]
+
+def get_matiere_icone(matiere):
+    """Retourne l'icône correspondante à la matière"""
+    icones = {
+        'math': 'calculate',
+        'mathématiques': 'calculate',
+        'français': 'menu_book',
+        'anglais': 'translate',
+        'physique': 'biotech',
+        'chimie': 'science',
+        'histoire': 'history',
+        'géo': 'public',
+        'web': 'code',
+        'informatique': 'code',
+        'programmation': 'code',
+        'art': 'palette',
+        'musique': 'music_note',
+        'sport': 'sports',
+    }
+    if matiere:
+        for key, icon in icones.items():
+            if key in matiere.lower():
+                return icon
+    return 'school'
+
+def get_matiere_couleur(matiere):
+    """Retourne la couleur correspondante à la matière"""
+    couleurs = {
+        'math': 'primary',
+        'mathématiques': 'primary',
+        'français': 'tertiary',
+        'anglais': 'secondary',
+        'physique': 'blue',
+        'chimie': 'purple',
+        'histoire': 'orange',
+        'géo': 'green',
+        'web': 'indigo',
+        'informatique': 'indigo',
+        'programmation': 'indigo',
+        'art': 'pink',
+        'musique': 'teal',
+        'sport': 'emerald',
+    }
+    if matiere:
+        for key, color in couleurs.items():
+            if key in matiere.lower():
+                return color
+    return 'primary'
