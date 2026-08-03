@@ -70,6 +70,8 @@ def dashboard_parent(request):
         'solde_portefeuille': solde_portefeuille,
         'prochaines_seances': prochaines_seances,
         'user': request.user,
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
     }
     
     return render(request, 'parent/dashboard.html', context)
@@ -289,8 +291,6 @@ def ajouter_enfant(request):
     messages.success(request, f"{prenom} {nom} a été ajouté avec succès !")
     return redirect('clients:liste_enfants')
 
-# clients/views.py (AJOUTER cette fonction)
-
 @login_required
 def liste_enseignants(request):
     """Vue pour afficher la liste des enseignants des enfants du parent"""
@@ -426,8 +426,6 @@ def get_disponibilites_enseignant(enseignant):
         {'jour': 'Samedi', 'heure': '09:00 - 13:00'},
     ]
 
-# clients/views.py (AJOUTER cette fonction)
-
 @login_required
 def liste_forfaits(request):
     """Vue pour afficher les forfaits du parent et de ses enfants"""
@@ -495,6 +493,8 @@ def liste_forfaits(request):
         'offres_forfaits': offres_forfaits,
         'recommandation': recommandation,
         'user': request.user,
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
     }
     
     return render(request, 'parent/forfaits.html', context)
@@ -557,8 +557,6 @@ def get_recommandation_forfait(forfaits_enfants):
             }
     return None
 
-# clients/views.py (AJOUTER cette fonction)
-
 @login_required
 def acheter_forfait(request):
     """Acheter un forfait pour un enfant"""
@@ -608,8 +606,6 @@ def acheter_forfait(request):
     
     messages.success(request, f"Forfait {offre['nom']} acheté avec succès pour {enfant.prenom} !")
     return redirect('clients:liste_forfaits')
-
-# clients/views.py (AJOUTER cette fonction)
 
 @login_required
 def liste_seances(request):
@@ -797,6 +793,8 @@ def liste_seances(request):
         'historique_data': historique_data,
         'optimisation': optimisation,
         'user': request.user,
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
     }
     
     return render(request, 'parent/seances.html', context)
@@ -861,8 +859,6 @@ def get_matiere_couleur(matiere):
             if key in matiere.lower():
                 return color
     return 'primary'
-
-# clients/views.py (AJOUTER cette fonction)
 
 @login_required
 def profil_parent(request):
@@ -1030,11 +1026,11 @@ def profil_parent(request):
         'prochain_cours': prochain_cours,
         'preferences': preferences,
         'nombre_enfants': len(enfants_data),
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
     }
     
     return render(request, 'parent/profil.html', context)
-
-    # clients/views.py (AJOUTER cette fonction)
 
 @login_required
 def liste_paiements(request):
@@ -1168,6 +1164,8 @@ def liste_paiements(request):
         'mois_labels': mois_labels,
         'hauteurs_graphique': hauteurs_graphique,
         'user': request.user,
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
     }
     
     return render(request, 'parent/paiements.html', context)

@@ -17,26 +17,15 @@ from django.utils import timezone
 from datetime import timedelta
 
 def inscription(request):
-    if request.user.is_authenticated:
-        # Rediriger vers le bon dashboard - utilise filter().first()
-        try:
-            client = Client.objects.filter(utilisateur=request.user).first()
-            if client and client.type_client == 'PARENT':
-                return redirect('clients:dashboard_parent')
-            else:
-                return redirect('authentication:dashboard')
-        except:
-            return redirect('authentication:dashboard')
-        
     if request.method == 'POST':
         form = InscriptionForm(request.POST)
         if form.is_valid():
             user = form.save()
             
-            # Récupérer le type de client depuis le formulaire
-            type_client = request.POST.get('type_client', 'parent').upper()
+            # 🔥 Récupérer le type_client et le mettre en minuscules
+            type_client = request.POST.get('type_client', 'parent').lower()
+            print(f"🔍 [DEBUG] type_client reçu: {type_client}")
             
-            # Créer le client
             client = Client.objects.create(
                 utilisateur=user,
                 nom=form.cleaned_data['nom'],
@@ -45,9 +34,9 @@ def inscription(request):
                 adresse=form.cleaned_data.get('adresse', ''),
                 type_client=type_client
             )
+            print(f"✅ [DEBUG] Client créé: {client.id_client} - Type: {client.type_client}")
             
-            # Si c'est un parent, créer les enfants
-            if type_client == 'PARENT':
+            if type_client == 'parent':
                 noms_enfants = request.POST.getlist('nom_enfant[]')
                 prenoms_enfants = request.POST.getlist('prenom_enfant[]')
                 niveaux_enfants = request.POST.getlist('niveau_enfant[]')
@@ -57,7 +46,7 @@ def inscription(request):
                     if noms_enfants[i] and prenoms_enfants[i]:
                         Client.objects.create(
                             utilisateur=user,
-                            type_client='ETUDIANT',
+                            type_client='etudiant',
                             nom=noms_enfants[i],
                             prenom=prenoms_enfants[i],
                             telephone='',
@@ -67,15 +56,8 @@ def inscription(request):
                             etablissement=etablissements_enfants[i] if i < len(etablissements_enfants) else ''
                         )
             
-            # Connecter l'utilisateur
-            login(request, user)
-            messages.success(request, "Inscription réussie ! Bienvenue sur Origami Privé.")
-            
-            # Rediriger vers le bon dashboard
-            if type_client == 'PARENT':
-                return redirect('clients:dashboard_parent')
-            else:
-                return redirect('authentication:dashboard')
+            messages.success(request, "Inscription réussie ! Veuillez vous connecter pour accéder à votre espace.")
+            return redirect('authentication:connexion')
         else:
             for field, errors in form.errors.items():
                 for error in errors:
@@ -86,17 +68,6 @@ def inscription(request):
     return render(request, 'clients/inscription.html', {'form': form})
 
 def connexion(request):
-    if request.user.is_authenticated:
-        # Rediriger vers le bon dashboard - utilise filter().first()
-        try:
-            client = Client.objects.filter(utilisateur=request.user).first()
-            if client and client.type_client == 'PARENT':
-                return redirect('clients:dashboard_parent')
-            else:
-                return redirect('authentication:dashboard')
-        except:
-            return redirect('authentication:dashboard')
-        
     if request.method == 'POST':
         form = ConnexionForm(request, data=request.POST)
         if form.is_valid():
@@ -104,15 +75,24 @@ def connexion(request):
             login(request, user)
             messages.success(request, f"Bonjour {user.first_name} ! Content de vous revoir.")
             
-            # Rediriger vers le bon dashboard - utilise filter().first()
-            try:
-                client = Client.objects.filter(utilisateur=user).first()
-                if client and client.type_client == 'PARENT':
+            # Récupérer le client
+            client = Client.objects.filter(utilisateur=user).first()
+            print(f"🔍 [DEBUG] Client trouvé: {client}")
+            if client:
+                print(f"🔍 [DEBUG] Type client: {client.type_client}")
+            
+            # 🔥 REDIRECTION CORRECTE selon le type de client (en minuscules)
+            if client:
+                if client.type_client == 'parent':
+                    print("👉 [DEBUG] Redirection vers dashboard_parent")
                     return redirect('clients:dashboard_parent')
-                else:
+                elif client.type_client == 'etudiant':
+                    print("👉 [DEBUG] Redirection vers authentication:dashboard")
                     return redirect('authentication:dashboard')
-            except:
-                return redirect('authentication:dashboard')
+            
+            # Par défaut, rediriger vers le dashboard étudiant
+            print("👉 [DEBUG] Redirection par défaut vers authentication:dashboard")
+            return redirect('authentication:dashboard')
         else:
             messages.error(request, "Email ou mot de passe incorrect.")
     else:
@@ -130,8 +110,12 @@ def deconnexion(request):
 def dashboard(request):
     user = request.user
     
-    # Utiliser filter().first() au lieu de get()
     client = Client.objects.filter(utilisateur=user).first()
+    
+    # 🔥 Si c'est un parent, rediriger vers le dashboard parent (en minuscules)
+    if client and client.type_client == 'parent':
+        print("👉 [DEBUG] Parent détecté dans dashboard, redirection vers clients:dashboard_parent")
+        return redirect('clients:dashboard_parent')
     
     etudiant = None
     if client:
@@ -170,7 +154,7 @@ def dashboard(request):
     
     cours_list = []
     try:
-        affectations = Affectation.objects.filter(utilisateur=user, statut_affectation='active')[:3]
+        affectations = Affectation.objects.filter(etudiant=etudiant, statut_affectation='active')[:3]
         for aff in affectations:
             total_seances = Seance.objects.filter(affectation=aff).count()
             seances_terminees = Seance.objects.filter(affectation=aff, statut='termine').count()
@@ -244,7 +228,7 @@ def dashboard(request):
     try:
         notifications = Notification.objects.filter(
             utilisateur=user,
-            lue=False  # Changé de lecture à lue
+            lue=False
         ).order_by('-date_envoi')[:3]
         
         for notif in notifications:
@@ -291,7 +275,6 @@ def dashboard(request):
             for s in seances.filter(statut='termine'):
                 if s.duree:
                     try:
-                        # Extraire les heures de la durée (ex: "1h30" -> 1.5)
                         duree_str = s.duree.replace('h', '').strip()
                         if 'min' in duree_str:
                             parts = duree_str.split('h')

@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 from django.db.models import Count, Sum, Q, Avg
 from django.utils import timezone
 from clients.models import Client
@@ -21,6 +22,100 @@ from .forms import ParametresForm, SecuriteForm, NotificationPreferencesForm, Av
 @login_required
 def profil(request):
     user = request.user
+    client = Client.objects.filter(utilisateur=user).first()
+    
+    # ===== GESTION DES ACTIONS POST =====
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        # 1. Mettre à jour le profil
+        if action == 'update_profile':
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            email = request.POST.get('email')
+            telephone = request.POST.get('telephone')
+            adresse = request.POST.get('adresse')
+            
+            # Mettre à jour l'utilisateur
+            if first_name:
+                user.first_name = first_name.strip()
+            if last_name:
+                user.last_name = last_name.strip()
+            if email:
+                user.email = email.strip()
+                user.username = email.strip()  # Django utilise username pour l'authentification
+            if telephone:
+                user.telephone = telephone.strip()
+            if adresse:
+                user.adresse_actuelle = adresse.strip()
+            
+            user.save()
+            
+            # Mettre à jour le client si nécessaire
+            if client and adresse:
+                client.adresse = adresse.strip()
+                client.nom = last_name.strip() if last_name else client.nom
+                client.prenom = first_name.strip() if first_name else client.prenom
+                client.telephone = telephone.strip() if telephone else client.telephone
+                client.save()
+            
+            messages.success(request, "✅ Vos informations ont été mises à jour avec succès !")
+            return redirect('etudiants:profil')
+        
+        # 2. Changer le mot de passe
+        elif action == 'change_password':
+            current_password = request.POST.get('current_password')
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+            
+            # Vérifier le mot de passe actuel
+            if not user.check_password(current_password):
+                messages.error(request, "❌ Le mot de passe actuel est incorrect.")
+                return redirect('etudiants:profil')
+            
+            # Vérifier que les nouveaux mots de passe correspondent
+            if new_password != confirm_password:
+                messages.error(request, "❌ Les mots de passe ne correspondent pas.")
+                return redirect('etudiants:profil')
+            
+            # Vérifier la longueur du nouveau mot de passe
+            if len(new_password) < 8:
+                messages.error(request, "❌ Le mot de passe doit contenir au moins 8 caractères.")
+                return redirect('etudiants:profil')
+            
+            # Changer le mot de passe
+            user.set_password(new_password)
+            user.save()
+            
+            # Garder l'utilisateur connecté après changement de mot de passe
+            update_session_auth_hash(request, user)
+            
+            messages.success(request, "✅ Votre mot de passe a été changé avec succès !")
+            return redirect('etudiants:profil')
+        
+        # 3. Supprimer le compte
+        elif action == 'delete_account':
+            # Déconnecter l'utilisateur
+            from django.contrib.auth import logout
+            logout(request)
+            
+            # Supprimer l'utilisateur (cascade supprime aussi les clients)
+            user.delete()
+            
+            messages.success(request, "Votre compte a été supprimé avec succès.")
+            return redirect('authentication:connexion')
+        
+        # 4. Activer/Désactiver la 2FA
+        elif action == 'toggle_2fa':
+            enabled = request.POST.get('enabled') == 'true'
+            # Ajoutez ce champ dans votre modèle Utilisateur si nécessaire
+            # user.two_factor_enabled = enabled
+            # user.save()
+            
+            messages.success(request, f"✅ Authentification à deux facteurs {'activée' if enabled else 'désactivée'}")
+            return redirect('etudiants:profil')
+    
+    # ===== AFFICHAGE DU PROFIL =====
     context = {
         'user': user,
         'first_name': user.first_name,
@@ -29,7 +124,9 @@ def profil(request):
         'telephone': user.telephone,
         'adresse_actuelle': user.adresse_actuelle,
         'date_naissance': user.date_naissance,
+        'client': client,
     }
+    
     return render(request, 'etudiants/profil.html', context)
 
 @login_required
@@ -39,7 +136,7 @@ def enseignants(request):
     total_enseignants = 0
     
     try:
-        client = Client.objects.get(utilisateur=user)
+        client = Client.objects.filter(utilisateur=user).first()
         etudiant = Etudiant.objects.filter(client=client).first()
         
         if etudiant:
@@ -107,7 +204,7 @@ def seances(request):
     ia_recommendations = []
     
     try:
-        client = Client.objects.get(utilisateur=user)
+        client = Client.objects.filter(utilisateur=user).first()
         etudiant = Etudiant.objects.filter(client=client).first()
         
         if etudiant:
@@ -169,7 +266,7 @@ def forfait(request):
             id_forfait = f"#PKG-{forfait.id_forfait:04d}" if forfait.id_forfait else "#PKG-0001"
             
             try:
-                client = Client.objects.get(utilisateur=user)
+                client = Client.objects.filter(utilisateur=user).first()
                 etudiant = Etudiant.objects.filter(client=client).first()
                 
                 if etudiant:
@@ -274,7 +371,7 @@ def portefeuille(request):
             total_depense += d.montant if d.montant else 0
         
         try:
-            client = Client.objects.get(utilisateur=user)
+            client = Client.objects.filter(utilisateur=user).first()
             etudiant = Etudiant.objects.filter(client=client).first()
             if etudiant:
                 seances = Seance.objects.filter(affectation__etudiant=etudiant)
@@ -310,7 +407,7 @@ def progression(request):
         'total': 0, 
         'terminees': 0, 
         'pourcentage': 0,
-        'presence': 0,  # Changé de 95 à 0 (sera calculé dynamiquement)
+        'presence': 0,
         'heures_completees': 0,
         'heures_restantes': 0,
         'note_moyenne': 0,
@@ -320,11 +417,10 @@ def progression(request):
     }
     
     try:
-        client = Client.objects.get(utilisateur=user)
+        client = Client.objects.filter(utilisateur=user).first()
         etudiant = Etudiant.objects.filter(client=client).first()
         
         if etudiant:
-            # Récupérer toutes les séances
             seances = Seance.objects.filter(affectation__etudiant=etudiant)
             total = seances.count()
             terminees = seances.filter(statut='termine').count()
@@ -337,15 +433,10 @@ def progression(request):
             progression_data['heures_completees'] = terminees * 2
             progression_data['heures_restantes'] = prevues * 2
             
-            # ===== CALCUL DU TAUX DE PRÉSENCE =====
-            # Récupérer toutes les séances (prévues ET terminées)
             toutes_les_seances = Seance.objects.filter(affectation__etudiant=etudiant)
             total_seances_prevues = toutes_les_seances.count()
-            
-            # Compter les séances où l'étudiant était présent (statut = 'termine')
             seances_present = toutes_les_seances.filter(statut='termine').count()
             
-            # Calculer le taux de présence
             if total_seances_prevues > 0:
                 taux_presence = int((seances_present / total_seances_prevues) * 100)
             else:
@@ -353,7 +444,6 @@ def progression(request):
             
             progression_data['presence'] = taux_presence
             
-            # Calculer la note moyenne
             notes = [s.qualite for s in seances if s.qualite]
             if notes:
                 notes_float = []
@@ -365,7 +455,6 @@ def progression(request):
                 if notes_float:
                     progression_data['note_moyenne'] = round(sum(notes_float) / len(notes_float), 1)
             
-            # Récupérer les matières et leur progression
             affectations = Affectation.objects.filter(etudiant=etudiant)
             matieres = []
             for aff in affectations:
@@ -380,7 +469,6 @@ def progression(request):
                 })
             progression_data['matieres'] = matieres
             
-            # ===== ÉVALUATIONS DES ENSEIGNANTS =====
             avis_enseignants = Avis.objects.filter(
                 etudiant=etudiant
             ).select_related('enseignant', 'affectation').order_by('-date_creation')[:5]
@@ -396,7 +484,6 @@ def progression(request):
                 })
             progression_data['evaluations'] = evaluations
             
-            # ===== TIMELINE D'APPRENTISSAGE =====
             timeline = []
             
             seances_terminees = Seance.objects.filter(
@@ -478,23 +565,20 @@ def avis(request):
     enseignants_a_noter = []
     avis_existants = []
     
-    # Récupérer les statistiques
     total_avis = 0
     note_moyenne = 0
     
     try:
-        client = Client.objects.get(utilisateur=user)
+        client = Client.objects.filter(utilisateur=user).first()
         etudiant = Etudiant.objects.filter(client=client).first()
         
         if etudiant:
-            # Récupérer toutes les affectations de l'étudiant
             affectations = Affectation.objects.filter(etudiant=etudiant)
             
             for aff in affectations:
                 if aff.rh and aff.rh.utilisateur:
                     enseignant_user = aff.rh.utilisateur
                     
-                    # Vérifier si un avis existe déjà pour cet enseignant
                     try:
                         avis_existant = Avis.objects.get(
                             etudiant=etudiant,
@@ -502,7 +586,6 @@ def avis(request):
                             affectation=aff
                         )
                         
-                        # Ajouter aux avis existants
                         avis_existants.append({
                             'id': avis_existant.id_avis,
                             'enseignant_nom': f"{enseignant_user.first_name} {enseignant_user.last_name}",
@@ -518,8 +601,6 @@ def avis(request):
                         note_moyenne += avis_existant.note
                         
                     except Avis.DoesNotExist:
-                        # Enseignant non encore noté
-                        # Récupérer la dernière séance pour afficher la date
                         derniere_seance = Seance.objects.filter(
                             affectation=aff,
                             statut='termine'
@@ -534,11 +615,9 @@ def avis(request):
                             'affectation_id': aff.id_affectation,
                         })
             
-            # Calculer la moyenne
             if total_avis > 0:
                 note_moyenne = round(note_moyenne / total_avis, 1)
             
-            # Ajouter la moyenne et le total au contexte
             context_avis = {
                 'total_avis': total_avis,
                 'note_moyenne': note_moyenne,
@@ -552,7 +631,6 @@ def avis(request):
     except Exception as e:
         print(f"Erreur avis: {e}")
     
-    # Gérer le formulaire d'ajout/modification d'avis
     if request.method == 'POST':
         form = AvisForm(request.POST)
         if form.is_valid():
@@ -562,12 +640,11 @@ def avis(request):
             commentaire = form.cleaned_data['commentaire']
             
             try:
-                client = Client.objects.get(utilisateur=user)
+                client = Client.objects.filter(utilisateur=user).first()
                 etudiant = Etudiant.objects.filter(client=client).first()
                 enseignant = Utilisateur.objects.get(id=enseignant_id)
                 affectation = Affectation.objects.get(id_affectation=affectation_id)
                 
-                # Vérifier si un avis existe déjà
                 avis_existant = Avis.objects.filter(
                     etudiant=etudiant,
                     enseignant=enseignant,
@@ -575,13 +652,11 @@ def avis(request):
                 ).first()
                 
                 if avis_existant:
-                    # Mettre à jour l'avis existant
                     avis_existant.note = note
                     avis_existant.commentaire = commentaire
                     avis_existant.save()
                     messages.success(request, "Votre avis a été mis à jour avec succès !")
                 else:
-                    # Créer un nouvel avis
                     Avis.objects.create(
                         etudiant=etudiant,
                         enseignant=enseignant,
@@ -617,7 +692,6 @@ def avis(request):
 def notifications(request):
     user = request.user
     
-    # Récupérer les notifications avec gestion des types
     notifications_list = []
     notifications_non_lues = 0
     total_notifications = 0
@@ -626,7 +700,6 @@ def notifications(request):
     messages_notifications = []
     
     try:
-        # Récupérer toutes les notifications de l'utilisateur
         all_notifications = Notification.objects.filter(
             Q(utilisateur=user) | Q(destinataire=user)
         ).order_by('-date_envoi')
@@ -634,10 +707,8 @@ def notifications(request):
         total_notifications = all_notifications.count()
         notifications_non_lues = all_notifications.filter(lue=False).count()
         
-        # Récupérer les 10 dernières notifications
         notifications_list = all_notifications[:10]
         
-        # Filtrer par type pour les onglets
         seances_notifications = all_notifications.filter(type__in=['seance', 'cours', 'rappel'])[:5]
         paiements_notifications = all_notifications.filter(type='paiement')[:5]
         messages_notifications = all_notifications.filter(type__in=['message', 'commentaire'])[:5]
@@ -667,16 +738,14 @@ def parametres(request):
     client = None
     etudiant = None
     
-    # Récupérer les données du client et de l'étudiant
     try:
-        client = Client.objects.get(utilisateur=user)
-        etudiant = Etudiant.objects.filter(client=client).first()
+        client = Client.objects.filter(utilisateur=user).first()
+        if client:
+            etudiant = Etudiant.objects.filter(client=client).first()
     except Client.DoesNotExist:
         pass
     
-    # Initialiser les formulaires
     if request.method == 'POST':
-        # Détecter quel formulaire a été soumis
         if 'form_type' in request.POST:
             if request.POST['form_type'] == 'informations':
                 form = ParametresForm(request.POST, instance=user, client_instance=client)
@@ -715,14 +784,12 @@ def parametres(request):
         securite_form = SecuriteForm()
         notifications_form = NotificationPreferencesForm()
     
-    # Récupérer les statistiques pour l'affichage
     try:
         forfait = Forfait.objects.filter(utilisateur=user).first()
         forfait_nom = forfait.type if forfait and forfait.type else "Standard"
     except:
         forfait_nom = "Standard"
     
-    # Récupérer la prochaine séance
     prochaine_seance = None
     try:
         if etudiant:

@@ -238,7 +238,7 @@
                     <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Suivez l'évolution académique et gérez le planning de vos enfants.</p>
                 </div>
             </div>
-            <!-- Student - CORRIGÉ : id="role-etudiant" -->
+            <!-- Student -->
             <div class="role-card group p-8 rounded-xl border-2 border-outline-variant/30 bg-surface-container-lowest flex flex-col items-center text-center space-y-5" id="role-etudiant" onclick="selectRole('etudiant')">
                 <div class="icon-box w-16 h-16 rounded-2xl bg-surface-container-high flex items-center justify-center transition-all duration-300">
                     <span class="material-symbols-outlined text-[36px]">school</span>
@@ -287,7 +287,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
             
-            <!-- Type de compte (caché car déjà choisi) -->
+            <!-- 🔥 Type de compte en MINUSCULES -->
             <input type="hidden" name="type_client" id="id_type_client" value="parent">
 
             <!-- Prénom -->
@@ -495,7 +495,8 @@
         document.querySelectorAll('.role-card').forEach(card => card.classList.remove('active'));
         document.getElementById(`role-${role}`).classList.add('active');
         
-        document.getElementById('id_type_client').value = role;
+        // 🔥 Envoyer en MINUSCULES
+        document.getElementById('id_type_client').value = role.toLowerCase();
         
         const nextBtn = document.getElementById('next-btn');
         nextBtn.removeAttribute('disabled');
