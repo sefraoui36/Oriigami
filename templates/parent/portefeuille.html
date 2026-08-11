@@ -7,25 +7,168 @@
     <title>Mon Portefeuille - Origami Privé</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
-    {% load static %}
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface-variant": "#4b4456",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb782",
+                        "surface-dim": "#d9dadb",
+                        "inverse-surface": "#2e3132",
+                        "primary-container": "#8b3dff",
+                        "background": "#f8f9fa",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#270058",
+                        "surface-container": "#edeeef",
+                        "tertiary-container": "#ad5900",
+                        "on-surface": "#191c1d",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#cdc2d8",
+                        "surface-tint": "#7921ed",
+                        "on-tertiary-fixed": "#301400",
+                        "on-primary-fixed-variant": "#5d00c2",
+                        "secondary": "#ae128a",
+                        "secondary-fixed-dim": "#ffaede",
+                        "on-secondary-fixed-variant": "#87006b",
+                        "tertiary": "#894500",
+                        "surface-container-high": "#e7e8e9",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#3b002d",
+                        "surface-bright": "#f8f9fa",
+                        "primary-fixed": "#ebdcff",
+                        "on-primary-container": "#faf1ff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#fe60cf",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#d4bbff",
+                        "surface-container-low": "#f3f4f5",
+                        "outline": "#7c7387",
+                        "surface": "#f8f9fa",
+                        "on-secondary-container": "#680052",
+                        "tertiary-fixed": "#ffdcc5",
+                        "inverse-primary": "#d4bbff",
+                        "on-tertiary-fixed-variant": "#703800",
+                        "primary": "#710fe5",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e1e3e4",
+                        "surface-container-highest": "#e1e3e4",
+                        "secondary-fixed": "#ffd8ec",
+                        "on-tertiary-container": "#fff2eb",
+                        "on-background": "#191c1d"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "container-padding": "32px",
+                        "card-gap": "24px",
+                        "gutter": "24px",
+                        "base": "8px",
+                        "section-margin": "48px"
+                    },
+                    fontFamily: {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "title-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    fontSize: {
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
     <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            vertical-align: middle;
-        }
-        .premium-gradient {
-            background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
         }
         .glass-card {
             background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(225, 227, 228, 0.5);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
         }
-        .soft-shadow {
-            box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.08);
+        .sidebar-link {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #4b4456;
+            text-decoration: none;
         }
+        .sidebar-link:hover {
+            background: rgba(113, 15, 229, 0.08);
+            color: #710fe5;
+        }
+        .sidebar-link.active {
+            background: rgba(113, 15, 229, 0.12);
+            color: #710fe5;
+            font-weight: 600;
+        }
+        .sidebar-link.active .material-symbols-outlined {
+            color: #710fe5;
+        }
+        .stat-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+        }
+        .bg-primary-gradient {
+            background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+        }
+        .animate-pulse-slow {
+            animation: pulse-soft 4s ease-in-out infinite;
+        }
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 9999px;
+            display: inline-block;
+        }
+        .badge-dot.green { background: #10b981; }
+        .badge-dot.orange { background: #f59e0b; }
+        .badge-dot.red { background: #ef4444; }
+        .badge-dot.blue { background: #3b82f6; }
+
+        .bg-primary-light { background-color: rgba(113, 15, 229, 0.1); }
+        .bg-secondary-light { background-color: rgba(174, 18, 138, 0.1); }
+        .bg-tertiary-light { background-color: rgba(137, 69, 0, 0.1); }
+        .bg-blue-light { background-color: rgba(59, 130, 246, 0.1); }
+        .bg-purple-light { background-color: rgba(139, 92, 246, 0.1); }
+        .bg-orange-light { background-color: rgba(249, 115, 22, 0.1); }
+        .bg-green-light { background-color: rgba(34, 197, 94, 0.1); }
+        .bg-indigo-light { background-color: rgba(99, 102, 241, 0.1); }
+        .bg-pink-light { background-color: rgba(236, 72, 153, 0.1); }
+        .bg-teal-light { background-color: rgba(20, 184, 166, 0.1); }
+        .bg-emerald-light { background-color: rgba(16, 185, 129, 0.1); }
+
         .pulse-active {
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
@@ -35,19 +178,6 @@
         }
         .chart-bar-grow {
             transition: height 1s ease-out;
-        }
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cdc2d8;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #710fe5;
         }
         .toast-message {
             animation: slideDown 0.5s ease-out;
@@ -62,556 +192,530 @@
                 transform: translateY(0);
             }
         }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cdc2d8;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #710fe5;
+        }
     </style>
 </head>
-<body class="bg-background text-on-surface font-body-lg overflow-x-hidden">
+<body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
 
-<!-- Messages / Toast Notifications -->
-{% if messages %}
-<div class="fixed top-24 right-6 z-50 space-y-3 max-w-md">
-    {% for message in messages %}
-    <div class="glass-card p-4 rounded-2xl shadow-lg border-l-4 
-        {% if message.tags == 'success' %}border-green-500{% elif message.tags == 'error' %}border-red-500{% else %}border-primary{% endif %} 
-        toast-message flex items-start gap-3">
-        <span class="material-symbols-outlined 
-            {% if message.tags == 'success' %}text-green-500{% elif message.tags == 'error' %}text-red-500{% else %}text-primary{% endif %}">
-            {% if message.tags == 'success' %}check_circle{% elif message.tags == 'error' %}error{% else %}info{% endif %}
-        </span>
-        <div class="flex-1">
-            <p class="text-sm text-on-surface">{{ message }}</p>
-        </div>
-        <button onclick="this.parentElement.remove()" class="text-on-surface-variant hover:text-on-surface">
-            <span class="material-symbols-outlined text-sm">close</span>
-        </button>
-    </div>
-    {% endfor %}
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+    <div class="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] animate-pulse-slow"></div>
+    <div class="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
 </div>
-{% endif %}
 
-<!-- SideNavBar -->
-<aside class="fixed left-0 top-0 h-screen w-[280px] z-50 bg-surface-container-low border-r border-surface-variant flex flex-col py-base gap-1 overflow-y-auto">
-    <div class="px-6 py-8 flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl premium-gradient flex items-center justify-center text-white font-bold text-xl">O</div>
-        <div>
-            <h1 class="font-headline-lg text-title-md font-extrabold bg-gradient-to-r from-primary to-secondary-container bg-clip-text text-transparent">Origami Privé</h1>
-            <p class="text-[10px] font-label-md uppercase tracking-wider text-on-surface-variant/70">Tutoring Excellence</p>
+<div class="flex h-screen overflow-hidden">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
+        <div class="flex items-center gap-3 px-3 py-4 mb-6">
+            <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">change_history</span>
+            </div>
+            <span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Origami Privé</span>
         </div>
-    </div>
-    <nav class="flex-1 px-4 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="{% url 'dashboard' %}">
-            <span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
-            <span class="font-label-md">Dashboard</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="{% url 'profil' %}">
-            <span class="material-symbols-outlined group-hover:text-primary">person</span>
-            <span class="font-label-md">Profil</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="{% url 'enfants:liste' %}">
-            <span class="material-symbols-outlined group-hover:text-primary">school</span>
-            <span class="font-label-md">Enfants/Étudiants</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-l-4 border-primary font-bold" href="#">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
-            <span class="font-label-md">Portefeuille</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="{% url 'forfaits:liste' %}">
-            <span class="material-symbols-outlined group-hover:text-primary">inventory_2</span>
-            <span class="font-label-md">Forfaits</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="{% url 'enseignants:liste' %}">
-            <span class="material-symbols-outlined group-hover:text-primary">group</span>
-            <span class="font-label-md">Enseignants</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="{% url 'seances:liste' %}">
-            <span class="material-symbols-outlined group-hover:text-primary">event_repeat</span>
-            <span class="font-label-md">Séances</span>
-        </a>
-        <div class="pt-4 pb-2 px-4">
-            <p class="text-[10px] font-bold text-outline uppercase tracking-widest">Communication</p>
-        </div>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="{% url 'notifications:liste' %}">
-            <span class="material-symbols-outlined group-hover:text-primary">notifications</span>
-            <span class="font-label-md">Notifications</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="{% url 'messages:liste' %}">
-            <span class="material-symbols-outlined group-hover:text-primary">chat</span>
-            <span class="font-label-md">Messages</span>
-        </a>
-        <div class="mt-auto pt-8">
-            <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all group" href="{% url 'parametres' %}">
-                <span class="material-symbols-outlined group-hover:text-primary">settings</span>
-                <span class="font-label-md">Paramètres</span>
+
+        <nav class="flex-1 space-y-1">
+            <!-- Dashboard -->
+            <a href="{% url 'clients:dashboard_parent' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard</span>
             </a>
-            <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-error hover:bg-error/5 transition-all group" href="{% url 'authentication:deconnexion' %}">
-                <span class="material-symbols-outlined">logout</span>
-                <span class="font-label-md">Déconnexion</span>
+            <!-- Enfants -->
+            <a href="{% url 'clients:liste_enfants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">family_restroom</span>
+                <span>Mes Enfants</span>
+            </a>
+            <!-- Enseignants -->
+            <a href="{% url 'clients:liste_enseignants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">school</span>
+                <span>Enseignants</span>
+            </a>
+            <!-- Séances -->
+            <a href="{% url 'clients:liste_seances' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+                <span>Séances</span>
+            </a>
+            <!-- Forfaits -->
+            <a href="{% url 'clients:liste_forfaits' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">sell</span>
+                <span>Forfaits</span>
+            </a>
+            <!-- Paiements -->
+            <a href="{% url 'clients:liste_paiements' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">payments</span>
+                <span>Paiements</span>
+            </a>
+            <!-- Profil -->
+            <a href="{% url 'clients:profil_parent' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">person</span>
+                <span>Mon Profil</span>
+            </a>
+            <!-- Portefeuille (ACTIF) -->
+            <a href="{% url 'portefeuilles:mon_portefeuille' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+                <span>Portefeuille</span>
+            </a>
+            <!-- Notifications -->
+            <a href="{% url 'clients:notifications' %}" class="sidebar-link active">
+        <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">notifications</span>
+        <span>Notifications</span>
+        <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ non_lues|default:3 }}</span>
+    </a>
+            <!-- Paramètres -->
+            <a href="{% url 'clients:parametres' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">settings</span>
+                <span>Paramètres</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto pt-4 border-t border-outline-variant/30">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+                <span class="material-symbols-outlined text-[22px]">logout</span>
+                <span>Déconnexion</span>
             </a>
         </div>
-    </nav>
-</aside>
+    </aside>
 
-<!-- TopNavBar -->
-<header class="fixed top-0 right-0 left-[280px] h-20 z-40 bg-surface/80 backdrop-blur-xl border-b border-surface-variant flex items-center justify-between px-container-padding">
-    <div class="flex items-center gap-4">
-        <div class="flex items-center gap-2 text-on-surface-variant text-sm">
-            <span class="font-label-md">Dashboard</span>
-            <span class="material-symbols-outlined text-sm">chevron_right</span>
-            <span class="text-primary font-bold">Mon Portefeuille</span>
-        </div>
-    </div>
-    <div class="flex items-center gap-6">
-        <div class="relative group">
-            <span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">help</span>
-        </div>
-        <div class="relative group">
-            <span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">notifications</span>
-            <span class="absolute -top-1 -right-1 w-4 h-4 bg-error text-[10px] text-white flex items-center justify-center rounded-full font-bold">3</span>
-        </div>
-        <div class="h-10 w-[1px] bg-outline-variant"></div>
-        <div class="flex items-center gap-3 cursor-pointer group">
-            <div class="text-right">
-                <p class="font-bold text-sm text-on-surface">{{ user.get_full_name|default:user.username }}</p>
-                <p class="text-xs text-on-surface-variant">Parent Premium</p>
-            </div>
-            {% if user.photo %}
-                <img class="w-10 h-10 rounded-full border-2 border-primary/20 object-cover group-hover:border-primary transition-all" src="{{ user.photo.url }}" alt="{{ user.get_full_name }}"/>
-            {% else %}
-                <div class="w-10 h-10 rounded-full border-2 border-primary/20 flex items-center justify-center bg-primary/10 text-primary font-bold text-lg">
-                    {{ user.username|first|upper }}
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 overflow-y-auto p-8">
+
+        <!-- Messages / Toast Notifications -->
+        {% if messages %}
+        <div class="fixed top-24 right-6 z-50 space-y-3 max-w-md">
+            {% for message in messages %}
+            <div class="glass-card p-4 rounded-2xl shadow-lg border-l-4 
+                {% if message.tags == 'success' %}border-green-500{% elif message.tags == 'error' %}border-red-500{% else %}border-primary{% endif %} 
+                toast-message flex items-start gap-3">
+                <span class="material-symbols-outlined 
+                    {% if message.tags == 'success' %}text-green-500{% elif message.tags == 'error' %}text-red-500{% else %}text-primary{% endif %}">
+                    {% if message.tags == 'success' %}check_circle{% elif message.tags == 'error' %}error{% else %}info{% endif %}
+                </span>
+                <div class="flex-1">
+                    <p class="text-sm text-on-surface">{{ message }}</p>
                 </div>
-            {% endif %}
-        </div>
-    </div>
-</header>
-
-<!-- Main Content -->
-<main class="ml-[280px] pt-20 p-container-padding space-y-gutter">
-    <!-- Welcome Header -->
-    <div class="flex justify-between items-end mb-8">
-        <div>
-            <h2 class="font-headline-lg text-headline-lg text-on-surface">Mon Portefeuille</h2>
-            <p class="text-on-surface-variant mt-2">Gérez vos fonds et vos forfaits de cours en toute simplicité.</p>
-        </div>
-        <div class="flex items-center gap-2 bg-secondary-fixed text-on-secondary-fixed px-4 py-2 rounded-full font-label-md">
-            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-            Parent Premium
-        </div>
-    </div>
-
-    <!-- Wallet Top Grid -->
-    <div class="grid grid-cols-12 gap-gutter">
-        <!-- Balance Card -->
-        <div class="col-span-8 premium-gradient rounded-3xl p-10 text-white relative overflow-hidden soft-shadow group">
-            <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                <span class="material-symbols-outlined !text-[120px]">account_balance_wallet</span>
+                <button onclick="this.parentElement.remove()" class="text-on-surface-variant hover:text-on-surface">
+                    <span class="material-symbols-outlined text-sm">close</span>
+                </button>
             </div>
-            <div class="relative z-10 flex flex-col h-full justify-between">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="font-label-md uppercase tracking-[0.2em] opacity-80">Solde Actuel</p>
-                        <h3 class="font-display-lg text-[48px] mt-2">{{ portefeuille.solde|floatformat:2 }} MAD</h3>
-                    </div>
-                    <div class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl flex items-center gap-2">
-                        <span class="w-2 h-2 bg-green-400 rounded-full pulse-active"></span>
-                        <span class="font-label-md font-bold">{% if portefeuille.est_actif %}Actif{% else %}Inactif{% endif %}</span>
-                    </div>
-                </div>
-                <div class="mt-12 flex items-end justify-between">
-                    <div class="space-y-1">
-                        <p class="text-sm opacity-70">Wallet ID: <span class="font-mono">#OP-{{ user.id|stringformat:"05d" }}</span></p>
-                        <p class="text-sm opacity-70">Dernière mise à jour: {{ portefeuille.date_mise_a_jour|date:"d/m/Y, H:i" }}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-sm opacity-70">Compte valide jusqu'au</p>
-                        <p class="font-bold">12 / 2025</p>
-                    </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Welcome Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface">Mon Portefeuille</h1>
+                <p class="text-on-surface-variant body-sm">Gérez vos fonds et vos forfaits de cours en toute simplicité.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="bg-secondary-fixed text-on-secondary-fixed px-4 py-2 rounded-full font-label-md flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    Parent Premium
+                </span>
+                <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
+                    {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper|default:"P" }}
                 </div>
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="col-span-4 flex flex-col gap-4">
-            <!-- Modal pour recharger -->
-            <button onclick="document.getElementById('rechargeModal').classList.remove('hidden')" class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant hover:border-primary hover:bg-primary/5 transition-all group">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined">add_circle</span>
-                    </div>
-                    <div class="text-left">
-                        <p class="font-bold text-on-surface">Recharger</p>
-                        <p class="text-xs text-on-surface-variant">Ajouter des fonds au compte</p>
-                    </div>
-                </div>
-                <span class="material-symbols-outlined text-outline-variant group-hover:text-primary">chevron_right</span>
-            </button>
-            <button class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant hover:border-secondary hover:bg-secondary/5 transition-all group">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined">shopping_bag</span>
-                    </div>
-                    <div class="text-left">
-                        <p class="font-bold text-on-surface">Payer un forfait</p>
-                        <p class="text-xs text-on-surface-variant">Voir le catalogue de cours</p>
-                    </div>
-                </div>
-                <span class="material-symbols-outlined text-outline-variant group-hover:text-secondary">chevron_right</span>
-            </button>
-            <button class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant hover:border-tertiary hover:bg-tertiary/5 transition-all group">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined">download</span>
-                    </div>
-                    <div class="text-left">
-                        <p class="font-bold text-on-surface">Télécharger l'historique</p>
-                        <p class="text-xs text-on-surface-variant">Export PDF / CSV</p>
-                    </div>
-                </div>
-                <span class="material-symbols-outlined text-outline-variant group-hover:text-tertiary">chevron_right</span>
-            </button>
-        </div>
-    </div>
+        <!-- Wallet Top Grid -->
+        <div class="grid grid-cols-12 gap-6 mb-8">
 
-    <!-- KPI Row -->
-    <div class="grid grid-cols-4 gap-gutter">
-        <div class="glass-card soft-shadow p-6 rounded-2xl">
-            <p class="text-xs text-on-surface-variant font-label-md uppercase tracking-wider">Total rechargé</p>
-            <p class="text-2xl font-bold mt-2 text-on-surface">{{ total_recharge|floatformat:0 }} MAD</p>
-            <div class="mt-4 flex items-center gap-1 text-xs text-green-600">
-                <span class="material-symbols-outlined text-sm">trending_up</span>
-                <span>+12% vs mois dernier</span>
-            </div>
-        </div>
-        <div class="glass-card soft-shadow p-6 rounded-2xl">
-            <p class="text-xs text-on-surface-variant font-label-md uppercase tracking-wider">Total dépensé</p>
-            <p class="text-2xl font-bold mt-2 text-on-surface">{{ total_depense|floatformat:0 }} MAD</p>
-            <div class="mt-4 flex items-center gap-1 text-xs text-primary">
-                <span class="material-symbols-outlined text-sm">info</span>
-                <span>81% de taux d'utilisation</span>
-            </div>
-        </div>
-        <div class="glass-card soft-shadow p-6 rounded-2xl">
-            <p class="text-xs text-on-surface-variant font-label-md uppercase tracking-wider">Dernière transaction</p>
-            {% with derniere=dernieres_transactions.first %}
-            <p class="text-2xl font-bold mt-2 {% if derniere and derniere.type == 'RECHARGE' %}text-green-600{% else %}text-on-surface{% endif %}">
-                {% if derniere %}{% if derniere.type == 'RECHARGE' %}+{% else %}-{% endif %}{{ derniere.montant|floatformat:0 }} MAD{% else %}--{% endif %}
-            </p>
-            <div class="mt-4 flex items-center gap-1 text-xs text-on-surface-variant">
-                <span class="material-symbols-outlined text-sm">calendar_today</span>
-                <span>{% if derniere %}{{ derniere.date_creation|date:"d/m/Y, H:i" }}{% else %}Aucune transaction{% endif %}</span>
-            </div>
-            {% endwith %}
-        </div>
-        <div class="glass-card soft-shadow p-6 rounded-2xl border-l-4 border-l-primary">
-            <p class="text-xs text-on-surface-variant font-label-md uppercase tracking-wider">Total heures achetées</p>
-            <p class="text-2xl font-bold mt-2 text-on-surface">{{ total_heures }}h</p>
-            <div class="mt-4 flex items-center gap-1 text-xs text-primary">
-                <span class="material-symbols-outlined text-sm">schedule</span>
-                <span>45h restantes ce mois</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Analytics Section -->
-    <div class="grid grid-cols-12 gap-gutter">
-        <!-- Evolution Graph -->
-        <div class="col-span-8 glass-card soft-shadow p-8 rounded-3xl">
-            <div class="flex justify-between items-center mb-10">
-                <h4 class="font-title-md text-on-surface">Évolution du Solde</h4>
-                <div class="flex p-1 bg-surface-container rounded-lg">
-                    <button class="px-4 py-1.5 rounded-md text-sm font-bold bg-white shadow-sm text-primary">Mensuel</button>
-                    <button class="px-4 py-1.5 rounded-md text-sm text-on-surface-variant hover:text-on-surface">Annuel</button>
+            <!-- Balance Card -->
+            <div class="col-span-8 bg-primary-gradient rounded-3xl p-8 text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-10">
+                    <span class="material-symbols-outlined !text-[120px]">account_balance_wallet</span>
                 </div>
-            </div>
-            <div class="h-64 flex items-end justify-between gap-4 px-2">
-                <div class="flex flex-col items-center gap-3 flex-1 group">
-                    <div class="w-full bg-primary/10 rounded-t-lg relative h-[40%] hover:bg-primary/20 transition-all cursor-pointer">
-                        <div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-lg chart-bar-grow" style="height: 60%"></div>
-                    </div>
-                    <span class="text-[10px] text-on-surface-variant font-bold">JAN</span>
-                </div>
-                <div class="flex flex-col items-center gap-3 flex-1">
-                    <div class="w-full bg-primary/10 rounded-t-lg relative h-[60%]">
-                        <div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-lg chart-bar-grow" style="height: 75%"></div>
-                    </div>
-                    <span class="text-[10px] text-on-surface-variant font-bold">FEB</span>
-                </div>
-                <div class="flex flex-col items-center gap-3 flex-1">
-                    <div class="w-full bg-primary/10 rounded-t-lg relative h-[50%]">
-                        <div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-lg chart-bar-grow" style="height: 40%"></div>
-                    </div>
-                    <span class="text-[10px] text-on-surface-variant font-bold">MAR</span>
-                </div>
-                <div class="flex flex-col items-center gap-3 flex-1">
-                    <div class="w-full bg-primary/10 rounded-t-lg relative h-[80%]">
-                        <div class="absolute inset-x-0 bottom-0 bg-primary rounded-t-lg chart-bar-grow" style="height: 85%"></div>
-                    </div>
-                    <span class="text-[10px] text-primary font-bold">APR</span>
-                </div>
-                <div class="flex flex-col items-center gap-3 flex-1">
-                    <div class="w-full bg-primary/10 rounded-t-lg relative h-[65%]">
-                        <div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-lg chart-bar-grow" style="height: 55%"></div>
-                    </div>
-                    <span class="text-[10px] text-on-surface-variant font-bold">MAY</span>
-                </div>
-                <div class="flex flex-col items-center gap-3 flex-1">
-                    <div class="w-full bg-primary/10 rounded-t-lg relative h-[90%]">
-                        <div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-lg chart-bar-grow" style="height: 80%"></div>
-                    </div>
-                    <span class="text-[10px] text-on-surface-variant font-bold">JUN</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Distribution Pie -->
-        <div class="col-span-4 glass-card soft-shadow p-8 rounded-3xl flex flex-col">
-            <h4 class="font-title-md text-on-surface mb-6">Répartition des Dépenses</h4>
-            <div class="flex-1 flex flex-col items-center justify-center">
-                <div class="relative w-48 h-48">
-                    <svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
-                        <circle cx="18" cy="18" fill="none" r="16" stroke="#f1f3f4" stroke-width="3"></circle>
-                        <circle cx="18" cy="18" fill="none" r="16" stroke="#710fe5" stroke-dasharray="65, 100" stroke-linecap="round" stroke-width="3"></circle>
-                        <circle cx="18" cy="18" fill="none" r="16" stroke="#ae128a" stroke-dasharray="20, 100" stroke-dashoffset="-65" stroke-linecap="round" stroke-width="3"></circle>
-                        <circle cx="18" cy="18" fill="none" r="16" stroke="#894500" stroke-dasharray="15, 100" stroke-dashoffset="-85" stroke-linecap="round" stroke-width="3"></circle>
-                    </svg>
-                    <div class="absolute inset-0 flex flex-col items-center justify-center">
-                        <p class="text-3xl font-bold text-on-surface">81%</p>
-                        <p class="text-[10px] uppercase font-label-md text-on-surface-variant">Utilisé</p>
-                    </div>
-                </div>
-                <div class="mt-8 w-full space-y-3">
-                    <div class="flex justify-between items-center text-sm">
-                        <div class="flex items-center gap-2">
-                            <div class="w-3 h-3 rounded-full bg-primary"></div>
-                            <span class="text-on-surface-variant">Forfaits Premium</span>
+                <div class="relative z-10">
+                    <p class="font-label-md uppercase tracking-[0.2em] opacity-80">Solde Actuel</p>
+                    <h3 class="text-[48px] font-bold mt-2">{{ portefeuille.solde|floatformat:2 }} MAD</h3>
+                    <div class="mt-4 flex items-center gap-4">
+                        <div class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-400 rounded-full pulse-active"></span>
+                            <span class="font-label-md font-bold">{% if portefeuille.est_actif %}Actif{% else %}Inactif{% endif %}</span>
                         </div>
-                        <span class="font-bold">65%</span>
-                    </div>
-                    <div class="flex justify-between items-center text-sm">
-                        <div class="flex items-center gap-2">
-                            <div class="w-3 h-3 rounded-full bg-secondary"></div>
-                            <span class="text-on-surface-variant">Cours à l'unité</span>
+                        <div class="text-sm opacity-70">
+                            <p>Wallet ID: <span class="font-mono">#OP-{{ user.id|stringformat:"05d" }}</span></p>
                         </div>
-                        <span class="font-bold">20%</span>
-                    </div>
-                    <div class="flex justify-between items-center text-sm">
-                        <div class="flex items-center gap-2">
-                            <div class="w-3 h-3 rounded-full bg-tertiary"></div>
-                            <span class="text-on-surface-variant">Autres frais</span>
-                        </div>
-                        <span class="font-bold">15%</span>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Recent Transactions -->
-    <div class="glass-card soft-shadow rounded-3xl overflow-hidden">
-        <div class="p-8 flex justify-between items-center border-b border-surface-variant">
-            <h4 class="font-title-md text-on-surface">Transactions Récentes</h4>
-            <div class="flex gap-4">
-                <div class="relative">
-                    <input id="searchTransactions" class="pl-10 pr-4 py-2 bg-surface-container rounded-full border-none text-sm w-64 focus:ring-2 focus:ring-primary" placeholder="Rechercher..." type="text"/>
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
-                </div>
-                <button class="px-4 py-2 bg-surface-container hover:bg-surface-container-high rounded-full flex items-center gap-2 text-sm transition-colors">
-                    <span class="material-symbols-outlined text-sm">filter_list</span>
-                    Filtrer
+            <!-- Quick Actions -->
+            <div class="col-span-4 flex flex-col gap-4">
+                <button onclick="document.getElementById('rechargeModal').classList.remove('hidden')" class="flex items-center justify-between p-5 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 hover:border-primary hover:bg-primary/5 transition-all group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary-light text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined">add_circle</span>
+                        </div>
+                        <div class="text-left">
+                            <p class="font-bold text-on-surface">Recharger</p>
+                            <p class="text-xs text-on-surface-variant">Ajouter des fonds</p>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined text-outline-variant group-hover:text-primary">chevron_right</span>
+                </button>
+                <button onclick="window.location.href='{% url 'clients:liste_forfaits' %}'" class="flex items-center justify-between p-5 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 hover:border-secondary hover:bg-secondary/5 transition-all group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-secondary-light text-secondary flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined">shopping_bag</span>
+                        </div>
+                        <div class="text-left">
+                            <p class="font-bold text-on-surface">Payer un forfait</p>
+                            <p class="text-xs text-on-surface-variant">Voir le catalogue</p>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined text-outline-variant group-hover:text-secondary">chevron_right</span>
+                </button>
+                <button class="flex items-center justify-between p-5 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 hover:border-tertiary hover:bg-tertiary/5 transition-all group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-tertiary-light text-tertiary flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined">download</span>
+                        </div>
+                        <div class="text-left">
+                            <p class="font-bold text-on-surface">Exporter</p>
+                            <p class="text-xs text-on-surface-variant">PDF / CSV</p>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined text-outline-variant group-hover:text-tertiary">chevron_right</span>
                 </button>
             </div>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead class="bg-surface-container-low text-on-surface-variant font-label-md text-xs uppercase tracking-widest">
-                    <tr>
-                        <th class="px-8 py-4">Date</th>
-                        <th class="px-6 py-4">Type</th>
-                        <th class="px-6 py-4">Description</th>
-                        <th class="px-6 py-4">Montant</th>
-                        <th class="px-6 py-4">Méthode</th>
-                        <th class="px-8 py-4">Statut</th>
-                    </tr>
-                </thead>
-                <tbody id="transactionList" class="divide-y divide-surface-variant">
-                    {% for transaction in dernieres_transactions %}
-                    <tr class="hover:bg-primary/5 transition-colors group">
-                        <td class="px-8 py-5">
-                            <p class="text-sm font-bold">{{ transaction.date_creation|date:"d M, Y" }}</p>
-                            <p class="text-xs text-on-surface-variant">{{ transaction.date_creation|date:"H:i" }}</p>
-                        </td>
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-2 text-sm">
-                                <span class="material-symbols-outlined 
-                                    {% if transaction.type == 'RECHARGE' %}text-green-600 bg-green-50
-                                    {% elif transaction.type == 'PAIEMENT' %}text-primary bg-primary/5
-                                    {% elif transaction.type == 'REMBOURSEMENT' %}text-blue-600 bg-blue-50
-                                    {% else %}text-amber-600 bg-amber-50{% endif %} 
-                                    p-1.5 rounded-lg">
-                                    {% if transaction.type == 'RECHARGE' %}account_balance_wallet
-                                    {% elif transaction.type == 'PAIEMENT' %}shopping_basket
-                                    {% elif transaction.type == 'REMBOURSEMENT' %}undo
-                                    {% else %}history{% endif %}
-                                </span>
-                                {{ transaction.get_type_display }}
-                            </div>
-                        </td>
-                        <td class="px-6 py-5 text-sm">{{ transaction.description }}</td>
-                        <td class="px-6 py-5 font-bold 
-                            {% if transaction.type == 'RECHARGE' or transaction.type == 'REMBOURSEMENT' %}text-green-600
-                            {% else %}text-on-surface{% endif %}">
-                            {% if transaction.type == 'RECHARGE' or transaction.type == 'REMBOURSEMENT' %}+{% else %}-{% endif %}
-                            {{ transaction.montant|floatformat:2 }} MAD
-                        </td>
-                        <td class="px-6 py-5 text-sm text-on-surface-variant">{{ transaction.methode_paiement|default:"Solde Wallet" }}</td>
-                        <td class="px-8 py-5">
-                            <span class="text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wide 
-                                {% if transaction.statut == 'COMPLETE' %}bg-green-100 text-green-800
-                                {% elif transaction.statut == 'EN_ATTENTE' %}bg-amber-100 text-amber-800
-                                {% elif transaction.statut == 'ECHEC' %}bg-red-100 text-red-800
-                                {% else %}bg-gray-100 text-gray-800{% endif %}">
-                                {{ transaction.get_statut_display }}
-                            </span>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="6" class="px-8 py-10 text-center text-on-surface-variant">
-                            <span class="material-symbols-outlined text-4xl block mb-2">inbox</span>
-                            Aucune transaction pour le moment
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="p-4 bg-surface-container-low text-center">
-            <button class="text-primary font-bold text-sm hover:underline">Voir toutes les transactions</button>
-        </div>
-    </div>
 
-    <!-- Payment Methods & Packages Bento -->
-    <div class="grid grid-cols-12 gap-gutter">
-        <!-- Payment Methods -->
-        <div class="col-span-4 flex flex-col gap-gutter">
-            <div class="glass-card soft-shadow p-8 rounded-3xl h-full">
-                <h4 class="font-title-md text-on-surface mb-6">Méthodes de Paiement</h4>
-                <div class="space-y-4">
-                    <div class="p-4 border-2 border-primary bg-primary/5 rounded-2xl flex items-center justify-between">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-8 bg-black rounded flex items-center justify-center text-white text-[10px] font-bold">VISA</div>
-                            <div>
-                                <p class="font-bold text-sm">•••• •••• •••• 4242</p>
-                                <p class="text-xs text-on-surface-variant">Exp: 12/26</p>
-                            </div>
-                        </div>
-                        <span class="bg-primary text-white text-[10px] px-2 py-0.5 rounded font-bold">DÉFAUT</span>
+        <!-- KPI Row -->
+        <div class="grid grid-cols-4 gap-6 mb-8">
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <p class="text-xs text-on-surface-variant font-label-md uppercase tracking-wider">Total rechargé</p>
+                <p class="text-2xl font-bold mt-2 text-on-surface">{{ total_recharge|floatformat:0 }} MAD</p>
+                <div class="mt-4 flex items-center gap-1 text-xs text-green-600">
+                    <span class="material-symbols-outlined text-sm">trending_up</span>
+                    <span>+12% vs mois dernier</span>
+                </div>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <p class="text-xs text-on-surface-variant font-label-md uppercase tracking-wider">Total dépensé</p>
+                <p class="text-2xl font-bold mt-2 text-on-surface">{{ total_depense|floatformat:0 }} MAD</p>
+                <div class="mt-4 flex items-center gap-1 text-xs text-primary">
+                    <span class="material-symbols-outlined text-sm">info</span>
+                    <span>81% de taux d'utilisation</span>
+                </div>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <p class="text-xs text-on-surface-variant font-label-md uppercase tracking-wider">Dernière transaction</p>
+                {% with derniere=dernieres_transactions.first %}
+                <p class="text-2xl font-bold mt-2 {% if derniere and derniere.type == 'RECHARGE' %}text-green-600{% else %}text-on-surface{% endif %}">
+                    {% if derniere %}{% if derniere.type == 'RECHARGE' %}+{% else %}-{% endif %}{{ derniere.montant|floatformat:0 }} MAD{% else %}--{% endif %}
+                </p>
+                <div class="mt-4 flex items-center gap-1 text-xs text-on-surface-variant">
+                    <span class="material-symbols-outlined text-sm">calendar_today</span>
+                    <span>{% if derniere %}{{ derniere.date_creation|date:"d/m/Y, H:i" }}{% else %}Aucune transaction{% endif %}</span>
+                </div>
+                {% endwith %}
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30 border-l-4 border-l-primary">
+                <p class="text-xs text-on-surface-variant font-label-md uppercase tracking-wider">Total heures achetées</p>
+                <p class="text-2xl font-bold mt-2 text-on-surface">{{ total_heures }}h</p>
+                <div class="mt-4 flex items-center gap-1 text-xs text-primary">
+                    <span class="material-symbols-outlined text-sm">schedule</span>
+                    <span>45h restantes ce mois</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div class="grid grid-cols-12 gap-6 mb-8">
+
+            <!-- Evolution Graph -->
+            <div class="col-span-8 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex justify-between items-center mb-6">
+                    <h4 class="font-title-md text-title-md text-on-surface">Évolution du Solde</h4>
+                    <div class="flex p-1 bg-surface-container rounded-lg">
+                        <button class="px-4 py-1.5 rounded-md text-sm font-bold bg-white shadow-sm text-primary">Mensuel</button>
+                        <button class="px-4 py-1.5 rounded-md text-sm text-on-surface-variant hover:text-on-surface">Annuel</button>
                     </div>
-                    <div class="p-4 border border-outline-variant hover:border-primary/50 transition-all cursor-pointer rounded-2xl flex items-center justify-between group">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-8 bg-red-600 rounded flex items-center justify-center text-white text-[10px] font-bold italic">mastercard</div>
-                            <div>
-                                <p class="font-bold text-sm">•••• •••• •••• 8812</p>
-                                <p class="text-xs text-on-surface-variant">Exp: 08/25</p>
-                            </div>
+                </div>
+                <div class="h-64 flex items-end justify-between gap-4 px-2">
+                    {% for hauteur in hauteurs_graphique|default:"[40,60,50,80,65,90]" %}
+                    <div class="flex flex-col items-center gap-3 flex-1 group">
+                        <div class="w-full bg-primary/10 rounded-t-lg relative" style="height: {% if forloop.counter0 == 3 %}80%{% else %}60%{% endif %}">
+                            <div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-lg chart-bar-grow" style="height: {% if forloop.counter0 == 3 %}85%{% else %}60%{% endif %}"></div>
                         </div>
-                        <span class="material-symbols-outlined text-outline-variant group-hover:text-primary">more_vert</span>
+                        <span class="text-[10px] text-on-surface-variant font-bold">{% cycle 'JAN' 'FEB' 'MAR' 'APR' 'MAY' 'JUN' %}</span>
                     </div>
-                    <button class="w-full py-4 border-2 border-dashed border-outline-variant rounded-2xl text-on-surface-variant font-bold text-sm hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined">add</span>
-                        Ajouter une méthode
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Distribution Pie -->
+            <div class="col-span-4 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <h4 class="font-title-md text-title-md text-on-surface mb-4">Répartition des Dépenses</h4>
+                <div class="flex flex-col items-center">
+                    <div class="relative w-48 h-48">
+                        <svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+                            <circle cx="18" cy="18" fill="none" r="16" stroke="#f1f3f4" stroke-width="3"></circle>
+                            <circle cx="18" cy="18" fill="none" r="16" stroke="#710fe5" stroke-dasharray="65, 100" stroke-linecap="round" stroke-width="3"></circle>
+                            <circle cx="18" cy="18" fill="none" r="16" stroke="#ae128a" stroke-dasharray="20, 100" stroke-dashoffset="-65" stroke-linecap="round" stroke-width="3"></circle>
+                            <circle cx="18" cy="18" fill="none" r="16" stroke="#894500" stroke-dasharray="15, 100" stroke-dashoffset="-85" stroke-linecap="round" stroke-width="3"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <p class="text-3xl font-bold text-on-surface">81%</p>
+                            <p class="text-[10px] uppercase font-label-md text-on-surface-variant">Utilisé</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 w-full space-y-3">
+                        <div class="flex justify-between items-center text-sm">
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 rounded-full bg-primary"></div>
+                                <span class="text-on-surface-variant">Forfaits Premium</span>
+                            </div>
+                            <span class="font-bold">65%</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 rounded-full bg-secondary"></div>
+                                <span class="text-on-surface-variant">Cours à l'unité</span>
+                            </div>
+                            <span class="font-bold">20%</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 rounded-full bg-tertiary"></div>
+                                <span class="text-on-surface-variant">Autres frais</span>
+                            </div>
+                            <span class="font-bold">15%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden">
+            <div class="p-6 flex flex-wrap justify-between items-center border-b border-outline-variant/30">
+                <h4 class="font-title-md text-title-md text-on-surface">Transactions Récentes</h4>
+                <div class="flex gap-3">
+                    <div class="relative">
+                        <input id="searchTransactions" class="pl-10 pr-4 py-2 bg-surface-container rounded-full border-none text-sm w-64 focus:ring-2 focus:ring-primary outline-none" placeholder="Rechercher..." type="text"/>
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+                    </div>
+                    <button class="px-4 py-2 bg-surface-container hover:bg-surface-container-high rounded-full flex items-center gap-2 text-sm transition-colors">
+                        <span class="material-symbols-outlined text-sm">filter_list</span>
+                        Filtrer
                     </button>
                 </div>
             </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-surface-container-low text-on-surface-variant font-label-md text-xs uppercase tracking-widest">
+                        <tr>
+                            <th class="px-6 py-4">Date</th>
+                            <th class="px-6 py-4">Type</th>
+                            <th class="px-6 py-4">Description</th>
+                            <th class="px-6 py-4">Montant</th>
+                            <th class="px-6 py-4">Méthode</th>
+                            <th class="px-6 py-4">Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionList" class="divide-y divide-outline-variant/20">
+                        {% for transaction in dernieres_transactions %}
+                        <tr class="hover:bg-primary/5 transition-colors group">
+                            <td class="px-6 py-4">
+                                <p class="text-sm font-bold">{{ transaction.date_creation|date:"d M, Y" }}</p>
+                                <p class="text-xs text-on-surface-variant">{{ transaction.date_creation|date:"H:i" }}</p>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2 text-sm">
+                                    <span class="material-symbols-outlined 
+                                        {% if transaction.type == 'RECHARGE' %}text-green-600 bg-green-50
+                                        {% elif transaction.type == 'PAIEMENT' %}text-primary bg-primary/5
+                                        {% elif transaction.type == 'REMBOURSEMENT' %}text-blue-600 bg-blue-50
+                                        {% else %}text-amber-600 bg-amber-50{% endif %} 
+                                        p-1.5 rounded-lg">
+                                        {% if transaction.type == 'RECHARGE' %}account_balance_wallet
+                                        {% elif transaction.type == 'PAIEMENT' %}shopping_basket
+                                        {% elif transaction.type == 'REMBOURSEMENT' %}undo
+                                        {% else %}history{% endif %}
+                                    </span>
+                                    {{ transaction.get_type_display }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm">{{ transaction.description }}</td>
+                            <td class="px-6 py-4 font-bold 
+                                {% if transaction.type == 'RECHARGE' or transaction.type == 'REMBOURSEMENT' %}text-green-600
+                                {% else %}text-on-surface{% endif %}">
+                                {% if transaction.type == 'RECHARGE' or transaction.type == 'REMBOURSEMENT' %}+{% else %}-{% endif %}
+                                {{ transaction.montant|floatformat:2 }} MAD
+                            </td>
+                            <td class="px-6 py-4 text-sm text-on-surface-variant">{{ transaction.methode_paiement|default:"Solde Wallet" }}</td>
+                            <td class="px-6 py-4">
+                                <span class="text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wide 
+                                    {% if transaction.statut == 'COMPLETE' %}bg-green-100 text-green-800
+                                    {% elif transaction.statut == 'EN_ATTENTE' %}bg-amber-100 text-amber-800
+                                    {% elif transaction.statut == 'ECHEC' %}bg-red-100 text-red-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ transaction.get_statut_display }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-10 text-center text-on-surface-variant">
+                                <span class="material-symbols-outlined text-4xl block mb-2">inbox</span>
+                                Aucune transaction pour le moment
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-4 bg-surface-container-low text-center">
+                <button class="text-primary font-bold text-sm hover:underline">Voir toutes les transactions</button>
+            </div>
         </div>
 
-        <!-- Packages Bento -->
-        <div class="col-span-8">
-            <div class="grid grid-cols-3 gap-gutter h-full">
-                <!-- Package 1 -->
-                <div class="glass-card soft-shadow p-6 rounded-3xl flex flex-col items-center text-center group hover:-translate-y-2 transition-transform">
-                    <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-6 group-hover:bg-primary/10 transition-colors">
-                        <span class="material-symbols-outlined text-primary text-3xl">lightbulb</span>
-                    </div>
-                    <h5 class="font-title-md">Pack Light</h5>
-                    <p class="text-xs text-on-surface-variant mt-2">Idéal pour un soutien ponctuel</p>
-                    <div class="my-6">
-                        <span class="text-3xl font-extrabold text-on-surface">1 200</span>
-                        <span class="text-sm font-bold text-on-surface-variant">MAD</span>
-                    </div>
-                    <div class="flex flex-col gap-2 w-full mb-8">
-                        <div class="flex items-center gap-2 text-sm text-on-surface-variant">
-                            <span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
-                            10 Heures de cours
-                        </div>
-                        <div class="flex items-center gap-2 text-sm text-on-surface-variant">
-                            <span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
-                            Tous niveaux
-                        </div>
-                    </div>
-                    <button class="w-full py-3 rounded-xl border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all mt-auto">Choisir</button>
-                </div>
+        <!-- Payment Methods & Packages Bento -->
+        <div class="grid grid-cols-12 gap-6 mt-8">
 
-                <!-- Package 2 (Populaire) -->
-                <div class="glass-card soft-shadow p-6 rounded-3xl flex flex-col items-center text-center border-2 border-primary relative group hover:-translate-y-2 transition-transform">
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-widest">Populaire</div>
-                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6">
-                        <span class="material-symbols-outlined text-primary text-3xl">rocket_launch</span>
-                    </div>
-                    <h5 class="font-title-md">Pack Standard</h5>
-                    <p class="text-xs text-on-surface-variant mt-2">Le meilleur équilibre progrès/prix</p>
-                    <div class="my-6">
-                        <span class="text-3xl font-extrabold text-on-surface">2 200</span>
-                        <span class="text-sm font-bold text-on-surface-variant">MAD</span>
-                    </div>
-                    <div class="flex flex-col gap-2 w-full mb-8">
-                        <div class="flex items-center gap-2 text-sm text-on-surface-variant">
-                            <span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
-                            20 Heures de cours
+            <!-- Payment Methods -->
+            <div class="col-span-4">
+                <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30 h-full">
+                    <h4 class="font-title-md text-title-md text-on-surface mb-6">Méthodes de Paiement</h4>
+                    <div class="space-y-4">
+                        <div class="p-4 border-2 border-primary bg-primary/5 rounded-xl flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-8 bg-black rounded flex items-center justify-center text-white text-[10px] font-bold">VISA</div>
+                                <div>
+                                    <p class="font-bold text-sm">•••• •••• •••• 4242</p>
+                                    <p class="text-xs text-on-surface-variant">Exp: 12/26</p>
+                                </div>
+                            </div>
+                            <span class="bg-primary text-white text-[10px] px-2 py-0.5 rounded font-bold">DÉFAUT</span>
                         </div>
-                        <div class="flex items-center gap-2 text-sm text-on-surface-variant">
-                            <span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
-                            Rapport personnalisé
+                        <div class="p-4 border border-outline-variant/30 hover:border-primary/50 transition-all cursor-pointer rounded-xl flex items-center justify-between group">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-8 bg-red-600 rounded flex items-center justify-center text-white text-[10px] font-bold italic">mastercard</div>
+                                <div>
+                                    <p class="font-bold text-sm">•••• •••• •••• 8812</p>
+                                    <p class="text-xs text-on-surface-variant">Exp: 08/25</p>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-outline-variant group-hover:text-primary">more_vert</span>
                         </div>
+                        <button class="w-full py-4 border-2 border-dashed border-outline-variant/30 rounded-xl text-on-surface-variant font-bold text-sm hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">add</span>
+                            Ajouter une méthode
+                        </button>
                     </div>
-                    <button class="w-full py-3 rounded-xl premium-gradient text-white font-bold hover:opacity-90 shadow-lg shadow-primary/25 mt-auto">Acheter</button>
                 </div>
+            </div>
 
-                <!-- Package 3 -->
-                <div class="glass-card soft-shadow p-6 rounded-3xl flex flex-col items-center text-center group hover:-translate-y-2 transition-transform overflow-hidden relative">
-                    <div class="absolute top-2 right-2 opacity-10 rotate-12">
-                        <span class="material-symbols-outlined !text-6xl">workspace_premium</span>
-                    </div>
-                    <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-6 group-hover:bg-secondary/10 transition-colors">
-                        <span class="material-symbols-outlined text-secondary text-3xl">workspace_premium</span>
-                    </div>
-                    <h5 class="font-title-md">Pack Premium</h5>
-                    <p class="text-xs text-on-surface-variant mt-2">Accompagnement intensif complet</p>
-                    <div class="my-6">
-                        <span class="text-3xl font-extrabold text-on-surface">4 000</span>
-                        <span class="text-sm font-bold text-on-surface-variant">MAD</span>
-                    </div>
-                    <div class="flex flex-col gap-2 w-full mb-8">
-                        <div class="flex items-center gap-2 text-sm text-on-surface-variant">
-                            <span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
-                            40 Heures de cours
+            <!-- Packages Bento -->
+            <div class="col-span-8">
+                <div class="grid grid-cols-3 gap-6 h-full">
+                    <!-- Package 1 -->
+                    <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30 flex flex-col items-center text-center group hover:-translate-y-2 transition-transform">
+                        <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
+                            <span class="material-symbols-outlined text-primary text-3xl">lightbulb</span>
                         </div>
-                        <div class="flex items-center gap-2 text-sm text-on-surface-variant font-bold text-primary">
-                            <span class="material-symbols-outlined text-primary text-sm">stars</span>
-                            Meilleur rapport/h
+                        <h5 class="font-title-md text-title-md text-on-surface">Pack Light</h5>
+                        <p class="text-xs text-on-surface-variant mt-1">Idéal pour un soutien ponctuel</p>
+                        <div class="my-4">
+                            <span class="text-3xl font-extrabold text-on-surface">1 200</span>
+                            <span class="text-sm font-bold text-on-surface-variant">MAD</span>
                         </div>
+                        <div class="flex flex-col gap-2 w-full mb-6">
+                            <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+                                <span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
+                                10 Heures de cours
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+                                <span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
+                                Tous niveaux
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='{% url 'clients:liste_forfaits' %}'" class="w-full py-3 rounded-xl border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all mt-auto">
+                            Choisir
+                        </button>
                     </div>
-                    <button class="w-full py-3 rounded-xl border-2 border-secondary text-secondary font-bold hover:bg-secondary hover:text-white transition-all mt-auto">Découvrir</button>
+
+                    <!-- Package 2 (Populaire) -->
+                    <div class="bg-surface-container-lowest rounded-xl p-6 border-2 border-primary flex flex-col items-center text-center relative group hover:-translate-y-2 transition-transform">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-widest">Populaire</div>
+                        <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                            <span class="material-symbols-outlined text-primary text-3xl">rocket_launch</span>
+                        </div>
+                        <h5 class="font-title-md text-title-md text-on-surface">Pack Standard</h5>
+                        <p class="text-xs text-on-surface-variant mt-1">Le meilleur équilibre progrès/prix</p>
+                        <div class="my-4">
+                            <span class="text-3xl font-extrabold text-on-surface">2 200</span>
+                            <span class="text-sm font-bold text-on-surface-variant">MAD</span>
+                        </div>
+                        <div class="flex flex-col gap-2 w-full mb-6">
+                            <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+                                <span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
+                                20 Heures de cours
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+                                <span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
+                                Rapport personnalisé
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='{% url 'clients:liste_forfaits' %}'" class="w-full py-3 rounded-xl bg-primary-gradient text-white font-bold hover:opacity-90 shadow-lg shadow-primary/25 mt-auto">
+                            Acheter
+                        </button>
+                    </div>
+
+                    <!-- Package 3 -->
+                    <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30 flex flex-col items-center text-center group hover:-translate-y-2 transition-transform overflow-hidden relative">
+                        <div class="absolute top-2 right-2 opacity-10 rotate-12">
+                            <span class="material-symbols-outlined !text-6xl">workspace_premium</span>
+                        </div>
+                        <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-4 group-hover:bg-secondary/10 transition-colors">
+                            <span class="material-symbols-outlined text-secondary text-3xl">workspace_premium</span>
+                        </div>
+                        <h5 class="font-title-md text-title-md text-on-surface">Pack Premium</h5>
+                        <p class="text-xs text-on-surface-variant mt-1">Accompagnement intensif complet</p>
+                        <div class="my-4">
+                            <span class="text-3xl font-extrabold text-on-surface">4 000</span>
+                            <span class="text-sm font-bold text-on-surface-variant">MAD</span>
+                        </div>
+                        <div class="flex flex-col gap-2 w-full mb-6">
+                            <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+                                <span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
+                                40 Heures de cours
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-on-surface-variant font-bold text-primary">
+                                <span class="material-symbols-outlined text-primary text-sm">stars</span>
+                                Meilleur rapport/h
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='{% url 'clients:liste_forfaits' %}'" class="w-full py-3 rounded-xl border-2 border-secondary text-secondary font-bold hover:bg-secondary hover:text-white transition-all mt-auto">
+                            Découvrir
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+
+    </main>
+</div>
 
 <!-- Modal Recharge -->
 <div id="rechargeModal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
-    <div class="glass-card rounded-3xl p-8 max-w-md w-full mx-4 animate-in fade-in slide-in-from-bottom duration-300">
+    <div class="bg-surface-container-lowest rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl border border-outline-variant/30">
         <div class="flex justify-between items-start mb-6">
-            <h3 class="font-title-md text-on-surface">Recharger mon portefeuille</h3>
+            <h3 class="font-title-md text-title-md text-on-surface">Recharger mon portefeuille</h3>
             <button onclick="document.getElementById('rechargeModal').classList.add('hidden')" class="text-on-surface-variant hover:text-on-surface">
                 <span class="material-symbols-outlined">close</span>
             </button>
@@ -624,13 +728,13 @@
                     <div class="relative">
                         <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-on-surface-variant">MAD</span>
                         <input type="number" name="montant" step="100" min="100" required 
-                               class="w-full pl-14 pr-4 py-3 bg-surface-container rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                               class="w-full pl-14 pr-4 py-3 bg-surface-container rounded-xl border border-outline-variant/30 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                                placeholder="0.00"/>
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-on-surface-variant mb-2">Méthode de paiement</label>
-                    <select name="methode_paiement" class="w-full py-3 px-4 bg-surface-container rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all">
+                    <select name="methode_paiement" class="w-full py-3 px-4 bg-surface-container rounded-xl border border-outline-variant/30 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all">
                         <option value="Carte Visa •••• 4242">Carte Visa •••• 4242</option>
                         <option value="Mastercard •••• 8812">Mastercard •••• 8812</option>
                         <option value="Virement Bancaire">Virement Bancaire</option>
@@ -639,10 +743,10 @@
             </div>
             <div class="flex gap-3 mt-8">
                 <button type="button" onclick="document.getElementById('rechargeModal').classList.add('hidden')" 
-                        class="flex-1 py-3 rounded-xl border border-outline-variant text-on-surface-variant font-bold hover:bg-surface-container transition-all">
+                        class="flex-1 py-3 rounded-xl border border-outline-variant/30 text-on-surface-variant font-bold hover:bg-surface-container transition-all">
                     Annuler
                 </button>
-                <button type="submit" class="flex-1 py-3 rounded-xl premium-gradient text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/25">
+                <button type="submit" class="flex-1 py-3 rounded-xl bg-primary-gradient text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/25">
                     Recharger
                 </button>
             </div>
@@ -651,7 +755,6 @@
 </div>
 
 <script>
-    // Micro-interactions for chart animation
     document.addEventListener('DOMContentLoaded', () => {
         const bars = document.querySelectorAll('.chart-bar-grow');
         setTimeout(() => {
@@ -665,7 +768,6 @@
         }, 500);
     });
 
-    // Search highlight simulation
     const searchInput = document.getElementById('searchTransactions');
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
@@ -678,7 +780,6 @@
         });
     }
 
-    // Auto-close messages after 5 seconds
     document.querySelectorAll('.toast-message').forEach(msg => {
         setTimeout(() => {
             msg.style.opacity = '0';

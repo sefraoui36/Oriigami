@@ -1,484 +1,464 @@
 <!-- templates/parent/paiements.html -->
-{% load static %}
+<!-- stylelint-disable -->
 <!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Paiements | Origami Privé</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
-    <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "on-primary-fixed-variant": "#5d00c2",
-                    "on-surface": "#191c1d",
-                    "tertiary": "#894500",
-                    "on-tertiary-fixed-variant": "#703800",
-                    "on-secondary": "#ffffff",
-                    "error": "#ba1a1a",
-                    "tertiary-container": "#ad5900",
-                    "on-error": "#ffffff",
-                    "on-primary-fixed": "#270058",
-                    "on-background": "#191c1d",
-                    "secondary-fixed": "#ffd8ec",
-                    "tertiary-fixed-dim": "#ffb782",
-                    "on-tertiary-container": "#fff2eb",
-                    "surface-container": "#edeeef",
-                    "secondary-container": "#fe60cf",
-                    "surface-container-lowest": "#ffffff",
-                    "primary-fixed": "#ebdcff",
-                    "surface-container-highest": "#e1e3e4",
-                    "outline-variant": "#cdc2d8",
-                    "inverse-on-surface": "#f0f1f2",
-                    "on-tertiary": "#ffffff",
-                    "surface-dim": "#d9dadb",
-                    "secondary-fixed-dim": "#ffaede",
-                    "primary-fixed-dim": "#d4bbff",
-                    "on-surface-variant": "#4b4456",
-                    "tertiary-fixed": "#ffdcc5",
-                    "secondary": "#ae128a",
-                    "on-primary-container": "#faf1ff",
-                    "on-primary": "#ffffff",
-                    "primary": "#710fe5",
-                    "surface-variant": "#e1e3e4",
-                    "on-error-container": "#93000a",
-                    "outline": "#7c7387",
-                    "surface": "#f8f9fa",
-                    "surface-container-low": "#f3f4f5",
-                    "background": "#f8f9fa",
-                    "inverse-primary": "#d4bbff",
-                    "surface-container-high": "#e7e8e9",
-                    "on-secondary-container": "#680052",
-                    "inverse-surface": "#2e3132",
-                    "primary-container": "#8b3dff",
-                    "on-secondary-fixed": "#3b002d",
-                    "surface-bright": "#f8f9fa",
-                    "on-secondary-fixed-variant": "#87006b",
-                    "error-container": "#ffdad6",
-                    "on-tertiary-fixed": "#301400",
-                    "surface-tint": "#7921ed"
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Paiements - Origami Privé</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "on-surface-variant": "#4b4456",
+                "error": "#ba1a1a",
+                "tertiary-fixed-dim": "#ffb782",
+                "surface-dim": "#d9dadb",
+                "inverse-surface": "#2e3132",
+                "primary-container": "#8b3dff",
+                "background": "#f8f9fa",
+                "on-primary": "#ffffff",
+                "on-primary-fixed": "#270058",
+                "surface-container": "#edeeef",
+                "tertiary-container": "#ad5900",
+                "on-surface": "#191c1d",
+                "inverse-on-surface": "#f0f1f2",
+                "on-error-container": "#93000a",
+                "outline-variant": "#cdc2d8",
+                "surface-tint": "#7921ed",
+                "on-tertiary-fixed": "#301400",
+                "on-primary-fixed-variant": "#5d00c2",
+                "secondary": "#ae128a",
+                "secondary-fixed-dim": "#ffaede",
+                "on-secondary-fixed-variant": "#87006b",
+                "tertiary": "#894500",
+                "surface-container-high": "#e7e8e9",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#3b002d",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#ebdcff",
+                "on-primary-container": "#faf1ff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#fe60cf",
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#d4bbff",
+                "surface-container-low": "#f3f4f5",
+                "outline": "#7c7387",
+                "surface": "#f8f9fa",
+                "on-secondary-container": "#680052",
+                "tertiary-fixed": "#ffdcc5",
+                "inverse-primary": "#d4bbff",
+                "on-tertiary-fixed-variant": "#703800",
+                "primary": "#710fe5",
+                "on-error": "#ffffff",
+                "surface-variant": "#e1e3e4",
+                "surface-container-highest": "#e1e3e4",
+                "secondary-fixed": "#ffd8ec",
+                "on-tertiary-container": "#fff2eb",
+                "on-background": "#191c1d"
             },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
             },
-            "spacing": {
-                    "card-gap": "24px",
-                    "container-padding": "32px",
-                    "gutter": "24px",
-                    "section-margin": "48px",
-                    "base": "8px"
+            spacing: {
+                "container-padding": "32px",
+                "card-gap": "24px",
+                "gutter": "24px",
+                "base": "8px",
+                "section-margin": "48px"
             },
-            "fontFamily": {
-                    "display-lg": ["Plus Jakarta Sans"],
-                    "body-sm": ["Plus Jakarta Sans"],
-                    "headline-lg-mobile": ["Plus Jakarta Sans"],
-                    "headline-lg": ["Plus Jakarta Sans"],
-                    "title-md": ["Plus Jakarta Sans"],
-                    "label-md": ["Inter"],
-                    "body-lg": ["Plus Jakarta Sans"]
+            fontFamily: {
+                "headline-lg": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"],
+                "body-sm": ["Plus Jakarta Sans"],
+                "label-md": ["Inter"],
+                "title-md": ["Plus Jakarta Sans"],
+                "headline-lg-mobile": ["Plus Jakarta Sans"]
             },
-            "fontSize": {
-                    "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
-                    "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
-                    "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
-                    "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
-                    "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
-                    "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            fontSize: {
+                "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
             }
-          },
         },
-      }
-    </script>
-    <style>
-      .material-symbols-outlined {
+    },
+}
+</script>
+<style>
+    .material-symbols-outlined {
         font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-      }
-      .glass-card {
+    }
+    .glass-card {
         background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(233, 236, 239, 1);
-      }
-      .primary-gradient {
-        background: linear-gradient(135deg, #8B3DFF 0%, #ae128a 100%);
-      }
-      .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
-      }
-      .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #cdc2d8;
-        border-radius: 10px;
-      }
-      .sidebar-active {
-        background: rgba(113, 15, 229, 0.1);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    }
+    .sidebar-link {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #4b4456;
+        text-decoration: none;
+    }
+    .sidebar-link:hover {
+        background: rgba(113, 15, 229, 0.08);
         color: #710fe5;
-        border-left: 4px solid #710fe5;
+    }
+    .sidebar-link.active {
+        background: rgba(113, 15, 229, 0.12);
+        color: #710fe5;
         font-weight: 600;
-      }
-    </style>
+    }
+    .sidebar-link.active .material-symbols-outlined {
+        color: #710fe5;
+    }
+    .stat-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+    }
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+    }
+    .animate-pulse-slow {
+        animation: pulse-soft 4s ease-in-out infinite;
+    }
+    @keyframes pulse-soft {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+    }
+    .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 9999px;
+        display: inline-block;
+    }
+    .badge-dot.green { background: #10b981; }
+    .badge-dot.orange { background: #f59e0b; }
+    .badge-dot.red { background: #ef4444; }
+    .badge-dot.blue { background: #3b82f6; }
+
+    .bg-primary-light { background-color: rgba(113, 15, 229, 0.1); }
+    .bg-secondary-light { background-color: rgba(174, 18, 138, 0.1); }
+    .bg-tertiary-light { background-color: rgba(137, 69, 0, 0.1); }
+    .bg-blue-light { background-color: rgba(59, 130, 246, 0.1); }
+    .bg-purple-light { background-color: rgba(139, 92, 246, 0.1); }
+    .bg-orange-light { background-color: rgba(249, 115, 22, 0.1); }
+    .bg-green-light { background-color: rgba(34, 197, 94, 0.1); }
+    .bg-indigo-light { background-color: rgba(99, 102, 241, 0.1); }
+    .bg-pink-light { background-color: rgba(236, 72, 153, 0.1); }
+    .bg-teal-light { background-color: rgba(20, 184, 166, 0.1); }
+    .bg-emerald-light { background-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-lighter { background-color: rgba(113, 15, 229, 0.05); }
+    .bg-secondary-lighter { background-color: rgba(174, 18, 138, 0.05); }
+    .bg-tertiary-lighter { background-color: rgba(137, 69, 0, 0.05); }
+    .bg-blue-lighter { background-color: rgba(59, 130, 246, 0.05); }
+    .bg-purple-lighter { background-color: rgba(139, 92, 246, 0.05); }
+    .bg-orange-lighter { background-color: rgba(249, 115, 22, 0.05); }
+    .bg-green-lighter { background-color: rgba(34, 197, 94, 0.05); }
+    .bg-indigo-lighter { background-color: rgba(99, 102, 241, 0.05); }
+    .bg-pink-lighter { background-color: rgba(236, 72, 153, 0.05); }
+    .bg-teal-lighter { background-color: rgba(20, 184, 166, 0.05); }
+    .bg-emerald-lighter { background-color: rgba(16, 185, 129, 0.05); }
+
+    .border-primary-light { border-color: rgba(113, 15, 229, 0.1); }
+    .border-secondary-light { border-color: rgba(174, 18, 138, 0.1); }
+    .border-tertiary-light { border-color: rgba(137, 69, 0, 0.1); }
+    .border-blue-light { border-color: rgba(59, 130, 246, 0.1); }
+    .border-purple-light { border-color: rgba(139, 92, 246, 0.1); }
+    .border-orange-light { border-color: rgba(249, 115, 22, 0.1); }
+    .border-green-light { border-color: rgba(34, 197, 94, 0.1); }
+    .border-indigo-light { border-color: rgba(99, 102, 241, 0.1); }
+    .border-pink-light { border-color: rgba(236, 72, 153, 0.1); }
+    .border-teal-light { border-color: rgba(20, 184, 166, 0.1); }
+    .border-emerald-light { border-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-solid { background-color: #710fe5; }
+    .bg-secondary-solid { background-color: #ae128a; }
+    .bg-tertiary-solid { background-color: #894500; }
+    .bg-blue-solid { background-color: #3b82f6; }
+    .bg-purple-solid { background-color: #8b5cf6; }
+    .bg-orange-solid { background-color: #f97316; }
+    .bg-green-solid { background-color: #22c55e; }
+    .bg-indigo-solid { background-color: #6366f1; }
+    .bg-pink-solid { background-color: #ec4899; }
+    .bg-teal-solid { background-color: #14b8a6; }
+    .bg-emerald-solid { background-color: #10b981; }
+
+    .text-primary { color: #710fe5; }
+    .text-secondary { color: #ae128a; }
+    .text-tertiary { color: #894500; }
+    .text-blue { color: #3b82f6; }
+    .text-purple { color: #8b5cf6; }
+    .text-orange { color: #f97316; }
+    .text-green { color: #22c55e; }
+    .text-indigo { color: #6366f1; }
+    .text-pink { color: #ec4899; }
+    .text-teal { color: #14b8a6; }
+    .text-emerald { color: #10b981; }
+</style>
 </head>
-<body class="bg-background text-on-surface font-body-lg">
+<body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
 
-<!-- Side Navigation -->
-<aside class="w-[280px] h-screen fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant flex flex-col py-base z-50">
-    <div class="px-gutter mb-section-margin">
-        <h1 class="font-headline-lg text-headline-lg font-bold text-primary">Origami Privé</h1>
-        <p class="font-body-sm text-body-sm text-on-surface-variant">Education d'Excellence</p>
-    </div>
-    <nav class="flex-1 overflow-y-auto custom-scrollbar px-4 space-y-1">
-        <a href="{% url 'clients:dashboard_parent' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200">
-            <span class="material-symbols-outlined">dashboard</span>
-            <span class="font-body-sm">Dashboard</span>
-        </a>
-        <a href="{% url 'clients:profil_parent' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200">
-            <span class="material-symbols-outlined">person</span>
-            <span class="font-body-sm">Mon profil</span>
-        </a>
-        <a href="{% url 'clients:liste_enfants' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200">
-            <span class="material-symbols-outlined">child_care</span>
-            <span class="font-body-sm">Mes enfants</span>
-        </a>
-        <a href="{% url 'clients:liste_paiements' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/10 text-primary border-l-4 border-primary font-semibold">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
-            <span class="font-body-sm">Paiements</span>
-        </a>
-        <a href="{% url 'portefeuilles:mon_portefeuille' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200">
-            <span class="material-symbols-outlined">account_balance_wallet</span>
-            <span class="font-body-sm">Mon portefeuille</span>
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200">
-            <span class="material-symbols-outlined">calendar_month</span>
-            <span class="font-body-sm">Calendrier</span>
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200">
-            <span class="material-symbols-outlined">settings</span>
-            <span class="font-body-sm">Paramètres</span>
-        </a>
-    </nav>
-    <div class="p-gutter mt-auto">
-        <button class="w-full primary-gradient text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform">
-            <span class="material-symbols-outlined">add</span>
-            Réserver une séance
-        </button>
-    </div>
-</aside>
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+    <div class="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] animate-pulse-slow"></div>
+    <div class="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+</div>
 
-<!-- Main Content Wrapper -->
-<main class="ml-[280px] min-h-screen flex flex-col">
-    <!-- Top App Bar -->
-    <header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-gutter z-40">
-        <div class="flex items-center bg-surface-container-low rounded-full px-4 py-2 w-96 border border-outline-variant focus-within:ring-2 focus-within:ring-primary/20 transition-all">
-            <span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
-            <input class="bg-transparent border-none focus:ring-0 text-body-sm w-full outline-none" placeholder="Rechercher une transaction..." type="text"/>
-        </div>
-        <div class="flex items-center gap-6">
-            <div class="flex gap-4">
-                <button class="relative p-2 rounded-full hover:bg-surface-container-low transition-all">
-                    <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
-                    <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
-                </button>
-                <button class="p-2 rounded-full hover:bg-surface-container-low transition-all">
-                    <span class="material-symbols-outlined text-on-surface-variant">help_outline</span>
-                </button>
+<div class="flex h-screen overflow-hidden">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
+        <div class="flex items-center gap-3 px-3 py-4 mb-6">
+            <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">change_history</span>
             </div>
-            <div class="h-8 w-px bg-outline-variant"></div>
-            <div class="flex items-center gap-3 cursor-pointer">
-                <div class="text-right">
-                    <p class="font-label-md text-label-md font-bold text-on-surface">{{ user.get_full_name|default:user.username }}</p>
-                    <p class="font-label-md text-label-md text-on-surface-variant">Parent</p>
-                </div>
-                <div class="w-10 h-10 rounded-full border-2 border-primary/20 object-cover overflow-hidden">
-                    {% if parent.photo %}
-                        <img class="w-full h-full object-cover" src="{{ parent.photo.url }}" alt="{{ parent.prenom }}"/>
-                    {% else %}
-                        <div class="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
-                            {{ parent.prenom|first|upper }}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+            <span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Origami Privé</span>
         </div>
-    </header>
 
-    <!-- Content Canvas -->
-    <div class="pt-24 px-container-padding pb-gutter flex-1">
-        <!-- Page Header & Breadcrumb -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <nav class="flex-1 space-y-1">
+            <!-- Dashboard -->
+            <a href="{% url 'clients:dashboard_parent' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <!-- Enfants -->
+            <a href="{% url 'clients:liste_enfants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">family_restroom</span>
+                <span>Mes Enfants</span>
+            </a>
+            <!-- Enseignants -->
+            <a href="{% url 'clients:liste_enseignants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">school</span>
+                <span>Enseignants</span>
+            </a>
+            <!-- Séances -->
+            <a href="{% url 'clients:liste_seances' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+                <span>Séances</span>
+            </a>
+            <!-- Forfaits -->
+            <a href="{% url 'clients:liste_forfaits' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">sell</span>
+                <span>Forfaits</span>
+            </a>
+            <!-- Paiements -->
+            <a href="{% url 'clients:liste_paiements' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]">payments</span>
+                <span>Paiements</span>
+            </a>
+            <!-- Profil -->
+            <a href="{% url 'clients:profil_parent' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">person</span>
+                <span>Mon Profil</span>
+            </a>
+            <!-- Portefeuille -->
+            <a href="{% url 'portefeuilles:mon_portefeuille' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+                <span>Portefeuille</span>
+            </a>
+            <!-- Notifications -->
+            <a href="{% url 'clients:notifications' %}" class="sidebar-link active">
+        <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">notifications</span>
+        <span>Notifications</span>
+        <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ non_lues|default:3 }}</span>
+    </a>
+            <!-- Paramètres -->
+           <a href="{% url 'clients:parametres' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">settings</span>
+                <span>Paramètres</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto pt-4 border-t border-outline-variant/30">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+                <span class="material-symbols-outlined text-[22px]">logout</span>
+                <span>Déconnexion</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 overflow-y-auto p-8">
+
+        <div class="flex items-center justify-between mb-8">
             <div>
-                <nav class="flex text-label-md font-label-md text-on-surface-variant mb-2 gap-2">
-                    <a class="hover:text-primary transition-colors" href="{% url 'clients:dashboard_parent' %}">Dashboard</a>
-                    <span>›</span>
-                    <span class="text-primary font-semibold">Paiements</span>
-                </nav>
-                <h2 class="font-headline-lg text-headline-lg text-on-surface">Paiements</h2>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface">Paiements</h1>
+                <p class="text-on-surface-variant body-sm">Gérez vos transactions et suivez vos dépenses</p>
             </div>
-            <!-- Advanced Filters -->
-            <div class="flex flex-wrap gap-2">
-                <select class="bg-white border border-outline-variant rounded-lg px-4 py-2 text-body-sm focus:ring-primary focus:border-primary outline-none">
-                    <option value="">Tous les enfants</option>
-                    {% for enfant in enfants %}
-                    <option value="{{ enfant.id_client }}">{{ enfant.prenom }}</option>
-                    {% endfor %}
-                </select>
-                <select class="bg-white border border-outline-variant rounded-lg px-4 py-2 text-body-sm focus:ring-primary focus:border-primary outline-none">
-                    <option value="">Statut</option>
-                    <option value="COMPLETE">Payé</option>
-                    <option value="EN_ATTENTE">En attente</option>
-                    <option value="ANNULE">Annulé</option>
-                </select>
-                <input class="bg-white border border-outline-variant rounded-lg px-4 py-2 text-body-sm focus:ring-primary focus:border-primary outline-none" type="date"/>
-                <button class="bg-surface-container-high hover:bg-surface-container-highest p-2 rounded-lg transition-colors">
-                    <span class="material-symbols-outlined">filter_list</span>
+            <div class="flex items-center gap-3">
+                <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
+                    <span class="material-symbols-outlined text-[24px]">notifications</span>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
+                    {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper|default:"P" }}
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-primary">payments</span>
+                    <span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">Total</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ total_paye_formatted|default:"0 DH" }}</p>
+                <p class="text-sm text-on-surface-variant">Total payé</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-orange-500">hourglass_empty</span>
+                    <span class="text-xs font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">En attente</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ total_attente_formatted|default:"0 DH" }}</p>
+                <p class="text-sm text-on-surface-variant">Paiements en attente</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-secondary">inventory_2</span>
+                    <span class="text-xs font-bold text-secondary bg-secondary/10 px-3 py-1 rounded-full">Actifs</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ forfaits_actifs|default:0 }}</p>
+                <p class="text-sm text-on-surface-variant">Forfaits actifs</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-purple-500">account_balance_wallet</span>
+                    <span class="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Solde</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ solde_formatted|default:"0 DH" }}</p>
+                <p class="text-sm text-on-surface-variant">Solde portefeuille</p>
+            </div>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 overflow-hidden">
+            <div class="p-6 border-b border-outline-variant/30 bg-surface-container-lowest flex items-center justify-between">
+                <h3 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">receipt_long</span>
+                    Historique des transactions
+                </h3>
+                <button class="px-4 py-2 text-sm font-semibold text-primary border border-primary/30 rounded-xl hover:bg-primary/5 transition-colors">
+                    <span class="material-symbols-outlined text-[18px] align-middle">download</span>
+                    Exporter
                 </button>
             </div>
-        </div>
-
-        <!-- KPI Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-card-gap mb-8">
-            <div class="glass-card p-6 rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 border-primary">
-                <p class="text-label-md font-label-md text-on-surface-variant uppercase mb-2">Total Payé</p>
-                <p class="text-title-md font-title-md text-on-surface font-bold">{{ total_paye_formatted }}</p>
-                <div class="mt-4 flex items-center text-primary text-body-sm font-semibold">
-                    <span class="material-symbols-outlined text-[16px] mr-1">trending_up</span>
-                    <span>+12% vs mois dernier</span>
-                </div>
-            </div>
-            <div class="glass-card p-6 rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 border-secondary">
-                <p class="text-label-md font-label-md text-on-surface-variant uppercase mb-2">Paiements en attente</p>
-                <p class="text-title-md font-title-md text-on-surface font-bold text-secondary">{{ total_attente_formatted }}</p>
-                <div class="mt-4 flex items-center text-on-surface-variant text-body-sm">
-                    <span class="material-symbols-outlined text-[16px] mr-1">schedule</span>
-                    <span>Échéance dans 3 jours</span>
-                </div>
-            </div>
-            <div class="glass-card p-6 rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 border-tertiary-container">
-                <p class="text-label-md font-label-md text-on-surface-variant uppercase mb-2">Forfaits Actifs</p>
-                <p class="text-title-md font-title-md text-on-surface font-bold">{{ forfaits_actifs }}</p>
-                <div class="mt-4 flex items-center text-on-surface-variant text-body-sm">
-                    <span class="material-symbols-outlined text-[16px] mr-1">inventory_2</span>
-                    <span>{% if forfaits_actifs > 0 %}Proche expiration (1){% else %}Aucun forfait actif{% endif %}</span>
-                </div>
-            </div>
-            <div class="glass-card p-6 rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 border-primary-fixed-dim">
-                <p class="text-label-md font-label-md text-on-surface-variant uppercase mb-2">Solde Portefeuille</p>
-                <p class="text-title-md font-title-md text-on-surface font-bold">{{ solde_formatted }}</p>
-                <div class="mt-4 flex items-center text-primary text-body-sm font-semibold cursor-pointer hover:underline" onclick="window.location.href='{% url 'portefeuilles:mon_portefeuille' %}'">
-                    <span>Recharger mon solde</span>
-                    <span class="material-symbols-outlined text-[16px] ml-1">chevron_right</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Analytics Section: Bento Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-card-gap mb-8">
-            <div class="lg:col-span-2 glass-card p-6 rounded-xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-title-md text-title-md text-on-surface">Évolution des paiements mensuels</h3>
-                    <div class="flex gap-2">
-                        <span class="flex items-center text-label-md text-on-surface-variant"><span class="w-3 h-3 rounded-full bg-primary mr-2"></span>Paiements</span>
-                    </div>
-                </div>
-                <div class="h-[280px] w-full relative">
-                    <div class="absolute inset-0 flex items-end justify-between px-4 pb-8">
-                        {% for hauteur in hauteurs_graphique %}
-                        <div class="w-12 bg-primary/10 rounded-t-lg h-[{{ hauteur }}%] hover:bg-primary/20 transition-all" style="height: {{ hauteur }}%;"></div>
-                        {% endfor %}
-                    </div>
-                    <div class="absolute bottom-0 left-0 right-0 border-t border-outline-variant flex justify-between px-4 pt-2 text-label-md text-on-surface-variant">
-                        {% for mois in mois_labels %}
-                        <span>{{ mois }}</span>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            <div class="glass-card p-6 rounded-xl flex flex-col">
-                <h3 class="font-title-md text-title-md text-on-surface mb-6">Dépenses par Enfant</h3>
-                <div class="flex-1 flex flex-col justify-center items-center">
-                    <div class="relative w-48 h-48 mb-6">
-                        <div class="absolute inset-0 rounded-full border-[16px] border-secondary-container"></div>
-                        <div class="absolute inset-0 rounded-full border-[16px] border-primary border-t-transparent border-l-transparent rotate-45"></div>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="text-display-lg-mobile font-bold text-on-surface">{{ total_paye|floatformat:0 }} DH</span>
-                        </div>
-                    </div>
-                    <div class="w-full space-y-3">
-                        {% for stat in stats_enfants %}
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center text-body-sm">
-                                <span class="w-3 h-3 rounded-full {% cycle 'bg-primary' 'bg-secondary-container' 'bg-tertiary-container' %} mr-3"></span>
-                                {{ stat.prenom }}
-                            </div>
-                            <span class="font-bold text-on-surface">{{ stat.total_formatted }}</span>
-                        </div>
-                        {% empty %}
-                        <div class="text-center text-on-surface-variant">Aucune dépense enregistrée</div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Payment History Table -->
-        <div class="glass-card rounded-xl overflow-hidden mb-8">
-            <div class="p-6 border-b border-outline-variant flex justify-between items-center">
-                <h3 class="font-title-md text-title-md text-on-surface">Historique des Paiements</h3>
-                <button class="text-primary text-body-sm font-semibold hover:underline">Exporter (.csv)</button>
-            </div>
-            <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-surface-container-low">
-                            <th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase">Date</th>
-                            <th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase">Enfant</th>
-                            <th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase">Détails</th>
-                            <th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase">Montant</th>
-                            <th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase">Méthode</th>
-                            <th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase">Statut</th>
-                            <th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase">Actions</th>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-surface-container-low">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider">Enfant</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider">Description</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider">Montant</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider">Méthode</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider">Statut</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-outline-variant">
-                        {% for transaction in transactions|slice:":10" %}
-                        <tr class="hover:bg-surface-container/30 transition-colors">
-                            <td class="px-6 py-4 text-body-sm">{{ transaction.date }}</td>
-                            <td class="px-6 py-4 font-semibold text-on-surface">{{ transaction.enfant }}</td>
+                    <tbody class="divide-y divide-outline-variant/30">
+                        {% for transaction in transactions %}
+                        <tr class="hover:bg-surface-container-low transition-colors">
+                            <td class="px-6 py-4 text-sm text-on-surface">{{ transaction.date }}</td>
+                            <td class="px-6 py-4 text-sm font-medium text-on-surface">{{ transaction.enfant }}</td>
+                            <td class="px-6 py-4 text-sm text-on-surface-variant">{{ transaction.description }}</td>
+                            <td class="px-6 py-4 text-sm font-semibold text-on-surface">{{ transaction.montant_formatted }}</td>
+                            <td class="px-6 py-4 text-sm text-on-surface-variant">{{ transaction.methode }}</td>
                             <td class="px-6 py-4">
-                                <div class="text-body-sm font-semibold">{{ transaction.description|truncatechars:30 }}</div>
-                                <div class="text-label-md text-on-surface-variant">Ref: {{ transaction.reference|default:"N/A" }}</div>
-                            </td>
-                            <td class="px-6 py-4 font-bold">{{ transaction.montant_formatted }}</td>
-                            <td class="px-6 py-4 text-body-sm">{{ transaction.methode }}</td>
-                            <td class="px-6 py-4">
-                                <span class="px-3 py-1 
+                                <span class="px-3 py-1 rounded-full text-xs font-bold 
                                     {% if transaction.statut_class == 'green' %}bg-green-100 text-green-700
-                                    {% elif transaction.statut_class == 'amber' %}bg-amber-100 text-amber-700
+                                    {% elif transaction.statut_class == 'amber' %}bg-yellow-100 text-yellow-700
                                     {% elif transaction.statut_class == 'red' %}bg-red-100 text-red-700
-                                    {% else %}bg-gray-100 text-gray-700{% endif %} 
-                                    text-label-md font-bold rounded-full">
+                                    {% else %}bg-gray-100 text-gray-700{% endif %}">
                                     {{ transaction.statut }}
                                 </span>
                             </td>
                             <td class="px-6 py-4">
-                                <button class="p-2 hover:bg-primary-container/10 text-primary rounded-lg transition-all" title="Télécharger facture">
-                                    <span class="material-symbols-outlined">download</span>
+                                <button class="p-2 rounded-lg hover:bg-primary/5 text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-[20px]">download</span>
                                 </button>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="7" class="px-6 py-8 text-center text-on-surface-variant">
+                            <td colspan="7" class="px-6 py-12 text-center text-on-surface-variant">
                                 <span class="material-symbols-outlined text-4xl block mb-2">inbox</span>
-                                Aucune transaction pour le moment
+                                Aucune transaction
                             </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-            {% if transactions|length > 10 %}
-            <div class="p-4 border-t border-outline-variant text-center">
-                <button class="text-primary text-body-sm font-semibold hover:underline">Voir plus de transactions</button>
-            </div>
-            {% endif %}
         </div>
 
-        <!-- Child Summary & Quick Actions -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-card-gap items-start">
-            <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-card-gap">
+        <!-- Statistiques par enfant -->
+        <div class="mt-6">
+            <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
+                <span class="material-symbols-outlined text-primary">analytics</span>
+                Dépenses par enfant
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for stat in stats_enfants %}
-                <div class="glass-card p-6 rounded-xl relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-32 h-32 {% cycle 'bg-primary/5' 'bg-secondary-container/5' 'bg-tertiary-container/5' %} rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform"></div>
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-full overflow-hidden border-2 {% cycle 'border-primary' 'border-secondary' 'border-tertiary' %}">
-                            {% if stat.photo %}
-                                <img class="w-full h-full object-cover" src="{{ stat.photo.url }}" alt="{{ stat.prenom }}"/>
-                            {% else %}
-                                <div class="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
-                                    {{ stat.prenom|first|upper }}
-                                </div>
-                            {% endif %}
+                <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30 hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-12 h-12 rounded-full bg-primary-light flex items-center justify-center text-primary font-bold text-lg">
+                            {{ stat.prenom|first|upper }}
                         </div>
                         <div>
-                            <h4 class="font-title-md text-title-md text-on-surface">{{ stat.prenom }}</h4>
-                            <span class="text-label-md text-on-surface-variant">{{ stat.etablissement|default:"N/A" }} • {{ stat.niveau|default:"N/A" }}</span>
+                            <h4 class="font-semibold text-on-surface">{{ stat.prenom }}</h4>
+                            <p class="text-xs text-on-surface-variant">{{ stat.niveau }} • {{ stat.etablissement }}</p>
                         </div>
                     </div>
-                    <div class="space-y-4">
-                        <div class="flex justify-between border-b border-outline-variant pb-2">
-                            <span class="text-body-sm text-on-surface-variant">Total payé</span>
-                            <span class="font-bold text-on-surface">{{ stat.total_formatted }}</span>
-                        </div>
-                        <div class="flex justify-between border-b border-outline-variant pb-2">
-                            <span class="text-body-sm text-on-surface-variant">Forfaits actifs</span>
-                            <span class="font-bold text-on-surface">{{ stat.forfaits_actifs }}</span>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-on-surface-variant">Total payé</span>
+                            <span class="font-semibold text-on-surface">{{ stat.total_formatted }}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-body-sm text-on-surface-variant">Prochaine échéance</span>
-                            <span class="font-bold text-secondary">{{ stat.prochaine_echeance }}</span>
+                            <span class="text-on-surface-variant">Forfaits actifs</span>
+                            <span class="font-semibold text-on-surface">{{ stat.forfaits_actifs }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-on-surface-variant">Prochaine échéance</span>
+                            <span class="font-semibold text-secondary">{{ stat.prochaine_echeance }}</span>
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <div class="glass-card p-8 text-center col-span-2">
-                    <p class="text-on-surface-variant">Aucun enfant inscrit</p>
+                <div class="col-span-full text-center py-8 text-on-surface-variant">
+                    Aucun enfant
                 </div>
                 {% endfor %}
             </div>
-
-            <!-- Quick Actions -->
-            <div class="glass-card p-6 rounded-xl bg-surface-container-low flex flex-col gap-4">
-                <h3 class="font-title-md text-title-md text-on-surface mb-2">Actions Rapides</h3>
-                {% if total_attente > 0 %}
-                <button class="primary-gradient text-white font-bold py-4 px-6 rounded-lg flex items-center justify-between group shadow-lg hover:shadow-primary/20 transition-all">
-                    <span>Payer le solde ({{ total_attente_formatted }})</span>
-                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">payments</span>
-                </button>
-                {% endif %}
-                <button class="bg-white border border-outline text-on-surface font-semibold py-4 px-6 rounded-lg flex items-center justify-between hover:bg-surface-container-high transition-all">
-                    <span>Tout télécharger (Factures)</span>
-                    <span class="material-symbols-outlined">download_for_offline</span>
-                </button>
-                <button class="bg-white border border-outline text-on-surface font-semibold py-4 px-6 rounded-lg flex items-center justify-between hover:bg-surface-container-high transition-all" onclick="window.location.href='{% url 'portefeuilles:mon_portefeuille' %}'">
-                    <span>Historique complet</span>
-                    <span class="material-symbols-outlined">history</span>
-                </button>
-            </div>
         </div>
-    </div>
 
-    <!-- Footer Branding -->
-    <footer class="p-gutter text-center text-label-md text-on-surface-variant opacity-60">
-        © 2023 Origami Privé - Éducation d'Excellence. Tous droits réservés.
-    </footer>
-</main>
+    </main>
 
-<script>
-    // Simple interactivity for demonstration
-    document.querySelectorAll('button, a').forEach(el => {
-        el.addEventListener('click', (e) => {
-            if (el.tagName === 'A' && el.getAttribute('href') === '#') e.preventDefault();
-        });
-    });
+</div>
 
-    // Filter functionality
-    document.querySelectorAll('select, input[type="date"]').forEach(filter => {
-        filter.addEventListener('change', function() {
-            console.log('Filtre appliqué:', this.value);
-            // Ici vous pouvez ajouter la logique de filtrage AJAX
-        });
-    });
-</script>
 </body>
 </html>

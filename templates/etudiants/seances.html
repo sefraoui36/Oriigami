@@ -327,7 +327,7 @@ tailwind.config = {
                 <p class="text-on-surface-variant body-sm">Gérez votre emploi du temps et optimisez vos révisions</p>
             </div>
             <div class="flex items-center gap-3">
-                <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
+                <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative" onclick="window.location.href='{% url 'etudiants:notifications' %}'">
                     <span class="material-symbols-outlined text-[24px]">notifications</span>
                     <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
@@ -360,7 +360,7 @@ tailwind.config = {
                     <span class="material-symbols-outlined text-[28px] text-orange-500">hourglass_empty</span>
                     <span class="text-xs font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Restant</span>
                 </div>
-                <p class="text-3xl font-bold text-on-surface">15h</p>
+                <p class="text-3xl font-bold text-on-surface">{{ heures_restantes|default:"0" }}h</p>
                 <p class="text-sm text-on-surface-variant">Heures restantes</p>
             </div>
             <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
@@ -368,7 +368,7 @@ tailwind.config = {
                     <span class="material-symbols-outlined text-[28px] text-purple-500">timer</span>
                     <span class="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Total</span>
                 </div>
-                <p class="text-3xl font-bold text-on-surface">{{ seances_a_venir|length|add:seances_terminees|length }}h</p>
+                <p class="text-3xl font-bold text-on-surface">{{ total_seances|default:"0" }}h</p>
                 <p class="text-sm text-on-surface-variant">Temps d'étude total</p>
             </div>
         </div>
@@ -438,18 +438,26 @@ tailwind.config = {
                     Assiduité
                 </h3>
                 <div class="h-48 relative flex items-end justify-between gap-2 px-2">
-                    <div class="w-full bg-primary/10 rounded-t-lg relative group" style="height: 80%;">
-                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">95%</div>
+                    {% for data in presence_data %}
+                    <div class="w-full relative group" style="height: 100%; display: flex; flex-direction: column; justify-content: flex-end;">
+                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">{{ data.presence }}%</div>
+                        <div class="rounded-t-lg transition-all duration-500 
+                            {% if data.presence >= 80 %}bg-primary
+                            {% elif data.presence >= 50 %}bg-primary/40
+                            {% else %}bg-primary/10{% endif %}" 
+                            style="height: {{ data.presence }}%; min-height: 8px; width: 100%;">
+                        </div>
                     </div>
-                    <div class="w-full bg-primary/10 rounded-t-lg relative group" style="height: 95%;">
-                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">100%</div>
-                    </div>
-                    <div class="w-full bg-primary/10 rounded-t-lg relative group" style="height: 60%;"></div>
-                    <div class="w-full bg-primary/20 rounded-t-lg relative group" style="height: 85%;"></div>
-                    <div class="w-full bg-primary rounded-t-lg relative group" style="height: 90%;"></div>
+                    {% empty %}
+                    <p class="text-center text-on-surface-variant col-span-5">Aucune donnée d'assiduité</p>
+                    {% endfor %}
                 </div>
                 <div class="flex justify-between mt-4 text-[10px] font-bold text-on-surface-variant uppercase">
+                    {% for data in presence_data %}
+                    <span>{{ data.day }}</span>
+                    {% empty %}
                     <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -462,7 +470,9 @@ tailwind.config = {
                     <div class="relative w-32 h-32">
                         <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="42" fill="none" stroke="#e5e7eb" stroke-width="8"/>
-                            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#grad)" stroke-width="8" stroke-dasharray="263.89" stroke-dashoffset="52.78" stroke-linecap="round"/>
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#grad)" stroke-width="8" 
+                                    stroke-dasharray="263.89" stroke-dashoffset="{{ focus_score|default:0|add:"-263.89"|cut:"-" }}" 
+                                    stroke-linecap="round"/>
                             <defs>
                                 <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" style="stop-color:#710fe5;stop-opacity:1" />
@@ -471,8 +481,8 @@ tailwind.config = {
                             </defs>
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="text-2xl font-bold text-on-surface">88%</span>
-                            <span class="text-xs text-on-surface-variant">Optimal</span>
+                            <span class="text-2xl font-bold text-on-surface">{{ focus_score|default:0 }}%</span>
+                            <span class="text-xs text-on-surface-variant">{{ focus_status|default:"En attente" }}</span>
                         </div>
                     </div>
                     <div class="ml-6 space-y-2">
@@ -555,7 +565,7 @@ tailwind.config = {
                                 "Aucune séance programmée aujourd'hui. Profitez-en pour réviser !"
                             {% endif %}
                         </p>
-                        <button class="mt-4 w-full bg-white text-primary font-bold py-2 rounded-xl text-xs hover:bg-opacity-90 transition-all">
+                        <button onclick="ajouterAuCalendrier()" class="mt-4 w-full bg-white text-primary font-bold py-2 rounded-xl text-xs hover:bg-opacity-90 transition-all">
                             Ajouter au calendrier
                         </button>
                     </div>
@@ -606,6 +616,39 @@ tailwind.config = {
     </main>
 
 </div>
+
+<script>
+    // Fonction pour "Ajouter au calendrier"
+    function ajouterAuCalendrier() {
+        // Afficher un message de confirmation
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-8 right-8 z-50 glass-card rounded-xl p-4 max-w-sm flex items-center gap-3';
+        toast.innerHTML = `
+            <span class="material-symbols-outlined text-primary">check_circle</span>
+            <p class="text-sm font-medium">✅ Événement ajouté à votre calendrier</p>
+        `;
+        document.body.appendChild(toast);
+        
+        // Animation d'apparition
+        toast.style.transform = 'translateY(20px)';
+        toast.style.opacity = '0';
+        toast.style.transition = 'all 0.5s ease';
+        
+        setTimeout(() => {
+            toast.style.transform = 'translateY(0)';
+            toast.style.opacity = '1';
+        }, 100);
+        
+        // Disparaître après 3 secondes
+        setTimeout(() => {
+            toast.style.transform = 'translateY(20px)';
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                toast.remove();
+            }, 500);
+        }, 3000);
+    }
+</script>
 
 </body>
 </html>

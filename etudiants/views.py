@@ -203,28 +203,96 @@ def seances(request):
     seances_terminees = []
     ia_recommendations = []
     
+    # Statistiques
+    total_seances = 0
+    heures_restantes = 0
+    heures_total = 0
+    presence_data = []
+    focus_score = 0
+    
     try:
         client = Client.objects.filter(utilisateur=user).first()
         etudiant = Etudiant.objects.filter(client=client).first()
         
         if etudiant:
+            # Récupérer les séances à venir
             seances_a_venir = Seance.objects.filter(
                 affectation__etudiant=etudiant,
                 statut='prevue',
                 date__gte=timezone.now().date()
             ).order_by('date', 'heure')[:5]
             
+            # Récupérer les séances terminées
             seances_terminees = Seance.objects.filter(
                 affectation__etudiant=etudiant,
                 statut='termine'
             ).order_by('-date')[:5]
             
+            # Récupérer les recommandations IA
             ia_recommendations = IaRecommendations.objects.filter(
                 utilisateur=user
             ).order_by('-date')[:3]
             
-    except:
-        pass
+            # Calculer les statistiques
+            all_seances = Seance.objects.filter(affectation__etudiant=etudiant)
+            total_seances = all_seances.count()
+            seances_terminees_count = all_seances.filter(statut='termine').count()
+            
+            # Heures restantes (depuis le forfait)
+            forfait = Forfait.objects.filter(utilisateur=user).first()
+            if forfait:
+                heures_total = forfait.nombre_heure or 0
+                heures_utilisees = seances_terminees_count * 2  # 2h par séance
+                heures_restantes = max(0, heures_total - heures_utilisees)
+            
+            # Calcul du Focus Score (moyenne des notes ou progression)
+            if seances_terminees_count > 0:
+                notes = [s.qualite for s in all_seances if s.qualite]
+                if notes:
+                    notes_float = []
+                    for n in notes:
+                        try:
+                            notes_float.append(float(n))
+                        except:
+                            pass
+                    if notes_float:
+                        focus_score = int((sum(notes_float) / len(notes_float)) * 20)  # Convertir /5 en %
+                        focus_score = min(100, max(0, focus_score))
+            
+            # Données pour l'assiduité (derniers 5 jours)
+            today = timezone.now().date()
+            for i in range(4, -1, -1):
+                day = today - timedelta(days=i)
+                seances_day = Seance.objects.filter(
+                    affectation__etudiant=etudiant,
+                    date=day
+                )
+                total_day = seances_day.count()
+                present_day = seances_day.filter(statut='termine').count()
+                if total_day > 0:
+                    presence_pct = int((present_day / total_day) * 100)
+                else:
+                    presence_pct = 0
+                presence_data.append({
+                    'day': day.strftime('%a'),
+                    'presence': presence_pct,
+                    'is_high': presence_pct >= 80,
+                    'is_medium': 50 <= presence_pct < 80,
+                    'is_low': presence_pct < 50,
+                })
+            
+            # Si pas de données de présence, générer des valeurs par défaut
+            if not presence_data:
+                presence_data = [
+                    {'day': 'Lun', 'presence': 0, 'is_high': False, 'is_medium': False, 'is_low': True},
+                    {'day': 'Mar', 'presence': 0, 'is_high': False, 'is_medium': False, 'is_low': True},
+                    {'day': 'Mer', 'presence': 0, 'is_high': False, 'is_medium': False, 'is_low': True},
+                    {'day': 'Jeu', 'presence': 0, 'is_high': False, 'is_medium': False, 'is_low': True},
+                    {'day': 'Ven', 'presence': 0, 'is_high': False, 'is_medium': False, 'is_low': True},
+                ]
+            
+    except Exception as e:
+        print(f"Erreur seances: {e}")
     
     context = {
         'user': user,
@@ -233,6 +301,12 @@ def seances(request):
         'seances_a_venir': seances_a_venir,
         'seances_terminees': seances_terminees,
         'ia_recommendations': ia_recommendations,
+        'total_seances': total_seances,
+        'heures_restantes': heures_restantes,
+        'heures_total': heures_total,
+        'presence_data': presence_data,
+        'focus_score': focus_score,
+        'focus_status': 'Optimal' if focus_score >= 80 else 'Bon' if focus_score >= 60 else 'À améliorer',
     }
     return render(request, 'etudiants/seances.html', context)
 

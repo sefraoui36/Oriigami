@@ -15,4 +15,6 @@ urlpatterns = [
     path('profil/', views.profil_parent, name='profil_parent'),
     path('paiements/', views.liste_paiements, name='liste_paiements'),
     path('creer-profil-parent/', views.creer_profil_parent, name='creer_profil_parent'),
+    path('notifications/', views.notifications, name='notifications'),
+    path('parametres/', views.parametres, name='parametres'),     
 ]

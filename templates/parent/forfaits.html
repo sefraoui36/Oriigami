@@ -1,374 +1,461 @@
 <!-- templates/parent/forfaits.html -->
-{% load static %}
+<!-- stylelint-disable -->
 <!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Mes Forfaits - Origami Privé</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "on-surface-variant": "#4b4456",
-                        "tertiary-container": "#ad5900",
-                        "inverse-on-surface": "#f0f1f2",
-                        "on-primary-container": "#faf1ff",
-                        "primary-fixed": "#ebdcff",
-                        "secondary": "#ae128a",
-                        "secondary-container": "#fe60cf",
-                        "tertiary-fixed": "#ffdcc5",
-                        "surface-container-lowest": "#ffffff",
-                        "on-tertiary": "#ffffff",
-                        "surface-container-high": "#e7e8e9",
-                        "on-secondary-fixed-variant": "#87006b",
-                        "on-error-container": "#93000a",
-                        "inverse-primary": "#d4bbff",
-                        "surface-bright": "#f8f9fa",
-                        "error": "#ba1a1a",
-                        "primary": "#710fe5",
-                        "on-surface": "#191c1d",
-                        "on-secondary-container": "#680052",
-                        "tertiary": "#894500",
-                        "outline": "#7c7387",
-                        "surface-container": "#edeeef",
-                        "surface-dim": "#d9dadb",
-                        "on-primary": "#ffffff",
-                        "outline-variant": "#cdc2d8",
-                        "on-error": "#ffffff",
-                        "on-background": "#191c1d",
-                        "on-tertiary-fixed": "#301400",
-                        "on-primary-fixed": "#270058",
-                        "surface-tint": "#7921ed",
-                        "surface": "#f8f9fa",
-                        "on-secondary": "#ffffff",
-                        "on-secondary-fixed": "#3b002d",
-                        "primary-fixed-dim": "#d4bbff",
-                        "on-primary-fixed-variant": "#5d00c2",
-                        "on-tertiary-container": "#fff2eb",
-                        "inverse-surface": "#2e3132",
-                        "error-container": "#ffdad6",
-                        "secondary-fixed-dim": "#ffaede",
-                        "surface-container-highest": "#e1e3e4",
-                        "surface-container-low": "#f3f4f5",
-                        "on-tertiary-fixed-variant": "#703800",
-                        "tertiary-fixed-dim": "#ffb782",
-                        "background": "#f8f9fa",
-                        "surface-variant": "#e1e3e4",
-                        "secondary-fixed": "#ffd8ec",
-                        "primary-container": "#8b3dff"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "container-padding": "32px",
-                        "section-margin": "48px",
-                        "base": "8px",
-                        "card-gap": "24px",
-                        "gutter": "24px"
-                    },
-                    "fontFamily": {
-                        "title-md": ["Plus Jakarta Sans"],
-                        "headline-lg": ["Plus Jakarta Sans"],
-                        "display-lg": ["Plus Jakarta Sans"],
-                        "body-sm": ["Plus Jakarta Sans"],
-                        "body-lg": ["Plus Jakarta Sans"],
-                        "label-md": ["Inter"],
-                        "headline-lg-mobile": ["Plus Jakarta Sans"]
-                    },
-                    "fontSize": {
-                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
-                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
-                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
-                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
-                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
-                    }
-                },
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mes Forfaits - Origami Privé</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "on-surface-variant": "#4b4456",
+                "error": "#ba1a1a",
+                "tertiary-fixed-dim": "#ffb782",
+                "surface-dim": "#d9dadb",
+                "inverse-surface": "#2e3132",
+                "primary-container": "#8b3dff",
+                "background": "#f8f9fa",
+                "on-primary": "#ffffff",
+                "on-primary-fixed": "#270058",
+                "surface-container": "#edeeef",
+                "tertiary-container": "#ad5900",
+                "on-surface": "#191c1d",
+                "inverse-on-surface": "#f0f1f2",
+                "on-error-container": "#93000a",
+                "outline-variant": "#cdc2d8",
+                "surface-tint": "#7921ed",
+                "on-tertiary-fixed": "#301400",
+                "on-primary-fixed-variant": "#5d00c2",
+                "secondary": "#ae128a",
+                "secondary-fixed-dim": "#ffaede",
+                "on-secondary-fixed-variant": "#87006b",
+                "tertiary": "#894500",
+                "surface-container-high": "#e7e8e9",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#3b002d",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#ebdcff",
+                "on-primary-container": "#faf1ff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#fe60cf",
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#d4bbff",
+                "surface-container-low": "#f3f4f5",
+                "outline": "#7c7387",
+                "surface": "#f8f9fa",
+                "on-secondary-container": "#680052",
+                "tertiary-fixed": "#ffdcc5",
+                "inverse-primary": "#d4bbff",
+                "on-tertiary-fixed-variant": "#703800",
+                "primary": "#710fe5",
+                "on-error": "#ffffff",
+                "surface-variant": "#e1e3e4",
+                "surface-container-highest": "#e1e3e4",
+                "secondary-fixed": "#ffd8ec",
+                "on-tertiary-container": "#fff2eb",
+                "on-background": "#191c1d"
             },
-        }
-    </script>
-    <style>
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(233, 236, 239, 1);
-        }
-        .soft-shadow {
-            box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.08);
-        }
-        .premium-gradient {
-            background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
-        }
-        .progress-bar-animate {
-            transition: width 1s ease-in-out;
-        }
-        .sidebar-item-active {
-            background: rgba(113, 15, 229, 0.1);
-            color: #710fe5;
-            border-left: 4px solid #710fe5;
-            font-weight: 600;
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0px); }
-        }
-        .float-animation {
-            animation: float 3s ease-in-out infinite;
-        }
-    </style>
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            spacing: {
+                "container-padding": "32px",
+                "card-gap": "24px",
+                "gutter": "24px",
+                "base": "8px",
+                "section-margin": "48px"
+            },
+            fontFamily: {
+                "headline-lg": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"],
+                "body-sm": ["Plus Jakarta Sans"],
+                "label-md": ["Inter"],
+                "title-md": ["Plus Jakarta Sans"],
+                "headline-lg-mobile": ["Plus Jakarta Sans"]
+            },
+            fontSize: {
+                "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+        },
+    },
+}
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    }
+    .sidebar-link {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #4b4456;
+        text-decoration: none;
+    }
+    .sidebar-link:hover {
+        background: rgba(113, 15, 229, 0.08);
+        color: #710fe5;
+    }
+    .sidebar-link.active {
+        background: rgba(113, 15, 229, 0.12);
+        color: #710fe5;
+        font-weight: 600;
+    }
+    .sidebar-link.active .material-symbols-outlined {
+        color: #710fe5;
+    }
+    .stat-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+    }
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+    }
+    .animate-pulse-slow {
+        animation: pulse-soft 4s ease-in-out infinite;
+    }
+    @keyframes pulse-soft {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+    }
+    .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 9999px;
+        display: inline-block;
+    }
+    .badge-dot.green { background: #10b981; }
+    .badge-dot.orange { background: #f59e0b; }
+    .badge-dot.red { background: #ef4444; }
+    .badge-dot.blue { background: #3b82f6; }
+
+    .bg-primary-light { background-color: rgba(113, 15, 229, 0.1); }
+    .bg-secondary-light { background-color: rgba(174, 18, 138, 0.1); }
+    .bg-tertiary-light { background-color: rgba(137, 69, 0, 0.1); }
+    .bg-blue-light { background-color: rgba(59, 130, 246, 0.1); }
+    .bg-purple-light { background-color: rgba(139, 92, 246, 0.1); }
+    .bg-orange-light { background-color: rgba(249, 115, 22, 0.1); }
+    .bg-green-light { background-color: rgba(34, 197, 94, 0.1); }
+    .bg-indigo-light { background-color: rgba(99, 102, 241, 0.1); }
+    .bg-pink-light { background-color: rgba(236, 72, 153, 0.1); }
+    .bg-teal-light { background-color: rgba(20, 184, 166, 0.1); }
+    .bg-emerald-light { background-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-lighter { background-color: rgba(113, 15, 229, 0.05); }
+    .bg-secondary-lighter { background-color: rgba(174, 18, 138, 0.05); }
+    .bg-tertiary-lighter { background-color: rgba(137, 69, 0, 0.05); }
+    .bg-blue-lighter { background-color: rgba(59, 130, 246, 0.05); }
+    .bg-purple-lighter { background-color: rgba(139, 92, 246, 0.05); }
+    .bg-orange-lighter { background-color: rgba(249, 115, 22, 0.05); }
+    .bg-green-lighter { background-color: rgba(34, 197, 94, 0.05); }
+    .bg-indigo-lighter { background-color: rgba(99, 102, 241, 0.05); }
+    .bg-pink-lighter { background-color: rgba(236, 72, 153, 0.05); }
+    .bg-teal-lighter { background-color: rgba(20, 184, 166, 0.05); }
+    .bg-emerald-lighter { background-color: rgba(16, 185, 129, 0.05); }
+
+    .border-primary-light { border-color: rgba(113, 15, 229, 0.1); }
+    .border-secondary-light { border-color: rgba(174, 18, 138, 0.1); }
+    .border-tertiary-light { border-color: rgba(137, 69, 0, 0.1); }
+    .border-blue-light { border-color: rgba(59, 130, 246, 0.1); }
+    .border-purple-light { border-color: rgba(139, 92, 246, 0.1); }
+    .border-orange-light { border-color: rgba(249, 115, 22, 0.1); }
+    .border-green-light { border-color: rgba(34, 197, 94, 0.1); }
+    .border-indigo-light { border-color: rgba(99, 102, 241, 0.1); }
+    .border-pink-light { border-color: rgba(236, 72, 153, 0.1); }
+    .border-teal-light { border-color: rgba(20, 184, 166, 0.1); }
+    .border-emerald-light { border-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-solid { background-color: #710fe5; }
+    .bg-secondary-solid { background-color: #ae128a; }
+    .bg-tertiary-solid { background-color: #894500; }
+    .bg-blue-solid { background-color: #3b82f6; }
+    .bg-purple-solid { background-color: #8b5cf6; }
+    .bg-orange-solid { background-color: #f97316; }
+    .bg-green-solid { background-color: #22c55e; }
+    .bg-indigo-solid { background-color: #6366f1; }
+    .bg-pink-solid { background-color: #ec4899; }
+    .bg-teal-solid { background-color: #14b8a6; }
+    .bg-emerald-solid { background-color: #10b981; }
+
+    .text-primary { color: #710fe5; }
+    .text-secondary { color: #ae128a; }
+    .text-tertiary { color: #894500; }
+    .text-blue { color: #3b82f6; }
+    .text-purple { color: #8b5cf6; }
+    .text-orange { color: #f97316; }
+    .text-green { color: #22c55e; }
+    .text-indigo { color: #6366f1; }
+    .text-pink { color: #ec4899; }
+    .text-teal { color: #14b8a6; }
+    .text-emerald { color: #10b981; }
+
+    .forfait-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .forfait-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+    }
+</style>
 </head>
-<body class="bg-background font-body-lg text-on-background min-h-screen">
+<body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
 
-<!-- Sidebar Navigation -->
-<aside class="bg-surface-container-low dark:bg-surface-dim w-[280px] h-screen fixed left-0 top-0 border-r border-outline-variant dark:border-outline flex flex-col py-base z-50">
-    <div class="px-gutter mb-section-margin">
-        <h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim">Origami Privé</h1>
-        <p class="font-body-sm text-body-sm text-on-surface-variant opacity-70">Education d'Excellence</p>
-    </div>
-    <nav class="flex-1 overflow-y-auto">
-        <ul class="space-y-1">
-            <li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="{% url 'clients:dashboard_parent' %}"><span class="material-symbols-outlined mr-3">dashboard</span>Dashboard</a></li>
-            <li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">person</span>Mon profil</a></li>
-            <li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="{% url 'clients:liste_enfants' %}"><span class="material-symbols-outlined mr-3">child_care</span>Mes enfants</a></li>
-            <li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">school</span>Mes étudiants</a></li>
-            <li><a class="flex items-center px-gutter py-3 sidebar-item-active transition-colors duration-200 cursor-pointer active:scale-95" href="{% url 'clients:liste_forfaits' %}"><span class="material-symbols-outlined mr-3">inventory_2</span>Mes forfaits</a></li>
-            <li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="{% url 'clients:liste_enseignants' %}"><span class="material-symbols-outlined mr-3">supervisor_account</span>Mes enseignants</a></li>
-            <li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">event_available</span>Mes séances</a></li>
-            <li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">payments</span>Paiements</a></li>
-            <li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="{% url 'portefeuilles:mon_portefeuille' %}"><span class="material-symbols-outlined mr-3">account_balance_wallet</span>Mon portefeuille</a></li>
-            <li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">notifications</span>Notifications</a></li>
-            <li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">chat</span>Messages</a></li>
-            <li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">calendar_month</span>Calendrier</a></li>
-            <li><a class="flex items-center px-gutter py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#"><span class="material-symbols-outlined mr-3">trending_up</span>Progression</a></li>
-        </ul>
-    </nav>
-    <div class="px-base mt-auto">
-        <button class="w-full premium-gradient text-on-primary font-semibold py-4 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 transform transition hover:scale-[1.02] active:scale-95">
-            <span class="material-symbols-outlined">add_circle</span>
-            Réserver une séance
-        </button>
-    </div>
-</aside>
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+    <div class="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] animate-pulse-slow"></div>
+    <div class="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+</div>
 
-<!-- Top Navigation Bar -->
-<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md border-b border-outline-variant dark:border-outline shadow-sm flex justify-between items-center px-gutter z-40">
-    <div class="flex items-center bg-surface-container-low px-4 py-2 rounded-full w-96 border border-outline-variant/30 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
-        <span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
-        <input class="bg-transparent border-none focus:ring-0 text-body-sm w-full" placeholder="Rechercher un forfait..." type="text"/>
-    </div>
-    <div class="flex items-center gap-4">
-        <button class="p-2 rounded-full hover:bg-surface-container-low transition-all text-on-surface-variant">
-            <span class="material-symbols-outlined">help_outline</span>
-        </button>
-        <button class="p-2 rounded-full hover:bg-surface-container-low transition-all text-on-surface-variant relative">
-            <span class="material-symbols-outlined">notifications</span>
-            <span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full"></span>
-        </button>
-        <div class="flex items-center gap-3 pl-4 border-l border-outline-variant/30">
-            <div class="text-right">
-                <p class="font-title-md text-sm text-on-surface">{{ user.get_full_name|default:user.username }}</p>
-                <p class="font-label-md text-xs text-on-surface-variant">Parent Premium</p>
+<div class="flex h-screen overflow-hidden">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
+        <div class="flex items-center gap-3 px-3 py-4 mb-6">
+            <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">change_history</span>
             </div>
-            <div class="w-10 h-10 rounded-full border-2 border-primary/20 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYD9A8Ke2-lreUwoQGUKi8a9eNCd_qEQoQb4FK1KjJ4gHv0Nu5f7wihm9d_wFtTs5wDuvcTlIV6MvB4supzBYCL0hGw1DOj0PoXAjBeMstDI2tYhFaYfYCtzd9ynBBDMsNRy9IP9NW-HGeem8_k096tg57q2nrQ9UvZ4RmIzczZUXNGTnercqBkP6rV2H60qYV4emC0IFibcS8J22GZrKr14HA7ezhKSk477UPoOdrmIcmJ0reKTG4FN3mlSv7cy7-hSL10EFanxfM"/>
+            <span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Origami Privé</span>
+        </div>
+
+        <nav class="flex-1 space-y-1">
+            <!-- Dashboard -->
+            <a href="{% url 'clients:dashboard_parent' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <!-- Enfants -->
+            <a href="{% url 'clients:liste_enfants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">family_restroom</span>
+                <span>Mes Enfants</span>
+            </a>
+            <!-- Enseignants -->
+            <a href="{% url 'clients:liste_enseignants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">school</span>
+                <span>Enseignants</span>
+            </a>
+            <!-- Séances -->
+            <a href="{% url 'clients:liste_seances' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+                <span>Séances</span>
+            </a>
+            <!-- Forfaits -->
+            <a href="{% url 'clients:liste_forfaits' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]">sell</span>
+                <span>Forfaits</span>
+            </a>
+            <!-- Paiements -->
+            <a href="{% url 'clients:liste_paiements' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">payments</span>
+                <span>Paiements</span>
+            </a>
+            <!-- Profil -->
+            <a href="{% url 'clients:profil_parent' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">person</span>
+                <span>Mon Profil</span>
+            </a>
+            <!-- Portefeuille -->
+            <a href="{% url 'portefeuilles:mon_portefeuille' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+                <span>Portefeuille</span>
+            </a>
+            <!-- Notifications -->
+            <a href="{% url 'clients:notifications' %}" class="sidebar-link active">
+        <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">notifications</span>
+        <span>Notifications</span>
+        <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ non_lues|default:3 }}</span>
+    </a>
+            <!-- Paramètres -->
+           <a href="{% url 'clients:parametres' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">settings</span>
+                <span>Paramètres</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto pt-4 border-t border-outline-variant/30">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+                <span class="material-symbols-outlined text-[22px]">logout</span>
+                <span>Déconnexion</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 overflow-y-auto p-8">
+
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface">Mes Forfaits</h1>
+                <p class="text-on-surface-variant body-sm">Gérez les forfaits de vos enfants</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
+                    <span class="material-symbols-outlined text-[24px]">notifications</span>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
+                    {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper|default:"P" }}
+                </div>
             </div>
         </div>
-    </div>
-</header>
 
-<!-- Main Content Area -->
-<main class="ml-[280px] pt-16 min-h-screen p-gutter bg-background">
-    <div class="max-w-[1160px] mx-auto py-8">
-        <!-- Header Section -->
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-            <div>
-                <h2 class="font-headline-lg text-headline-lg text-primary mb-1">Mes Forfaits</h2>
-                <p class="text-on-surface-variant font-body-sm">Gérez les forfaits de vos <span class="font-bold text-primary">{{ nombre_enfants }} enfant{{ nombre_enfants|pluralize:"s" }}</span> inscrit{{ nombre_enfants|pluralize:"s" }}.</p>
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-primary">inventory_2</span>
+                    <span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">Actifs</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ forfaits_enfants|length }}</p>
+                <p class="text-sm text-on-surface-variant">Forfaits actifs</p>
             </div>
-            <div class="flex flex-wrap items-center gap-4">
-                <button class="premium-gradient text-on-primary flex items-center gap-2 px-6 py-3 rounded-xl font-semibold shadow-lg hover:opacity-90 transition-all" onclick="document.getElementById('modal-add-forfait').classList.remove('hidden')">
-                    <span class="material-symbols-outlined">add_circle</span>
-                    Acheter un forfait
-                </button>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-secondary">schedule</span>
+                    <span class="text-xs font-bold text-secondary bg-secondary/10 px-3 py-1 rounded-full">Restant</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ heures_restantes|default:0 }}h</p>
+                <p class="text-sm text-on-surface-variant">Heures restantes</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-tertiary">check_circle</span>
+                    <span class="text-xs font-bold text-tertiary bg-tertiary/10 px-3 py-1 rounded-full">Utilisées</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ heures_utilisees|default:0 }}h</p>
+                <p class="text-sm text-on-surface-variant">Heures utilisées</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-purple-500">trending_up</span>
+                    <span class="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Progression</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ pourcentage_global|default:0 }}%</p>
+                <p class="text-sm text-on-surface-variant">Taux d'utilisation</p>
             </div>
         </div>
 
         <!-- Forfaits des enfants -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-card-gap mb-section-margin">
-            {% for forfait in forfaits_enfants %}
-            <div class="glass-card soft-shadow rounded-3xl p-6 flex flex-col hover:border-primary/40 transition-all group">
-                <div class="flex justify-between items-start mb-4">
+        <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-6 mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">family_restroom</span>
+                    Forfaits par enfant
+                </h2>
+                <button onclick="window.location.href='#'" class="text-sm text-primary font-semibold hover:underline">Acheter un forfait <span class="material-symbols-outlined text-[16px]">arrow_forward</span></button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for forfait in forfaits_enfants %}
+                <div class="forfait-card p-4 bg-background rounded-xl border border-outline-variant/20 hover:border-primary/30 transition-all">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/20">
-                            {% if forfait.enfant.photo %}
-                                <img class="w-full h-full object-cover" src="{{ forfait.enfant.photo.url }}" alt="{{ forfait.enfant.prenom }}"/>
-                            {% else %}
-                                <div class="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
-                                    {{ forfait.enfant.prenom|first|upper }}
-                                </div>
-                            {% endif %}
+                        <div class="w-12 h-12 rounded-full bg-primary-light flex items-center justify-center text-primary font-bold text-lg">
+                            {{ forfait.enfant.prenom|first|upper }}
                         </div>
                         <div>
-                            <h3 class="font-title-md text-on-surface group-hover:text-primary transition-colors">{{ forfait.enfant.prenom }}</h3>
-                            <p class="text-on-surface-variant text-sm">{{ forfait.enfant.niveau_scolaire|default:"Niveau" }}</p>
+                            <h3 class="font-semibold text-on-surface">{{ forfait.enfant.prenom }}</h3>
+                            <p class="text-xs text-on-surface-variant">{{ forfait.enfant.niveau_scolaire|default:"Niveau" }}</p>
                         </div>
                     </div>
-                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-{{ forfait.couleur_statut }}-100 text-{{ forfait.couleur_statut }}-700">{{ forfait.statut }}</span>
+                    <div class="grid grid-cols-3 gap-2 mt-3">
+                        <div class="text-center p-2 bg-surface-container-low rounded-lg">
+                            <p class="text-xs text-on-surface-variant">Total</p>
+                            <p class="font-bold text-primary">{{ forfait.heures_total }}h</p>
+                        </div>
+                        <div class="text-center p-2 bg-surface-container-low rounded-lg">
+                            <p class="text-xs text-on-surface-variant">Restant</p>
+                            <p class="font-bold text-secondary">{{ forfait.heures_restantes }}h</p>
+                        </div>
+                        <div class="text-center p-2 bg-surface-container-low rounded-lg">
+                            <p class="text-xs text-on-surface-variant">Utilisées</p>
+                            <p class="font-bold text-tertiary">{{ forfait.heures_utilisees }}h</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                                <div class="h-full bg-primary-gradient rounded-full" style="width: {{ forfait.pourcentage }}%"></div>
+                            </div>
+                            <span class="text-xs font-medium text-primary">{{ forfait.pourcentage }}%</span>
+                        </div>
+                        <div class="mt-2 flex items-center justify-between">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-{{ forfait.couleur_statut }}-100 text-{{ forfait.couleur_statut }}-700">
+                                {{ forfait.statut }}
+                            </span>
+                            <button class="text-xs text-primary font-semibold hover:underline">Voir détails</button>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="flex justify-between items-center mb-4">
-                    <div class="text-center">
-                        <p class="text-3xl font-extrabold text-primary">{{ forfait.heures_total }}</p>
-                        <p class="text-[10px] text-on-surface-variant uppercase">Heures totales</p>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-3xl font-extrabold text-secondary">{{ forfait.heures_restantes }}</p>
-                        <p class="text-[10px] text-on-surface-variant uppercase">Heures restantes</p>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-3xl font-extrabold text-on-surface">{{ forfait.heures_utilisees }}</p>
-                        <p class="text-[10px] text-on-surface-variant uppercase">Utilisées</p>
-                    </div>
+                {% empty %}
+                <div class="col-span-full text-center py-8">
+                    <p class="text-on-surface-variant">Aucun forfait actif</p>
                 </div>
-
-                <div>
-                    <div class="flex justify-between text-xs mb-1">
-                        <span class="text-on-surface-variant">Progression</span>
-                        <span class="font-bold text-primary">{{ forfait.pourcentage }}%</span>
-                    </div>
-                    <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
-                        <div class="bg-primary h-full progress-bar-animate" style="width: {{ forfait.pourcentage }}%"></div>
-                    </div>
-                </div>
-
-                <div class="mt-4 grid grid-cols-2 gap-2">
-                    <button class="w-full py-2 border border-primary/20 text-primary rounded-xl font-semibold hover:bg-primary hover:text-white transition-all text-sm">
-                        Détails
-                    </button>
-                    {% if forfait.heures_restantes < 5 %}
-                    <button class="w-full py-2 premium-gradient text-white rounded-xl font-semibold hover:opacity-90 transition-all text-sm">
-                        Recharger
-                    </button>
-                    {% endif %}
-                </div>
+                {% endfor %}
             </div>
-            {% empty %}
-            <div class="glass-card soft-shadow rounded-3xl p-12 text-center col-span-3">
-                <span class="material-symbols-outlined text-6xl text-on-surface-variant/50 block mb-4">inventory_2</span>
-                <h3 class="font-title-md text-on-surface mb-2">Aucun forfait actif</h3>
-                <p class="text-on-surface-variant text-sm mb-6">Commencez par acheter un forfait pour vos enfants.</p>
-                <button class="premium-gradient text-on-primary px-8 py-3 rounded-xl font-semibold shadow-lg hover:opacity-90 transition-all" onclick="document.getElementById('modal-add-forfait').classList.remove('hidden')">
-                    <span class="material-symbols-outlined">add_circle</span>
-                    Acheter un forfait
-                </button>
-            </div>
-            {% endfor %}
         </div>
 
-        <!-- Offres de forfaits -->
-        <div class="mb-section-margin">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-headline-lg text-title-md text-on-surface">Offres disponibles</h3>
+        <!-- Offres disponibles -->
+        <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">local_offer</span>
+                    Offres disponibles
+                </h2>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-card-gap">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {% for offre in offres_forfaits %}
-                <div class="glass-card soft-shadow rounded-3xl p-6 flex flex-col items-center text-center group hover:-translate-y-2 transition-transform 
-                    {% if offre.popularite == 'populaire' %}border-2 border-primary relative{% endif %}">
-                    {% if offre.popularite == 'populaire' %}
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-widest">Populaire</div>
-                    {% elif offre.popularite == 'premium' %}
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-widest">Premium</div>
-                    {% endif %}
-                    <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-6 group-hover:bg-primary/10 transition-colors">
-                        <span class="material-symbols-outlined text-{{ offre.couleur }} text-3xl">{{ offre.icone }}</span>
+                <div class="p-4 bg-background rounded-xl border border-outline-variant/20 hover:border-primary/30 transition-all text-center">
+                    <div class="w-12 h-12 rounded-full bg-primary-light flex items-center justify-center text-primary mx-auto mb-3">
+                        <span class="material-symbols-outlined text-[28px]">{{ offre.icone }}</span>
                     </div>
-                    <h5 class="font-title-md">{{ offre.nom }}</h5>
-                    <p class="text-xs text-on-surface-variant mt-2">{{ offre.description }}</p>
-                    <div class="my-6">
-                        <span class="text-3xl font-extrabold text-on-surface">{{ offre.prix }}</span>
-                        <span class="text-sm font-bold text-on-surface-variant"> MAD</span>
-                        <p class="text-xs text-on-surface-variant mt-1">{{ offre.prix_par_heure }} MAD/heure</p>
+                    <h3 class="font-semibold text-on-surface">{{ offre.nom }}</h3>
+                    <p class="text-xs text-on-surface-variant">{{ offre.description }}</p>
+                    <div class="my-3">
+                        <span class="text-2xl font-bold text-primary">{{ offre.prix }}</span>
+                        <span class="text-xs text-on-surface-variant"> MAD</span>
                     </div>
-                    <div class="flex flex-col gap-2 w-full mb-8">
+                    <div class="flex flex-col gap-1 text-xs text-on-surface-variant mb-3">
                         {% for feature in offre.features %}
-                        <div class="flex items-center gap-2 text-sm text-on-surface-variant">
-                            <span class="material-symbols-outlined text-green-600 text-sm">check_circle</span>
-                            {{ feature }}
-                        </div>
+                        <span>✓ {{ feature }}</span>
                         {% endfor %}
                     </div>
-                    <button class="w-full py-3 rounded-xl {% if offre.popularite == 'populaire' %}premium-gradient text-white shadow-lg shadow-primary/25{% else %}border-2 border-primary text-primary hover:bg-primary hover:text-white{% endif %} font-bold transition-all mt-auto">
-                        {% if offre.popularite == 'populaire' %}Acheter{% else %}Choisir{% endif %}
+                    <button onclick="window.location.href='#'" class="w-full py-2 text-sm font-semibold text-white bg-primary-gradient rounded-lg hover:opacity-90 transition-all">
+                        Acheter
                     </button>
                 </div>
                 {% endfor %}
             </div>
         </div>
-    </div>
-</main>
 
-<!-- Modal: Ajouter un forfait -->
-<div class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4" id="modal-add-forfait">
-    <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="this.parentElement.classList.add('hidden')"></div>
-    <div class="bg-surface rounded-[32px] w-full max-w-2xl overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300">
-        <div class="p-8 border-b border-outline-variant flex justify-between items-center">
-            <h3 class="font-headline-lg text-title-md text-primary">Acheter un forfait</h3>
-            <button class="p-2 hover:bg-surface-container rounded-full" onclick="document.getElementById('modal-add-forfait').classList.add('hidden')"><span class="material-symbols-outlined">close</span></button>
-        </div>
-        <form class="p-8" method="POST" action="{% url 'clients:acheter_forfait' %}">
-            {% csrf_token %}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="md:col-span-2">
-                    <label class="text-xs font-bold text-on-surface-variant ml-1 block mb-2">Choisir l'enfant</label>
-                    <select class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary" name="enfant">
-                        <option value="">Sélectionner un enfant</option>
-                        {% for enfant in enfants %}
-                        <option value="{{ enfant.id_client }}">{{ enfant.prenom }} {{ enfant.nom }}</option>
-                        {% empty %}
-                        <option value="" disabled>Aucun enfant inscrit</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="md:col-span-2">
-                    <label class="text-xs font-bold text-on-surface-variant ml-1 block mb-2">Choisir un forfait</label>
-                    <select class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary" name="forfait">
-                        <option value="">Sélectionner un forfait</option>
-                        {% for offre in offres_forfaits %}
-                        <option value="{{ offre.id }}">{{ offre.nom }} - {{ offre.heures }}h - {{ offre.prix }} MAD</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            <div class="mt-8 flex gap-4">
-                <button class="flex-1 py-4 text-on-surface-variant font-bold hover:bg-surface-container rounded-2xl transition-all" onclick="document.getElementById('modal-add-forfait').classList.add('hidden')" type="button">Annuler</button>
-                <button class="flex-1 py-4 premium-gradient text-white font-bold rounded-2xl shadow-lg hover:opacity-90 transition-all" type="submit">Acheter maintenant</button>
-            </div>
-        </form>
-    </div>
+    </main>
+
 </div>
 
-<script>
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            document.getElementById('modal-add-forfait').classList.add('hidden');
-        }
-    });
-</script>
 </body>
 </html>

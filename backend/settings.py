@@ -50,8 +50,7 @@ INSTALLED_APPS = [
     'avis',
 ]
 
-AUTH_USER_MODEL = 'authentication.Utilisateur'
-
+AUTH_USER_MODEL = 'authentication.Utilisateur' 
 LOGIN_URL = 'authentication:connexion'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'authentication:connexion'

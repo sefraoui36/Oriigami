@@ -1,0 +1,706 @@
+<!-- templates/parent/parametres.html -->
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Paramètres - Origami Privé</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "on-surface-variant": "#4b4456",
+                "error": "#ba1a1a",
+                "tertiary-fixed-dim": "#ffb782",
+                "surface-dim": "#d9dadb",
+                "inverse-surface": "#2e3132",
+                "primary-container": "#8b3dff",
+                "background": "#f8f9fa",
+                "on-primary": "#ffffff",
+                "on-primary-fixed": "#270058",
+                "surface-container": "#edeeef",
+                "tertiary-container": "#ad5900",
+                "on-surface": "#191c1d",
+                "inverse-on-surface": "#f0f1f2",
+                "on-error-container": "#93000a",
+                "outline-variant": "#cdc2d8",
+                "surface-tint": "#7921ed",
+                "on-tertiary-fixed": "#301400",
+                "on-primary-fixed-variant": "#5d00c2",
+                "secondary": "#ae128a",
+                "secondary-fixed-dim": "#ffaede",
+                "on-secondary-fixed-variant": "#87006b",
+                "tertiary": "#894500",
+                "surface-container-high": "#e7e8e9",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#3b002d",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#ebdcff",
+                "on-primary-container": "#faf1ff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#fe60cf",
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#d4bbff",
+                "surface-container-low": "#f3f4f5",
+                "outline": "#7c7387",
+                "surface": "#f8f9fa",
+                "on-secondary-container": "#680052",
+                "tertiary-fixed": "#ffdcc5",
+                "inverse-primary": "#d4bbff",
+                "on-tertiary-fixed-variant": "#703800",
+                "primary": "#710fe5",
+                "on-error": "#ffffff",
+                "surface-variant": "#e1e3e4",
+                "surface-container-highest": "#e1e3e4",
+                "secondary-fixed": "#ffd8ec",
+                "on-tertiary-container": "#fff2eb",
+                "on-background": "#191c1d"
+            },
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            spacing: {
+                "container-padding": "32px",
+                "card-gap": "24px",
+                "gutter": "24px",
+                "base": "8px",
+                "section-margin": "48px"
+            },
+            fontFamily: {
+                "headline-lg": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"],
+                "body-sm": ["Plus Jakarta Sans"],
+                "label-md": ["Inter"],
+                "title-md": ["Plus Jakarta Sans"],
+                "headline-lg-mobile": ["Plus Jakarta Sans"]
+            },
+            fontSize: {
+                "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+        },
+    },
+}
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    }
+    .sidebar-link {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #4b4456;
+        text-decoration: none;
+    }
+    .sidebar-link:hover {
+        background: rgba(113, 15, 229, 0.08);
+        color: #710fe5;
+    }
+    .sidebar-link.active {
+        background: rgba(113, 15, 229, 0.12);
+        color: #710fe5;
+        font-weight: 600;
+    }
+    .sidebar-link.active .material-symbols-outlined {
+        color: #710fe5;
+    }
+    .stat-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+    }
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+    }
+    .animate-pulse-slow {
+        animation: pulse-soft 4s ease-in-out infinite;
+    }
+    @keyframes pulse-soft {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+    }
+    .tab-content {
+        display: none;
+        animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tab-content.active {
+        display: block;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 28px;
+        flex-shrink: 0;
+    }
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #e1e3e4;
+        transition: .3s;
+        border-radius: 34px;
+    }
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .3s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .toggle-switch input:checked + .toggle-slider {
+        background-color: #710fe5;
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(20px);
+    }
+</style>
+</head>
+<body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
+
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+    <div class="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] animate-pulse-slow"></div>
+    <div class="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+</div>
+
+<div class="flex h-screen overflow-hidden">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
+        <div class="flex items-center gap-3 px-3 py-4 mb-6">
+            <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">change_history</span>
+            </div>
+            <span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Origami Privé</span>
+        </div>
+
+        <nav class="flex-1 space-y-1">
+            <!-- Dashboard -->
+            <a href="{% url 'clients:dashboard_parent' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <!-- Enfants -->
+            <a href="{% url 'clients:liste_enfants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">family_restroom</span>
+                <span>Mes Enfants</span>
+            </a>
+            <!-- Enseignants -->
+            <a href="{% url 'clients:liste_enseignants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">school</span>
+                <span>Enseignants</span>
+            </a>
+            <!-- Séances -->
+            <a href="{% url 'clients:liste_seances' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+                <span>Séances</span>
+            </a>
+            <!-- Forfaits -->
+            <a href="{% url 'clients:liste_forfaits' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">sell</span>
+                <span>Forfaits</span>
+            </a>
+            <!-- Paiements -->
+            <a href="{% url 'clients:liste_paiements' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">payments</span>
+                <span>Paiements</span>
+            </a>
+            <!-- Profil -->
+            <a href="{% url 'clients:profil_parent' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">person</span>
+                <span>Mon Profil</span>
+            </a>
+            <!-- Portefeuille -->
+            <a href="{% url 'portefeuilles:mon_portefeuille' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+                <span>Portefeuille</span>
+            </a>
+            <!-- Notifications -->
+            <a href="{% url 'clients:notifications' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">notifications</span>
+                <span>Notifications</span>
+                <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ non_lues|default:0 }}</span>
+            </a>
+            <!-- Paramètres (ACTIVE) -->
+            <a href="{% url 'clients:parametres' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">settings</span>
+                <span>Paramètres</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto pt-4 border-t border-outline-variant/30">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+                <span class="material-symbols-outlined text-[22px]">logout</span>
+                <span>Déconnexion</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 overflow-y-auto p-8">
+
+        <!-- Page Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface">Paramètres</h1>
+                <p class="text-on-surface-variant body-sm">Gérez les préférences de votre compte et de l'application.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="px-6 py-3 rounded-xl premium-gradient text-white font-bold hover:scale-105 transition-transform flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">save</span>
+                    Sauvegarder
+                </button>
+                <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
+                    {{ client.prenom|slice:":1"|upper }}{{ client.nom|slice:":1"|upper|default:"P" }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="flex gap-2 overflow-x-auto pb-2 border-b border-outline-variant/30">
+            <button class="tab-btn px-6 py-3 rounded-xl bg-primary text-white font-bold transition-all shadow-md" data-tab="general" onclick="switchTab('general')">
+                <span class="material-symbols-outlined text-[18px] align-middle mr-2">settings_applications</span>
+                Général
+            </button>
+            <button class="tab-btn px-6 py-3 rounded-xl bg-white text-on-surface-variant hover:bg-primary/5 font-medium transition-all" data-tab="notifications" onclick="switchTab('notifications')">
+                <span class="material-symbols-outlined text-[18px] align-middle mr-2">notifications</span>
+                Notifications
+            </button>
+            <button class="tab-btn px-6 py-3 rounded-xl bg-white text-on-surface-variant hover:bg-primary/5 font-medium transition-all" data-tab="securite" onclick="switchTab('securite')">
+                <span class="material-symbols-outlined text-[18px] align-middle mr-2">security</span>
+                Sécurité
+            </button>
+            <button class="tab-btn px-6 py-3 rounded-xl bg-white text-on-surface-variant hover:bg-primary/5 font-medium transition-all" data-tab="paiement" onclick="switchTab('paiement')">
+                <span class="material-symbols-outlined text-[18px] align-middle mr-2">payments</span>
+                Paiement
+            </button>
+            <button class="tab-btn px-6 py-3 rounded-xl bg-white text-on-surface-variant hover:bg-primary/5 font-medium transition-all" data-tab="confidentialite" onclick="switchTab('confidentialite')">
+                <span class="material-symbols-outlined text-[18px] align-middle mr-2">privacy_tip</span>
+                Confidentialité
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="space-y-6 mt-8">
+
+            <!-- TAB: Général -->
+            <div class="tab-content active space-y-6" id="general">
+                <div class="glass-card p-6 rounded-xl border border-outline-variant/30">
+                    <h3 class="font-title-md text-title-md text-on-surface mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">language</span>
+                        Langue et Région
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface-variant mb-2">Langue de l'interface</label>
+                            <select class="w-full bg-surface-container border border-outline-variant/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                                <option {% if langue == 'Français' %}selected{% endif %}>Français</option>
+                                <option {% if langue == 'English' %}selected{% endif %}>English</option>
+                                <option {% if langue == 'العربية' %}selected{% endif %}>العربية</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface-variant mb-2">Fuseau horaire</label>
+                            <select class="w-full bg-surface-container border border-outline-variant/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                                <option {% if fuseau_horaire == 'Europe/Paris (UTC+1)' %}selected{% endif %}>Europe/Paris (UTC+1)</option>
+                                <option {% if fuseau_horaire == 'Europe/London (UTC+0)' %}selected{% endif %}>Europe/London (UTC+0)</option>
+                                <option {% if fuseau_horaire == 'America/New_York (UTC-5)' %}selected{% endif %}>America/New_York (UTC-5)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface-variant mb-2">Format de date</label>
+                            <select class="w-full bg-surface-container border border-outline-variant/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                                <option {% if format_date == 'DD/MM/YYYY' %}selected{% endif %}>DD/MM/YYYY</option>
+                                <option {% if format_date == 'MM/DD/YYYY' %}selected{% endif %}>MM/DD/YYYY</option>
+                                <option {% if format_date == 'YYYY-MM-DD' %}selected{% endif %}>YYYY-MM-DD</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface-variant mb-2">Devise</label>
+                            <select class="w-full bg-surface-container border border-outline-variant/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                                <option {% if devise == 'MAD' %}selected{% endif %}>MAD</option>
+                                <option {% if devise == 'EUR' %}selected{% endif %}>EUR</option>
+                                <option {% if devise == 'USD' %}selected{% endif %}>USD</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 rounded-xl border border-outline-variant/30">
+                    <h3 class="font-title-md text-title-md text-on-surface mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">palette</span>
+                        Apparence
+                    </h3>
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-on-surface-variant mb-2">Thème</label>
+                            <div class="flex gap-3">
+                                <button class="flex-1 p-4 rounded-xl border-2 {% if theme == 'clair' %}border-primary bg-white{% else %}border-outline-variant bg-surface-container{% endif %} flex items-center justify-center gap-2 hover:shadow-lg transition-all">
+                                    <span class="material-symbols-outlined {% if theme == 'clair' %}text-primary{% endif %}">light_mode</span>
+                                    <span class="font-semibold">Clair</span>
+                                </button>
+                                <button class="flex-1 p-4 rounded-xl border-2 {% if theme == 'sombre' %}border-primary bg-white{% else %}border-outline-variant bg-surface-container{% endif %} flex items-center justify-center gap-2 hover:shadow-lg transition-all">
+                                    <span class="material-symbols-outlined">dark_mode</span>
+                                    <span class="font-semibold">Sombre</span>
+                                </button>
+                                <button class="flex-1 p-4 rounded-xl border-2 {% if theme == 'auto' %}border-primary bg-white{% else %}border-outline-variant bg-surface-container{% endif %} flex items-center justify-center gap-2 hover:shadow-lg transition-all">
+                                    <span class="material-symbols-outlined">auto_mode</span>
+                                    <span class="font-semibold">Auto</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Notifications -->
+            <div class="tab-content space-y-6" id="notifications">
+                <div class="glass-card p-6 rounded-xl border border-outline-variant/30">
+                    <h3 class="font-title-md text-title-md text-on-surface mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">notifications_active</span>
+                        Préférences de notification
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div>
+                                <p class="font-semibold text-on-surface">Email</p>
+                                <p class="text-sm text-on-surface-variant">Recevoir les récapitulatifs et rappels par email</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" {% if email_notif %}checked{% endif %}/>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div>
+                                <p class="font-semibold text-on-surface">SMS / Push Mobile</p>
+                                <p class="text-sm text-on-surface-variant">Alertes de début de séance et rappels</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" {% if sms_notif %}checked{% endif %}/>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div>
+                                <p class="font-semibold text-on-surface">Rappels de paiement</p>
+                                <p class="text-sm text-on-surface-variant">Notifications avant les échéances de paiement</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" {% if rappel_paiement %}checked{% endif %}/>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div>
+                                <p class="font-semibold text-on-surface">Actualités et promotions</p>
+                                <p class="text-sm text-on-surface-variant">Recevoir les offres spéciales et nouveautés</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" {% if promotions %}checked{% endif %}/>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-xl border border-outline-variant/30">
+                    <h3 class="font-title-md text-title-md text-on-surface mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">schedule</span>
+                        Fréquence des rappels
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface-variant mb-2">Rappel avant une séance</label>
+                            <select class="w-full bg-surface-container border border-outline-variant/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                                <option>15 minutes avant</option>
+                                <option>30 minutes avant</option>
+                                <option>1 heure avant</option>
+                                <option selected>2 heures avant</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface-variant mb-2">Rappel de paiement</label>
+                            <select class="w-full bg-surface-container border border-outline-variant/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                                <option selected>3 jours avant</option>
+                                <option>1 semaine avant</option>
+                                <option>Le jour même</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Sécurité -->
+            <div class="tab-content space-y-6" id="securite">
+                <div class="glass-card p-6 rounded-xl border border-outline-variant/30">
+                    <h3 class="font-title-md text-title-md text-on-surface mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">lock</span>
+                        Sécurité du compte
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div>
+                                <p class="font-semibold text-on-surface">Mot de passe</p>
+                                <p class="text-sm text-on-surface-variant">Modifié il y a 3 mois</p>
+                            </div>
+                            <button class="px-6 py-2 border border-primary text-primary rounded-xl font-semibold hover:bg-primary hover:text-white transition-all">
+                                Modifier
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div>
+                                <p class="font-semibold text-on-surface">Authentification à deux facteurs (2FA)</p>
+                                <p class="text-sm text-on-surface-variant">Renforcez la sécurité de votre compte</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox"/>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div>
+                                <p class="font-semibold text-on-surface">Appareils connectés</p>
+                                <p class="text-sm text-on-surface-variant">{{ appareils_connectes }} appareils actifs</p>
+                            </div>
+                            <button class="px-6 py-2 border border-outline-variant text-on-surface-variant rounded-xl font-semibold hover:bg-surface-container transition-all">
+                                Gérer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-xl border-l-4 border-error/20 border border-outline-variant/30">
+                    <h3 class="font-title-md text-title-md text-error mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined">warning</span>
+                        Zone Dangereuse
+                    </h3>
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div>
+                            <p class="font-semibold text-on-surface">Supprimer mon compte</p>
+                            <p class="text-sm text-on-surface-variant">Cette action est irréversible. Toutes vos données seront supprimées.</p>
+                        </div>
+                        <button class="px-6 py-3 bg-error/10 text-error rounded-xl font-bold hover:bg-error hover:text-white transition-all">
+                            Supprimer le compte
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Paiement -->
+            <div class="tab-content space-y-6" id="paiement">
+                <div class="glass-card p-6 rounded-xl border border-outline-variant/30">
+                    <h3 class="font-title-md text-title-md text-on-surface mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">credit_card</span>
+                        Méthodes de paiement
+                    </h3>
+                    <div class="space-y-4">
+                        {% for carte in cartes %}
+                        <div class="flex items-center justify-between p-4 rounded-xl {% if carte.defaut %}border-2 border-primary bg-primary/5{% else %}border border-outline-variant hover:border-primary/50{% endif %} transition-all cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-8 {% if carte.type == 'VISA' %}bg-black{% else %}bg-red-600{% endif %} rounded flex items-center justify-center text-white text-[10px] font-bold {% if carte.type == 'Mastercard' %}italic{% endif %}">
+                                    {{ carte.type }}
+                                </div>
+                                <div>
+                                    <p class="font-bold text-on-surface">{{ carte.numero }}</p>
+                                    <p class="text-sm text-on-surface-variant">Expire {{ carte.expiration }}</p>
+                                </div>
+                            </div>
+                            {% if carte.defaut %}
+                            <span class="px-3 py-1 bg-primary text-white rounded-full text-[10px] font-bold">Défaut</span>
+                            {% else %}
+                            <span class="material-symbols-outlined text-outline-variant">more_vert</span>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <button class="w-full py-4 border-2 border-dashed border-outline-variant/30 rounded-xl text-on-surface-variant font-bold hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">add</span>
+                            Ajouter une carte
+                        </button>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-xl border border-outline-variant/30">
+                    <h3 class="font-title-md text-title-md text-on-surface mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">receipt_long</span>
+                        Facturation
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div>
+                                <p class="font-semibold text-on-surface">Adresse de facturation</p>
+                                <p class="text-sm text-on-surface-variant">{{ adresse_facturation|default:"Non renseignée" }}</p>
+                            </div>
+                            <button class="px-6 py-2 border border-primary text-primary rounded-xl font-semibold hover:bg-primary hover:text-white transition-all">
+                                Modifier
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div>
+                                <p class="font-semibold text-on-surface">TVA intracommunautaire</p>
+                                <p class="text-sm text-on-surface-variant">FR12345678901</p>
+                            </div>
+                            <button class="px-6 py-2 border border-outline-variant text-on-surface-variant rounded-xl font-semibold hover:bg-surface-container transition-all">
+                                Modifier
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Confidentialité -->
+            <div class="tab-content space-y-6" id="confidentialite">
+                <div class="glass-card p-6 rounded-xl border border-outline-variant/30">
+                    <h3 class="font-title-md text-title-md text-on-surface mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">privacy_tip</span>
+                        Confidentialité des données
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div>
+                                <p class="font-semibold text-on-surface">Partage des données</p>
+                                <p class="text-sm text-on-surface-variant">Autoriser le partage de données anonymisées pour l'amélioration du service</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" {% if partage_donnees %}checked{% endif %}/>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div>
+                                <p class="font-semibold text-on-surface">Marketing et personnalisation</p>
+                                <p class="text-sm text-on-surface-variant">Recevoir des recommandations personnalisées</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" {% if marketing %}checked{% endif %}/>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div>
+                                <p class="font-semibold text-on-surface">Cookies de suivi</p>
+                                <p class="text-sm text-on-surface-variant">Utiliser des cookies pour améliorer l'expérience</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" {% if cookies %}checked{% endif %}/>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-xl border border-outline-variant/30">
+                    <h3 class="font-title-md text-title-md text-on-surface mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">download</span>
+                        Données personnelles
+                    </h3>
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <button class="flex-1 py-4 border border-primary text-primary rounded-xl font-bold hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">download</span>
+                            Exporter mes données
+                        </button>
+                        <button class="flex-1 py-4 border border-outline-variant text-on-surface-variant rounded-xl font-bold hover:bg-surface-container transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">history</span>
+                            Consulter l'historique
+                        </button>
+                    </div>
+                    <p class="text-xs text-on-surface-variant mt-4">Vos données sont exportées au format JSON. Conformément au RGPD, vous pouvez demander la suppression de vos données à tout moment.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script>
+    function switchTab(tabId) {
+        // Hide all tab contents
+        const contents = document.querySelectorAll('.tab-content');
+        contents.forEach(content => content.classList.remove('active'));
+
+        // Deactivate all buttons
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('bg-primary', 'text-white', 'shadow-md');
+            btn.classList.add('bg-white', 'text-on-surface-variant', 'font-medium');
+        });
+
+        // Show active content
+        const activeContent = document.getElementById(tabId);
+        if (activeContent) {
+            activeContent.classList.add('active');
+        }
+
+        // Style active button
+        const activeBtn = document.querySelector(`[data-tab="${tabId}"]`);
+        if (activeBtn) {
+            activeBtn.classList.remove('bg-white', 'text-on-surface-variant', 'font-medium');
+            activeBtn.classList.add('bg-primary', 'text-white', 'shadow-md', 'font-bold');
+        }
+    }
+
+    // Glass card hover effects
+    document.querySelectorAll('.glass-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.borderColor = 'rgba(113, 15, 229, 0.4)';
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+        });
+    });
+
+    // Toggle switch animation
+    document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+        toggle.addEventListener('change', function() {
+            const slider = this.nextElementSibling;
+            if (this.checked) {
+                slider.style.backgroundColor = '#710fe5';
+            } else {
+                slider.style.backgroundColor = '#e1e3e4';
+            }
+        });
+    });
+</script>
+</body>
+</html>

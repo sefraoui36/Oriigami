@@ -1,10 +1,17 @@
+# enseignants/models.py
 from django.db import models
-from utilisateurs.models import Utilisateur
-
+from django.conf import settings  # ← Utiliser settings au lieu de l'import direct
 
 class Enseignant(models.Model):
     id_enseignant = models.AutoField(primary_key=True)
-    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name='enseignants')
+    utilisateur = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # ← Utiliser le modèle d'authentification principal
+        on_delete=models.CASCADE, 
+        related_name='enseignants'
+    )
+    # Ajoutez ces champs si vous les utilisez
+    experience = models.CharField(max_length=255, null=True, blank=True)
+    diplome = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f"Enseignant: {self.utilisateur.username}"

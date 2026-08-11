@@ -1,620 +1,491 @@
 <!-- templates/parent/seances.html -->
-{% load static %}
+<!-- stylelint-disable -->
 <!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Mes Séances | Origami Privé</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(233, 236, 239, 1);
-        }
-        .sidebar-active-gradient {
-            background: linear-gradient(90deg, rgba(139, 61, 255, 0.1) 0%, rgba(139, 61, 255, 0) 100%);
-        }
-        .primary-gradient {
-            background: linear-gradient(135deg, #8B3DFF 0%, #FE60CF 100%);
-        }
-        @keyframes pulse-soft {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-        .animate-pulse-soft {
-            animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "on-primary-fixed": "#270058",
-                        "inverse-primary": "#d4bbff",
-                        "on-secondary-fixed": "#3b002d",
-                        "on-primary-container": "#faf1ff",
-                        "primary-container": "#8b3dff",
-                        "outline-variant": "#cdc2d8",
-                        "secondary-fixed": "#ffd8ec",
-                        "secondary-container": "#fe60cf",
-                        "outline": "#7c7387",
-                        "tertiary-fixed": "#ffdcc5",
-                        "on-secondary": "#ffffff",
-                        "error": "#ba1a1a",
-                        "background": "#f8f9fa",
-                        "on-secondary-container": "#680052",
-                        "surface-container-highest": "#e1e3e4",
-                        "primary-fixed-dim": "#d4bbff",
-                        "on-primary": "#ffffff",
-                        "tertiary-fixed-dim": "#ffb782",
-                        "surface-container-high": "#e7e8e9",
-                        "on-tertiary-container": "#fff2eb",
-                        "surface-container": "#edeeef",
-                        "error-container": "#ffdad6",
-                        "tertiary": "#894500",
-                        "surface": "#f8f9fa",
-                        "surface-variant": "#e1e3e4",
-                        "on-tertiary": "#ffffff",
-                        "on-surface": "#191c1d",
-                        "on-tertiary-fixed": "#301400",
-                        "on-secondary-fixed-variant": "#87006b",
-                        "inverse-surface": "#2e3132",
-                        "on-error": "#ffffff",
-                        "primary": "#710fe5",
-                        "on-surface-variant": "#4b4456",
-                        "surface-dim": "#d9dadb",
-                        "tertiary-container": "#ad5900",
-                        "on-background": "#191c1d",
-                        "surface-container-low": "#f3f4f5",
-                        "on-primary-fixed-variant": "#5d00c2",
-                        "surface-tint": "#7921ed",
-                        "secondary": "#ae128a",
-                        "primary-fixed": "#ebdcff",
-                        "on-error-container": "#93000a",
-                        "secondary-fixed-dim": "#ffaede",
-                        "on-tertiary-fixed-variant": "#703800",
-                        "inverse-on-surface": "#f0f1f2",
-                        "surface-bright": "#f8f9fa",
-                        "surface-container-lowest": "#ffffff"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "base": "8px",
-                        "container-padding": "32px",
-                        "gutter": "24px",
-                        "section-margin": "48px",
-                        "card-gap": "24px"
-                    },
-                    "fontFamily": {
-                        "headline-lg": ["Plus Jakarta Sans"],
-                        "title-md": ["Plus Jakarta Sans"],
-                        "label-md": ["Inter"],
-                        "body-sm": ["Plus Jakarta Sans"],
-                        "headline-lg-mobile": ["Plus Jakarta Sans"],
-                        "display-lg": ["Plus Jakarta Sans"],
-                        "body-lg": ["Plus Jakarta Sans"]
-                    },
-                    "fontSize": {
-                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
-                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
-                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
-                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
-                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
-                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
-                    }
-                },
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mes Séances | Origami Privé</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "on-surface-variant": "#4b4456",
+                "error": "#ba1a1a",
+                "tertiary-fixed-dim": "#ffb782",
+                "surface-dim": "#d9dadb",
+                "inverse-surface": "#2e3132",
+                "primary-container": "#8b3dff",
+                "background": "#f8f9fa",
+                "on-primary": "#ffffff",
+                "on-primary-fixed": "#270058",
+                "surface-container": "#edeeef",
+                "tertiary-container": "#ad5900",
+                "on-surface": "#191c1d",
+                "inverse-on-surface": "#f0f1f2",
+                "on-error-container": "#93000a",
+                "outline-variant": "#cdc2d8",
+                "surface-tint": "#7921ed",
+                "on-tertiary-fixed": "#301400",
+                "on-primary-fixed-variant": "#5d00c2",
+                "secondary": "#ae128a",
+                "secondary-fixed-dim": "#ffaede",
+                "on-secondary-fixed-variant": "#87006b",
+                "tertiary": "#894500",
+                "surface-container-high": "#e7e8e9",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#3b002d",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#ebdcff",
+                "on-primary-container": "#faf1ff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#fe60cf",
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#d4bbff",
+                "surface-container-low": "#f3f4f5",
+                "outline": "#7c7387",
+                "surface": "#f8f9fa",
+                "on-secondary-container": "#680052",
+                "tertiary-fixed": "#ffdcc5",
+                "inverse-primary": "#d4bbff",
+                "on-tertiary-fixed-variant": "#703800",
+                "primary": "#710fe5",
+                "on-error": "#ffffff",
+                "surface-variant": "#e1e3e4",
+                "surface-container-highest": "#e1e3e4",
+                "secondary-fixed": "#ffd8ec",
+                "on-tertiary-container": "#fff2eb",
+                "on-background": "#191c1d"
             },
-        }
-    </script>
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            spacing: {
+                "container-padding": "32px",
+                "card-gap": "24px",
+                "gutter": "24px",
+                "base": "8px",
+                "section-margin": "48px"
+            },
+            fontFamily: {
+                "headline-lg": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"],
+                "body-sm": ["Plus Jakarta Sans"],
+                "label-md": ["Inter"],
+                "title-md": ["Plus Jakarta Sans"],
+                "headline-lg-mobile": ["Plus Jakarta Sans"]
+            },
+            fontSize: {
+                "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+        },
+    },
+}
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    }
+    .sidebar-link {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #4b4456;
+        text-decoration: none;
+    }
+    .sidebar-link:hover {
+        background: rgba(113, 15, 229, 0.08);
+        color: #710fe5;
+    }
+    .sidebar-link.active {
+        background: rgba(113, 15, 229, 0.12);
+        color: #710fe5;
+        font-weight: 600;
+    }
+    .sidebar-link.active .material-symbols-outlined {
+        color: #710fe5;
+    }
+    .stat-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+    }
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+    }
+    .animate-pulse-slow {
+        animation: pulse-soft 4s ease-in-out infinite;
+    }
+    @keyframes pulse-soft {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+    }
+    .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 9999px;
+        display: inline-block;
+    }
+    .badge-dot.green { background: #10b981; }
+    .badge-dot.orange { background: #f59e0b; }
+    .badge-dot.red { background: #ef4444; }
+    .badge-dot.blue { background: #3b82f6; }
+
+    .bg-primary-light { background-color: rgba(113, 15, 229, 0.1); }
+    .bg-secondary-light { background-color: rgba(174, 18, 138, 0.1); }
+    .bg-tertiary-light { background-color: rgba(137, 69, 0, 0.1); }
+    .bg-blue-light { background-color: rgba(59, 130, 246, 0.1); }
+    .bg-purple-light { background-color: rgba(139, 92, 246, 0.1); }
+    .bg-orange-light { background-color: rgba(249, 115, 22, 0.1); }
+    .bg-green-light { background-color: rgba(34, 197, 94, 0.1); }
+    .bg-indigo-light { background-color: rgba(99, 102, 241, 0.1); }
+    .bg-pink-light { background-color: rgba(236, 72, 153, 0.1); }
+    .bg-teal-light { background-color: rgba(20, 184, 166, 0.1); }
+    .bg-emerald-light { background-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-lighter { background-color: rgba(113, 15, 229, 0.05); }
+    .bg-secondary-lighter { background-color: rgba(174, 18, 138, 0.05); }
+    .bg-tertiary-lighter { background-color: rgba(137, 69, 0, 0.05); }
+    .bg-blue-lighter { background-color: rgba(59, 130, 246, 0.05); }
+    .bg-purple-lighter { background-color: rgba(139, 92, 246, 0.05); }
+    .bg-orange-lighter { background-color: rgba(249, 115, 22, 0.05); }
+    .bg-green-lighter { background-color: rgba(34, 197, 94, 0.05); }
+    .bg-indigo-lighter { background-color: rgba(99, 102, 241, 0.05); }
+    .bg-pink-lighter { background-color: rgba(236, 72, 153, 0.05); }
+    .bg-teal-lighter { background-color: rgba(20, 184, 166, 0.05); }
+    .bg-emerald-lighter { background-color: rgba(16, 185, 129, 0.05); }
+
+    .border-primary-light { border-color: rgba(113, 15, 229, 0.1); }
+    .border-secondary-light { border-color: rgba(174, 18, 138, 0.1); }
+    .border-tertiary-light { border-color: rgba(137, 69, 0, 0.1); }
+    .border-blue-light { border-color: rgba(59, 130, 246, 0.1); }
+    .border-purple-light { border-color: rgba(139, 92, 246, 0.1); }
+    .border-orange-light { border-color: rgba(249, 115, 22, 0.1); }
+    .border-green-light { border-color: rgba(34, 197, 94, 0.1); }
+    .border-indigo-light { border-color: rgba(99, 102, 241, 0.1); }
+    .border-pink-light { border-color: rgba(236, 72, 153, 0.1); }
+    .border-teal-light { border-color: rgba(20, 184, 166, 0.1); }
+    .border-emerald-light { border-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-solid { background-color: #710fe5; }
+    .bg-secondary-solid { background-color: #ae128a; }
+    .bg-tertiary-solid { background-color: #894500; }
+    .bg-blue-solid { background-color: #3b82f6; }
+    .bg-purple-solid { background-color: #8b5cf6; }
+    .bg-orange-solid { background-color: #f97316; }
+    .bg-green-solid { background-color: #22c55e; }
+    .bg-indigo-solid { background-color: #6366f1; }
+    .bg-pink-solid { background-color: #ec4899; }
+    .bg-teal-solid { background-color: #14b8a6; }
+    .bg-emerald-solid { background-color: #10b981; }
+
+    .text-primary { color: #710fe5; }
+    .text-secondary { color: #ae128a; }
+    .text-tertiary { color: #894500; }
+    .text-blue { color: #3b82f6; }
+    .text-purple { color: #8b5cf6; }
+    .text-orange { color: #f97316; }
+    .text-green { color: #22c55e; }
+    .text-indigo { color: #6366f1; }
+    .text-pink { color: #ec4899; }
+    .text-teal { color: #14b8a6; }
+    .text-emerald { color: #10b981; }
+</style>
 </head>
-<body class="bg-background font-body-sm text-on-surface selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
 
-<!-- Fixed Side Navigation -->
-<aside class="w-[280px] h-screen fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant flex flex-col py-base z-50">
-    <div class="px-6 mb-8 mt-4">
-        <h1 class="font-headline-lg text-headline-lg font-bold text-primary">Origami Privé</h1>
-        <p class="text-on-surface-variant text-xs font-medium tracking-wide uppercase">Education d'Excellence</p>
-    </div>
-    <nav class="flex-1 px-3 space-y-1 overflow-y-auto no-scrollbar">
-        <a href="{% url 'clients:dashboard_parent' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group">
-            <span class="material-symbols-outlined group-hover:scale-110 transition-transform">dashboard</span>
-            <span class="font-medium">Dashboard</span>
-        </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group">
-            <span class="material-symbols-outlined group-hover:scale-110 transition-transform">person</span>
-            <span class="font-medium">Mon profil</span>
-        </a>
-        <a href="{% url 'clients:liste_enfants' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group">
-            <span class="material-symbols-outlined group-hover:scale-110 transition-transform">child_care</span>
-            <span class="font-medium">Mes enfants</span>
-        </a>
-        <a href="{% url 'clients:liste_seances' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary-container/10 text-primary border-l-4 border-primary font-semibold sidebar-active-gradient">
-            <span class="material-symbols-outlined">event_available</span>
-            <span>Mes séances</span>
-        </a>
-        <a href="{% url 'clients:liste_enseignants' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group">
-            <span class="material-symbols-outlined group-hover:scale-110 transition-transform">school</span>
-            <span class="font-medium">Mes enseignants</span>
-        </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group">
-            <span class="material-symbols-outlined group-hover:scale-110 transition-transform">payments</span>
-            <span class="font-medium">Paiements</span>
-        </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group">
-            <span class="material-symbols-outlined group-hover:scale-110 transition-transform">chat</span>
-            <span class="font-medium">Messages</span>
-        </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high hover:text-primary group">
-            <span class="material-symbols-outlined group-hover:scale-110 transition-transform">settings</span>
-            <span class="font-medium">Paramètres</span>
-        </a>
-    </nav>
-    <div class="p-4 mt-auto">
-        <div class="bg-primary/5 rounded-2xl p-4 border border-primary/10">
-            <p class="text-xs font-bold text-primary uppercase mb-2">Besoin d'aide ?</p>
-            <p class="text-xs text-on-surface-variant leading-relaxed mb-3">Notre équipe est là pour vous accompagner 24/7.</p>
-            <button class="w-full bg-primary text-white py-2 rounded-lg text-xs font-bold hover:shadow-lg hover:shadow-primary/20 transition-all">Contacter Support</button>
-        </div>
-    </div>
-</aside>
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+    <div class="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] animate-pulse-slow"></div>
+    <div class="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+</div>
 
-<!-- Top Navigation Bar -->
-<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-gutter z-40">
-    <div class="flex items-center gap-4 flex-1">
-        <div class="relative w-full max-w-md">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-            <input class="w-full pl-10 pr-4 py-2 bg-surface-container rounded-full border-none focus:ring-2 focus:ring-primary/20 text-body-sm outline-none" placeholder="Rechercher une séance, un enseignant..." type="text"/>
-        </div>
-    </div>
-    <div class="flex items-center gap-6">
-        <div class="flex items-center gap-3">
-            <button class="p-2 hover:bg-surface-container-low rounded-full transition-all relative">
-                <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
-                <span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full border-2 border-surface"></span>
-            </button>
-            <button class="p-2 hover:bg-surface-container-low rounded-full transition-all">
-                <span class="material-symbols-outlined text-on-surface-variant">help_outline</span>
-            </button>
-        </div>
-        <div class="h-8 w-px bg-outline-variant"></div>
-        <div class="flex items-center gap-3 cursor-pointer group">
-            <div class="text-right">
-                <p class="text-xs font-bold text-on-surface leading-none">{{ user.get_full_name|default:user.username }}</p>
-                <p class="text-[10px] text-on-surface-variant">Parent Premium</p>
+<div class="flex h-screen overflow-hidden">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
+        <div class="flex items-center gap-3 px-3 py-4 mb-6">
+            <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">change_history</span>
             </div>
-            <div class="w-10 h-10 rounded-full border-2 border-primary/20 group-hover:border-primary transition-all overflow-hidden bg-surface-container">
-                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7hEU4jffEdHinhTYVfWKPXPEsFh-kz5y7Uzz3wAv0hEHPe2E5mbzB4X0jTv54OKNpXlViMcfGSr90PgOP-a0J_yX3xPqpMYnMBkive8jd1VwbXy2m2eNpXdfxVYOVry6nL4IhLiG1iLyF1_9KVeoCku6zcuc5jm1o8ITKgtRSZPy5z6oPTU9Po8Yldu4G4h5_AZZvawBVWSa4AYz-AWE2Ex-7IlEL1FgOf0DHW2wrfcaR0G24ca-Tuc4cOLUOuCLoLljyvRW1g1qe"/>
-            </div>
+            <span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Origami Privé</span>
         </div>
-    </div>
-</header>
 
-<!-- Main Content Canvas -->
-<main class="ml-[280px] pt-16 min-h-screen">
-    <div class="max-w-[1440px] mx-auto p-container-padding">
-        <!-- Page Header Section -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <nav class="flex-1 space-y-1">
+            <!-- Dashboard -->
+            <a href="{% url 'clients:dashboard_parent' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <!-- Enfants -->
+            <a href="{% url 'clients:liste_enfants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">family_restroom</span>
+                <span>Mes Enfants</span>
+            </a>
+            <!-- Enseignants -->
+            <a href="{% url 'clients:liste_enseignants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">school</span>
+                <span>Enseignants</span>
+            </a>
+            <!-- Séances -->
+            <a href="{% url 'clients:liste_seances' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+                <span>Séances</span>
+            </a>
+            <!-- Forfaits -->
+            <a href="{% url 'clients:liste_forfaits' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">sell</span>
+                <span>Forfaits</span>
+            </a>
+            <!-- Paiements -->
+            <a href="{% url 'clients:liste_paiements' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">payments</span>
+                <span>Paiements</span>
+            </a>
+            <!-- Profil -->
+            <a href="{% url 'clients:profil_parent' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">person</span>
+                <span>Mon Profil</span>
+            </a>
+            <!-- Portefeuille -->
+            <a href="{% url 'portefeuilles:mon_portefeuille' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+                <span>Portefeuille</span>
+            </a>
+            <!-- Notifications -->
+            <a href="{% url 'clients:notifications' %}" class="sidebar-link active">
+        <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">notifications</span>
+        <span>Notifications</span>
+        <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ non_lues|default:3 }}</span>
+    </a>
+            <!-- Paramètres -->
+            <a href="{% url 'clients:parametres' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">settings</span>
+                <span>Paramètres</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto pt-4 border-t border-outline-variant/30">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+                <span class="material-symbols-outlined text-[22px]">logout</span>
+                <span>Déconnexion</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 overflow-y-auto p-8">
+
+        <div class="flex items-center justify-between mb-8">
             <div>
-                <div class="flex items-center gap-3 mb-1">
-                    <h2 class="font-headline-lg text-headline-lg text-on-surface">Mes Séances</h2>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/5 text-primary rounded-full text-xs font-bold border border-primary/10 animate-pulse-soft">
-                        <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-                        Généré par IA
-                    </span>
-                </div>
-                <p class="text-on-surface-variant font-medium">{{ total_seances|default:0 }} séances prévues pour vos {{ enfants.count|default:0 }} enfants.</p>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface">Mes Séances</h1>
+                <p class="text-on-surface-variant body-sm">Gérez les séances de vos enfants</p>
             </div>
-            <button class="primary-gradient text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all" onclick="toggleModal(true)">
-                <span class="material-symbols-outlined">add_circle</span>
-                Planifier une séance
-            </button>
+            <div class="flex items-center gap-3">
+                <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
+                    <span class="material-symbols-outlined text-[24px]">notifications</span>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
+                    {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper|default:"P" }}
+                </div>
+            </div>
         </div>
 
-        <!-- Bento Layout Content -->
-        <div class="grid grid-cols-12 gap-card-gap">
-            <!-- Horizontal Weekly Overview (Left 8 cols) -->
-            <div class="col-span-12 lg:col-span-8 space-y-card-gap">
-                <div class="glass-card rounded-2xl p-6 shadow-sm">
-                    <div class="flex justify-between items-center mb-6">
-                        <div class="flex gap-2">
-                            <button class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-sm">Aujourd'hui</button>
-                            <button class="px-4 py-2 text-on-surface-variant hover:bg-surface-container rounded-lg text-sm font-semibold transition-all">Cette semaine</button>
-                            <button class="px-4 py-2 text-on-surface-variant hover:bg-surface-container rounded-lg text-sm font-semibold transition-all">Le mois prochain</button>
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-primary">upcoming</span>
+                    <span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">À venir</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ seances_a_venir|length }}</p>
+                <p class="text-sm text-on-surface-variant">Séances à venir</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-green-500">check_circle</span>
+                    <span class="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">Terminées</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ seances_terminees|length }}</p>
+                <p class="text-sm text-on-surface-variant">Séances terminées</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-orange-500">hourglass_empty</span>
+                    <span class="text-xs font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Restant</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ heures_restantes|default:"0" }}h</p>
+                <p class="text-sm text-on-surface-variant">Heures restantes</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-purple-500">timer</span>
+                    <span class="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Total</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ total_seances|default:"0" }}</p>
+                <p class="text-sm text-on-surface-variant">Séances totales</p>
+            </div>
+        </div>
+
+        <!-- Séances à venir -->
+        <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 overflow-hidden mb-6">
+            <div class="p-6 border-b border-outline-variant/30 bg-surface-container-lowest">
+                <div class="flex items-center gap-4">
+                    <h4 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">event_upcoming</span>
+                        Séances à venir
+                    </h4>
+                </div>
+            </div>
+            <div class="p-6 space-y-4">
+                {% for seance in seances %}
+                <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/30">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">event</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-all">
-                                <span class="material-symbols-outlined">chevron_left</span>
-                            </button>
-                            <span class="font-bold text-sm">{{ mois_courant|date:"F Y"|default:"Octobre 2023" }}</span>
-                            <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-all">
-                                <span class="material-symbols-outlined">chevron_right</span>
-                            </button>
+                        <div>
+                            <p class="font-semibold text-on-surface">{{ seance.matiere }}</p>
+                            <p class="text-sm text-on-surface-variant">{{ seance.date }} à {{ seance.heure }}</p>
+                            <p class="text-xs text-primary">{{ seance.enseignant }}</p>
                         </div>
                     </div>
-                    <div class="flex justify-between gap-2 overflow-x-auto no-scrollbar pb-2">
-                        {% for jour in calendrier_mois|slice:":7" %}
-                        <div class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl {% if jour.est_aujourdhui %}bg-primary text-white shadow-lg shadow-primary/30{% else %}hover:bg-surface-container transition-all cursor-pointer{% endif %}">
-                            <span class="text-[10px] font-bold uppercase {% if jour.est_aujourdhui %}text-white/80{% else %}text-on-surface-variant{% endif %}">{{ jour.date|date:"D"|slice:":3" }}</span>
-                            <span class="w-10 h-10 flex items-center justify-center font-bold rounded-full {% if jour.est_aujourdhui %}text-white{% endif %}">{{ jour.jour }}</span>
-                            <div class="flex gap-1">
-                                {% if jour.a_seances %}
-                                    <div class="w-1.5 h-1.5 {% if jour.est_aujourdhui %}bg-white{% else %}bg-primary{% endif %} rounded-full"></div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endfor %}
+                    <div class="flex items-center gap-3">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary">À venir</span>
+                        <span class="text-sm text-on-surface-variant">{{ seance.enfant }}</span>
                     </div>
                 </div>
+                {% empty %}
+                <p class="text-center text-on-surface-variant py-8">Aucune séance à venir</p>
+                {% endfor %}
+            </div>
+        </div>
 
-                <!-- Filters & Search Bar -->
-                <div class="flex flex-col md:flex-row gap-4 items-center">
-                    <div class="flex-1 w-full relative">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">filter_list</span>
-                        <select class="w-full pl-10 pr-4 py-3 bg-white rounded-xl border border-outline-variant focus:ring-2 focus:ring-primary/20 text-sm font-semibold appearance-none outline-none">
-                            <option value="">Tous les enfants</option>
-                            {% for enfant in enfants %}
-                            <option value="{{ enfant.id_client }}">{{ enfant.prenom }}</option>
-                            {% endfor %}
-                        </select>
+        <!-- Séances terminées -->
+        {% if historique_data %}
+        <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 overflow-hidden">
+            <div class="p-6 border-b border-outline-variant/30 bg-surface-container-lowest">
+                <h4 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-green-500">check_circle</span>
+                    Séances terminées
+                </h4>
+            </div>
+            <div class="p-6 space-y-3">
+                {% for item in historique_data %}
+                <div class="flex items-center justify-between p-3 bg-surface-container-low rounded-xl border border-outline-variant/30">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-green-500 text-[20px]">check_circle</span>
+                        <div>
+                            <p class="font-medium text-on-surface text-sm">{{ item.matiere }}</p>
+                            <p class="text-xs text-on-surface-variant">{{ item.date }}</p>
+                        </div>
                     </div>
-                    <div class="flex gap-2 w-full md:w-auto">
-                        <button class="flex-1 md:flex-none px-4 py-3 bg-white border border-outline-variant rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:bg-surface-container transition-all">
-                            <span class="material-symbols-outlined text-[18px]">school</span>
-                            Matières
-                        </button>
-                        <button class="flex-1 md:flex-none px-4 py-3 bg-white border border-outline-variant rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:bg-surface-container transition-all">
-                            <span class="material-symbols-outlined text-[18px]">calendar_today</span>
-                            Date
-                        </button>
-                    </div>
+                    <span class="text-xs text-green-600 font-bold">{{ item.statut }}</span>
                 </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
 
-                <!-- Sessions Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {% for seance in seances|slice:":4" %}
-                    <div class="glass-card rounded-2xl p-5 border {% if seance.est_ia %}border-2 border-primary/20 bg-primary-container/5 relative overflow-hidden{% else %}border-outline-variant{% endif %} flex flex-col gap-4 group hover:shadow-xl hover:shadow-primary/5 transition-all">
-                        {% if seance.est_ia %}
-                        <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-12 -mt-12"></div>
-                        {% endif %}
-                        
-                        <div class="flex justify-between items-start relative z-10">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-{{ seance.couleur_matiere }}/10 text-{{ seance.couleur_matiere }} rounded-xl flex items-center justify-center">
-                                    <span class="material-symbols-outlined">{{ seance.matiere_icone|default:"school" }}</span>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-sm">{{ seance.matiere|default:"Cours" }}</p>
-                                    <p class="text-xs text-on-surface-variant font-medium">{{ seance.enfant|default:"Enfant" }} • {{ seance.heure|default:"--:--" }} - {{ seance.heure_fin|default:"--:--" }}</p>
-                                </div>
-                            </div>
-                            <span class="px-2.5 py-1 
-                                {% if seance.couleur_statut == 'green' %}bg-green-100 text-green-700
-                                {% elif seance.couleur_statut == 'orange' %}bg-orange-100 text-orange-700
-                                {% elif seance.couleur_statut == 'blue' %}bg-blue-100 text-blue-700
-                                {% else %}bg-gray-100 text-gray-700{% endif %} 
-                                rounded-full text-[10px] font-extrabold uppercase tracking-tight">
-                                {% if seance.est_ia %}
-                                <span class="flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[10px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-                                    Recommandé
-                                </span>
-                                {% else %}
-                                {{ seance.statut|default:"Confirmé" }}
-                                {% endif %}
-                            </span>
-                        </div>
-
-                        {% if seance.est_ia %}
-                        <p class="text-[11px] text-primary font-medium bg-primary/5 p-2 rounded-lg relative z-10">
-                            <span class="font-bold">IA Origami:</span> Basé sur les examens de la semaine prochaine, cette séance est cruciale.
-                        </p>
-                        {% endif %}
-                        
-                        <div class="flex items-center gap-4 py-2 border-y border-outline-variant/30">
-                            <div class="flex items-center gap-2 flex-1">
-                                <div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
-                                    {% if seance.enseignant_photo %}
-                                        <img class="w-full h-full object-cover" src="{{ seance.enseignant_photo.url }}" alt="{{ seance.enseignant }}"/>
-                                    {% else %}
-                                        <div class="w-full h-full bg-{{ seance.couleur_matiere }}/10 flex items-center justify-center text-{{ seance.couleur_matiere }} font-bold text-sm">
-                                            {{ seance.enseignant|first|upper|default:"E" }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                <div>
-                                    <p class="text-[11px] font-bold">{{ seance.enseignant|default:"Enseignant" }}</p>
-                                    <p class="text-[10px] text-on-surface-variant">{{ seance.matiere|default:"Cours" }}</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-[10px] font-bold text-on-surface-variant flex items-center justify-end gap-1">
-                                    <span class="material-symbols-outlined text-[14px]">{{ seance.mode_icone|default:"videocam" }}</span>
-                                    {{ seance.mode|default:"En visio" }}
-                                </p>
-                                <p class="text-[10px] text-on-surface-variant font-medium">{{ seance.lieu|default:"Lien prêt" }}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex gap-2">
-                            {% if seance.peut_rejoindre %}
-                            <button class="flex-1 py-2 rounded-lg bg-primary text-white text-[11px] font-bold hover:brightness-110 transition-all">Rejoindre</button>
-                            {% endif %}
-                            {% if seance.peut_modifier %}
-                            <button class="px-3 py-2 rounded-lg bg-surface-container text-on-surface-variant text-[11px] font-bold hover:bg-surface-container-high transition-all">Modifier</button>
-                            {% endif %}
-                            {% if seance.peut_annuler %}
-                            <button class="px-3 py-2 rounded-lg bg-surface-container text-on-surface-variant text-[11px] font-bold hover:bg-error/10 hover:text-error transition-all">Annuler</button>
-                            {% endif %}
-                            {% if seance.est_ia %}
-                            <button class="flex-1 py-2 rounded-lg bg-primary text-white text-[11px] font-bold shadow-md shadow-primary/20">Confirmer Créneau</button>
-                            <button class="px-3 py-2 rounded-lg bg-white border border-outline-variant text-on-surface-variant text-[11px] font-bold">Autre date</button>
-                            {% endif %}
-                            {% if seance.est_termine %}
-                            <button class="flex-1 py-2 rounded-lg bg-surface-container-high text-on-surface-variant text-[11px] font-bold">Détails de la séance</button>
-                            {% endif %}
+        <!-- Timeline Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+            <div class="lg:col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-6">
+                <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
+                    <span class="material-symbols-outlined text-primary">analytics</span>
+                    Assiduité
+                </h3>
+                <div class="h-48 relative flex items-end justify-between gap-2 px-2">
+                    {% for data in presence_data %}
+                    <div class="w-full relative group" style="height: 100%; display: flex; flex-direction: column; justify-content: flex-end;">
+                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">{{ data.presence }}%</div>
+                        <div class="rounded-t-lg transition-all duration-500 
+                            {% if data.presence >= 80 %}bg-primary
+                            {% elif data.presence >= 50 %}bg-primary/40
+                            {% else %}bg-primary/10{% endif %}" 
+                            style="height: {{ data.presence }}%; min-height: 8px; width: 100%;">
                         </div>
                     </div>
                     {% empty %}
-                    <div class="glass-card rounded-2xl p-8 text-center col-span-2">
-                        <span class="material-symbols-outlined text-6xl text-on-surface-variant/50 block mb-4">event_available</span>
-                        <h3 class="font-title-md text-on-surface mb-2">Aucune séance prévue</h3>
-                        <p class="text-on-surface-variant text-sm mb-6">Planifiez une séance pour vos enfants.</p>
-                        <button class="primary-gradient text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:opacity-90 transition-all" onclick="toggleModal(true)">
-                            <span class="material-symbols-outlined">add_circle</span>
-                            Planifier une séance
-                        </button>
-                    </div>
+                    <p class="text-center text-on-surface-variant col-span-5">Aucune donnée d'assiduité</p>
+                    {% endfor %}
+                </div>
+                <div class="flex justify-between mt-4 text-[10px] font-bold text-on-surface-variant uppercase">
+                    {% for data in presence_data %}
+                    <span>{{ data.day }}</span>
+                    {% empty %}
+                    <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span>
                     {% endfor %}
                 </div>
             </div>
 
-            <!-- Right Sidebar (4 cols) -->
-            <div class="col-span-12 lg:col-span-4 space-y-card-gap">
-                <!-- Smart Scheduling Optimization -->
-                <div class="primary-gradient rounded-2xl p-6 text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
-                    <div class="absolute -right-4 -bottom-4 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-sm flex items-center gap-2">
-                                <span class="material-symbols-outlined">psychology</span>
-                                Optimisation IA
-                            </h3>
-                            <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold">Score: {{ optimisation.score|default:"92" }}%</span>
+            <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-6">
+                <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
+                    <span class="material-symbols-outlined text-primary">psychology</span>
+                    Focus Score IA
+                </h3>
+                <div class="flex items-center justify-center h-48">
+                    <div class="relative w-32 h-32">
+                        <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#grad)" stroke-width="8" 
+                                    stroke-dasharray="263.89" stroke-dashoffset="{{ focus_score|default:0|add:"-263.89"|cut:"-" }}" 
+                                    stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#710fe5;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#ae128a;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-2xl font-bold text-on-surface">{{ focus_score|default:0 }}%</span>
+                            <span class="text-xs text-on-surface-variant">{{ focus_status|default:"En attente" }}</span>
                         </div>
-                        <p class="text-xs text-white/90 leading-relaxed mb-6">
-                            {{ optimisation.message|default:"Votre planning actuel est optimisé. Cependant, 2 créneaux pourraient être regroupés pour économiser du temps de transport." }}
-                        </p>
-                        <button class="w-full bg-white text-primary py-3 rounded-xl font-bold text-xs hover:bg-opacity-90 transition-all flex items-center justify-center gap-2">
-                            <span class="material-symbols-outlined text-[16px]">bolt</span>
-                            Optimiser mon planning
-                        </button>
+                    </div>
+                    <div class="ml-6 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-primary"></span>
+                            <span class="text-xs">Concentration</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-secondary"></span>
+                            <span class="text-xs">Régularité</span>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Daily Timeline View -->
-                <div class="glass-card rounded-2xl p-6 shadow-sm flex flex-col h-full">
-                    <h3 class="font-bold text-sm mb-6 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">schedule</span>
-                        Fil de la journée
-                    </h3>
-                    <div class="relative border-l-2 border-surface-container pl-6 space-y-8">
-                        {% for item in timeline_data %}
-                        <div class="relative">
-                            <div class="absolute -left-[31px] top-0 w-3.5 h-3.5 
-                                {% if item.est_termine %}bg-outline-variant
-                                {% elif item.couleur == 'primary' %}bg-primary
-                                {% elif item.couleur == 'secondary' %}bg-secondary
-                                {% elif item.couleur == 'tertiary' %}bg-tertiary
-                                {% else %}bg-primary{% endif %} 
-                                rounded-full border-2 border-white shadow-sm ring-4 ring-{{ item.couleur }}/10"></div>
-                            <div class="flex flex-col gap-1 {% if item.est_termine %}opacity-40{% endif %}">
-                                <span class="text-[10px] font-bold text-on-surface-variant">{{ item.heure|default:"--:--" }} • {{ item.duree|default:"1h" }}</span>
-                                <p class="text-sm font-bold">{{ item.matiere|default:"Cours" }}</p>
-                                <p class="text-xs text-on-surface-variant font-medium">{{ item.enfant|default:"Enfant" }} avec {{ item.enseignant|default:"Enseignant" }}</p>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <div class="relative">
-                            <div class="absolute -left-[31px] top-0 w-3.5 h-3.5 bg-outline-variant rounded-full border-2 border-white"></div>
-                            <div class="flex flex-col gap-1">
-                                <p class="text-sm font-bold text-on-surface-variant">Aucune séance aujourd'hui</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+    </main>
 
-            <!-- History Table (Full width) -->
-            <div class="col-span-12">
-                <div class="glass-card rounded-2xl overflow-hidden shadow-sm">
-                    <div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
-                        <h3 class="font-bold text-sm">Historique des séances</h3>
-                        <div class="flex gap-2">
-                            <button class="p-2 hover:bg-surface-container rounded-lg transition-all text-on-surface-variant flex items-center gap-2 text-xs font-bold">
-                                <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span> PDF
-                            </button>
-                            <button class="p-2 hover:bg-surface-container rounded-lg transition-all text-on-surface-variant flex items-center gap-2 text-xs font-bold">
-                                <span class="material-symbols-outlined text-[18px]">calendar_add_on</span> ICS
-                            </button>
-                        </div>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-surface-container-low/50">
-                                <tr class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">
-                                    <th class="px-6 py-4">Enfant / Matière</th>
-                                    <th class="px-6 py-4">Enseignant</th>
-                                    <th class="px-6 py-4">Date & Heure</th>
-                                    <th class="px-6 py-4">Durée</th>
-                                    <th class="px-6 py-4">Statut</th>
-                                    <th class="px-6 py-4 text-right">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-outline-variant/30">
-                                {% for item in historique_data %}
-                                <tr class="hover:bg-surface-container-low transition-all">
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 rounded-lg bg-{{ item.couleur_matiere }}/10 text-{{ item.couleur_matiere }} flex items-center justify-center text-sm font-bold">
-                                                <span class="material-symbols-outlined text-sm">{{ item.matiere_icone|default:"school" }}</span>
-                                            </div>
-                                            <div>
-                                                <p class="text-xs font-bold">{{ item.matiere|default:"Cours" }}</p>
-                                                <p class="text-[10px] text-on-surface-variant">{{ item.enfant|default:"Enfant" }}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 text-xs font-medium">{{ item.enseignant|default:"Enseignant" }}</td>
-                                    <td class="px-6 py-4 text-xs font-medium">{{ item.date|default:"--" }} • {{ item.heure|default:"--:--" }}</td>
-                                    <td class="px-6 py-4 text-xs font-medium">{{ item.duree|default:"1h" }}</td>
-                                    <td class="px-6 py-4">
-                                        <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">{{ item.statut|default:"Complétée" }}</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-right">
-                                        {% if item.peut_voir_rapport %}
-                                        <button class="text-primary text-[11px] font-bold hover:underline">Voir rapport</button>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="6" class="px-6 py-8 text-center text-on-surface-variant">
-                                        <span class="material-symbols-outlined text-4xl block mb-2">inbox</span>
-                                        Aucun historique de séances
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
-
-<!-- Modal: Plan Session (5-Step Flow) -->
-<div class="fixed inset-0 z-[100] hidden" id="booking-modal">
-    <!-- Backdrop -->
-    <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="toggleModal(false)"></div>
-    <!-- Modal Content -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[921px]">
-        <!-- Modal Header -->
-        <div class="px-8 py-6 border-b border-outline-variant flex justify-between items-center">
-            <div>
-                <h2 class="font-bold text-xl">Planifier une séance</h2>
-                <p class="text-xs text-on-surface-variant">Suivez les 5 étapes pour une planification optimale</p>
-            </div>
-            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all" onclick="toggleModal(false)">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-        </div>
-        <!-- Steps Progress -->
-        <div class="px-8 py-4 bg-surface-container-low flex justify-between gap-2">
-            <div class="flex-1 h-1.5 rounded-full bg-primary"></div>
-            <div class="flex-1 h-1.5 rounded-full bg-outline-variant"></div>
-            <div class="flex-1 h-1.5 rounded-full bg-outline-variant"></div>
-            <div class="flex-1 h-1.5 rounded-full bg-outline-variant"></div>
-            <div class="flex-1 h-1.5 rounded-full bg-outline-variant"></div>
-        </div>
-        <!-- Modal Body (Dynamic Steps) -->
-        <div class="p-8 overflow-y-auto" id="modal-content">
-            <!-- Step 1 Content (Default) -->
-            <div class="space-y-6">
-                <h3 class="font-bold text-lg">Étape 1 : Pour quel enfant ?</h3>
-                <div class="grid grid-cols-3 gap-4">
-                    {% for enfant in enfants|slice:":3" %}
-                    <button class="flex flex-col items-center gap-3 p-4 rounded-2xl border-2 {% if forloop.first %}border-primary bg-primary/5{% else %}border-outline-variant hover:border-primary/50 transition-all{% endif %}">
-                        <div class="w-16 h-16 rounded-full overflow-hidden border-4 border-white shadow-md">
-                            {% if enfant.photo %}
-                                <img class="w-full h-full object-cover" src="{{ enfant.photo.url }}" alt="{{ enfant.prenom }}"/>
-                            {% else %}
-                                <div class="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold text-2xl">
-                                    {{ enfant.prenom|first|upper }}
-                                </div>
-                            {% endif %}
-                        </div>
-                        <span class="font-bold text-sm {% if forloop.first %}text-primary{% endif %}">{{ enfant.prenom }}</span>
-                    </button>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        <!-- Modal Footer -->
-        <div class="px-8 py-6 border-t border-outline-variant flex justify-between items-center bg-surface-container-low">
-            <button class="px-6 py-2.5 rounded-xl font-bold text-on-surface-variant hover:bg-surface-container transition-all">Précédent</button>
-            <button class="px-8 py-2.5 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all">Suivant</button>
-        </div>
-    </div>
 </div>
 
-<script>
-    function toggleModal(show) {
-        const modal = document.getElementById('booking-modal');
-        if (show) {
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        } else {
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-    }
-
-    // Add some interactive hover effects to cards
-    document.querySelectorAll('.glass-card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-4px)';
-        });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'translateY(0)';
-        });
-    });
-
-    // Simple Tab Logic for Month/Week
-    document.addEventListener('DOMContentLoaded', function() {
-        const tabButtons = document.querySelectorAll('.flex.gap-2 .px-4.py-2');
-        tabButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                tabButtons.forEach(b => {
-                    b.classList.remove('bg-primary', 'text-white', 'shadow-sm');
-                    b.classList.add('text-on-surface-variant');
-                });
-                this.classList.add('bg-primary', 'text-white', 'shadow-sm');
-                this.classList.remove('text-on-surface-variant');
-            });
-        });
-    });
-
-    // Filter dropdown change
-    document.addEventListener('DOMContentLoaded', function() {
-        const filterSelect = document.querySelector('select');
-        if (filterSelect) {
-            filterSelect.addEventListener('change', function() {
-                // Logique de filtrage des séances
-                const value = this.value;
-                console.log('Filtrage par enfant:', value);
-            });
-        }
-    });
-</script>
 </body>
 </html>

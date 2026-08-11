@@ -1,11 +1,16 @@
 # affectations/models.py
 from django.db import models
-from utilisateurs.models import Utilisateur
+from django.conf import settings  # ← IMPORTANT !
 from rh.models import Rh
 from forfaits.models import Forfait
 
 class Affectation(models.Model):
-    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name='affectations')
+    # 🔥 Utiliser settings.AUTH_USER_MODEL
+    utilisateur = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE, 
+        related_name='affectations'
+    )
     rh = models.ForeignKey(Rh, on_delete=models.SET_NULL, null=True, related_name='affectations')
     forfait = models.ForeignKey(Forfait, on_delete=models.CASCADE, related_name='affectations')
     matiere = models.CharField(max_length=100)

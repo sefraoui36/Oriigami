@@ -1,545 +1,497 @@
 <!-- templates/parent/dashboard.html -->
-{% load static %}
+<!-- stylelint-disable -->
 <!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Dashboard Parent - Origami Privé</title>
+<title>Origami Privé - Dashboard Parent</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "on-surface-variant": "#4b4456",
+                "error": "#ba1a1a",
+                "tertiary-fixed-dim": "#ffb782",
+                "surface-dim": "#d9dadb",
+                "inverse-surface": "#2e3132",
+                "primary-container": "#8b3dff",
+                "background": "#f8f9fa",
+                "on-primary": "#ffffff",
+                "on-primary-fixed": "#270058",
+                "surface-container": "#edeeef",
+                "tertiary-container": "#ad5900",
+                "on-surface": "#191c1d",
+                "inverse-on-surface": "#f0f1f2",
+                "on-error-container": "#93000a",
+                "outline-variant": "#cdc2d8",
+                "surface-tint": "#7921ed",
+                "on-tertiary-fixed": "#301400",
+                "on-primary-fixed-variant": "#5d00c2",
+                "secondary": "#ae128a",
+                "secondary-fixed-dim": "#ffaede",
+                "on-secondary-fixed-variant": "#87006b",
+                "tertiary": "#894500",
+                "surface-container-high": "#e7e8e9",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#3b002d",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#ebdcff",
+                "on-primary-container": "#faf1ff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#fe60cf",
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#d4bbff",
+                "surface-container-low": "#f3f4f5",
+                "outline": "#7c7387",
+                "surface": "#f8f9fa",
+                "on-secondary-container": "#680052",
+                "tertiary-fixed": "#ffdcc5",
+                "inverse-primary": "#d4bbff",
+                "on-tertiary-fixed-variant": "#703800",
+                "primary": "#710fe5",
+                "on-error": "#ffffff",
+                "surface-variant": "#e1e3e4",
+                "surface-container-highest": "#e1e3e4",
+                "secondary-fixed": "#ffd8ec",
+                "on-tertiary-container": "#fff2eb",
+                "on-background": "#191c1d"
+            },
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            spacing: {
+                "container-padding": "32px",
+                "card-gap": "24px",
+                "gutter": "24px",
+                "base": "8px",
+                "section-margin": "48px"
+            },
+            fontFamily: {
+                "headline-lg": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"],
+                "body-sm": ["Plus Jakarta Sans"],
+                "label-md": ["Inter"],
+                "title-md": ["Plus Jakarta Sans"],
+                "headline-lg-mobile": ["Plus Jakarta Sans"]
+            },
+            fontSize: {
+                "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+        },
+    },
+}
+</script>
 <style>
     .material-symbols-outlined {
         font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
     .glass-card {
         background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(233, 236, 239, 1);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
     }
-    .premium-gradient {
+    .sidebar-link {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #4b4456;
+        text-decoration: none;
+    }
+    .sidebar-link:hover {
+        background: rgba(113, 15, 229, 0.08);
+        color: #710fe5;
+    }
+    .sidebar-link.active {
+        background: rgba(113, 15, 229, 0.12);
+        color: #710fe5;
+        font-weight: 600;
+    }
+    .sidebar-link.active .material-symbols-outlined {
+        color: #710fe5;
+    }
+    .stat-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+    }
+    .bg-primary-gradient {
         background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
     }
-    .premium-gradient-soft {
-        background: linear-gradient(135deg, rgba(139, 61, 255, 0.1) 0%, rgba(254, 96, 207, 0.05) 100%);
+    .animate-pulse-slow {
+        animation: pulse-soft 4s ease-in-out infinite;
     }
-    .soft-shadow {
-        box-shadow: 0px 10px 30px rgba(139, 61, 255, 0.08);
+    @keyframes pulse-soft {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
     }
-    body {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        background-color: #f8f9fa;
+    .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 9999px;
+        display: inline-block;
     }
-    .sidebar-active {
-        background: rgba(139, 61, 255, 0.08);
-        border-left: 4px solid #710fe5;
-    }
+    .badge-dot.green { background: #10b981; }
+    .badge-dot.orange { background: #f59e0b; }
+    .badge-dot.red { background: #ef4444; }
+    .badge-dot.blue { background: #3b82f6; }
+
+    .bg-primary-light { background-color: rgba(113, 15, 229, 0.1); }
+    .bg-secondary-light { background-color: rgba(174, 18, 138, 0.1); }
+    .bg-tertiary-light { background-color: rgba(137, 69, 0, 0.1); }
+    .bg-blue-light { background-color: rgba(59, 130, 246, 0.1); }
+    .bg-purple-light { background-color: rgba(139, 92, 246, 0.1); }
+    .bg-orange-light { background-color: rgba(249, 115, 22, 0.1); }
+    .bg-green-light { background-color: rgba(34, 197, 94, 0.1); }
+    .bg-indigo-light { background-color: rgba(99, 102, 241, 0.1); }
+    .bg-pink-light { background-color: rgba(236, 72, 153, 0.1); }
+    .bg-teal-light { background-color: rgba(20, 184, 166, 0.1); }
+    .bg-emerald-light { background-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-lighter { background-color: rgba(113, 15, 229, 0.05); }
+    .bg-secondary-lighter { background-color: rgba(174, 18, 138, 0.05); }
+    .bg-tertiary-lighter { background-color: rgba(137, 69, 0, 0.05); }
+    .bg-blue-lighter { background-color: rgba(59, 130, 246, 0.05); }
+    .bg-purple-lighter { background-color: rgba(139, 92, 246, 0.05); }
+    .bg-orange-lighter { background-color: rgba(249, 115, 22, 0.05); }
+    .bg-green-lighter { background-color: rgba(34, 197, 94, 0.05); }
+    .bg-indigo-lighter { background-color: rgba(99, 102, 241, 0.05); }
+    .bg-pink-lighter { background-color: rgba(236, 72, 153, 0.05); }
+    .bg-teal-lighter { background-color: rgba(20, 184, 166, 0.05); }
+    .bg-emerald-lighter { background-color: rgba(16, 185, 129, 0.05); }
+
+    .border-primary-light { border-color: rgba(113, 15, 229, 0.1); }
+    .border-secondary-light { border-color: rgba(174, 18, 138, 0.1); }
+    .border-tertiary-light { border-color: rgba(137, 69, 0, 0.1); }
+    .border-blue-light { border-color: rgba(59, 130, 246, 0.1); }
+    .border-purple-light { border-color: rgba(139, 92, 246, 0.1); }
+    .border-orange-light { border-color: rgba(249, 115, 22, 0.1); }
+    .border-green-light { border-color: rgba(34, 197, 94, 0.1); }
+    .border-indigo-light { border-color: rgba(99, 102, 241, 0.1); }
+    .border-pink-light { border-color: rgba(236, 72, 153, 0.1); }
+    .border-teal-light { border-color: rgba(20, 184, 166, 0.1); }
+    .border-emerald-light { border-color: rgba(16, 185, 129, 0.1); }
+
+    .bg-primary-solid { background-color: #710fe5; }
+    .bg-secondary-solid { background-color: #ae128a; }
+    .bg-tertiary-solid { background-color: #894500; }
+    .bg-blue-solid { background-color: #3b82f6; }
+    .bg-purple-solid { background-color: #8b5cf6; }
+    .bg-orange-solid { background-color: #f97316; }
+    .bg-green-solid { background-color: #22c55e; }
+    .bg-indigo-solid { background-color: #6366f1; }
+    .bg-pink-solid { background-color: #ec4899; }
+    .bg-teal-solid { background-color: #14b8a6; }
+    .bg-emerald-solid { background-color: #10b981; }
+
+    .text-primary { color: #710fe5; }
+    .text-secondary { color: #ae128a; }
+    .text-tertiary { color: #894500; }
+    .text-blue { color: #3b82f6; }
+    .text-purple { color: #8b5cf6; }
+    .text-orange { color: #f97316; }
+    .text-green { color: #22c55e; }
+    .text-indigo { color: #6366f1; }
+    .text-pink { color: #ec4899; }
+    .text-teal { color: #14b8a6; }
+    .text-emerald { color: #10b981; }
 </style>
-<script id="tailwind-config">
-    tailwind.config = {
-        darkMode: "class",
-        theme: {
-            extend: {
-                "colors": {
-                    "primary-fixed-dim": "#d4bbff",
-                    "on-tertiary-fixed": "#301400",
-                    "on-tertiary": "#ffffff",
-                    "tertiary-container": "#ad5900",
-                    "tertiary-fixed": "#ffdcc5",
-                    "outline": "#7c7387",
-                    "surface-tint": "#7921ed",
-                    "surface-container-lowest": "#ffffff",
-                    "surface-container-highest": "#e1e3e4",
-                    "tertiary-fixed-dim": "#ffb782",
-                    "on-tertiary-fixed-variant": "#703800",
-                    "on-primary-fixed": "#270058",
-                    "surface-variant": "#e1e3e4",
-                    "on-background": "#191c1d",
-                    "on-error-container": "#93000a",
-                    "surface-bright": "#f8f9fa",
-                    "outline-variant": "#cdc2d8",
-                    "on-surface-variant": "#4b4456",
-                    "inverse-on-surface": "#f0f1f2",
-                    "on-primary-fixed-variant": "#5d00c2",
-                    "secondary-fixed": "#ffd8ec",
-                    "surface-container-low": "#f3f4f5",
-                    "surface-container-high": "#e7e8e9",
-                    "on-surface": "#191c1d",
-                    "surface-container": "#edeeef",
-                    "inverse-surface": "#2e3132",
-                    "on-secondary-container": "#680052",
-                    "on-secondary": "#ffffff",
-                    "primary": "#710fe5",
-                    "on-error": "#ffffff",
-                    "surface": "#f8f9fa",
-                    "inverse-primary": "#d4bbff",
-                    "secondary": "#ae128a",
-                    "on-secondary-fixed-variant": "#87006b",
-                    "tertiary": "#894500",
-                    "secondary-fixed-dim": "#ffaede",
-                    "error-container": "#ffdad6",
-                    "on-primary": "#ffffff",
-                    "primary-container": "#8b3dff",
-                    "on-secondary-fixed": "#3b002d",
-                    "secondary-container": "#fe60cf",
-                    "error": "#ba1a1a",
-                    "on-tertiary-container": "#fff2eb",
-                    "background": "#f8f9fa",
-                    "on-primary-container": "#faf1ff",
-                    "primary-fixed": "#ebdcff",
-                    "surface-dim": "#d9dadb"
-                },
-                "fontFamily": {
-                    "title-md": ["Plus Jakarta Sans"],
-                    "headline-lg": ["Plus Jakarta Sans"],
-                    "body-sm": ["Plus Jakarta Sans"],
-                    "display-lg": ["Plus Jakarta Sans"],
-                    "label-md": ["Inter"],
-                    "body-lg": ["Plus Jakarta Sans"]
-                }
-            }
-        }
-    }
-</script>
 </head>
-<body class="text-on-surface">
-<!-- Sidebar -->
-<aside class="w-[280px] h-screen fixed left-0 top-0 overflow-y-auto bg-surface-container-low border-r border-outline-variant flex flex-col py-8 px-4 z-50">
-    <div class="mb-10 px-4">
-        <h1 class="font-headline-lg text-headline-lg text-primary font-bold">Origami Privé</h1>
-        <p class="text-on-surface-variant font-body-sm opacity-70">Premium Tutoring</p>
-    </div>
-    <nav class="flex-1 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary bg-primary-container/10 border-l-4 border-primary transition-colors group" href="{% url 'clients:dashboard_parent' %}">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
-            <span class="font-body-lg">Dashboard</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
-            <span class="material-symbols-outlined">person</span>
-            <span class="font-body-lg">Profil</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
-            <span class="material-symbols-outlined">group</span>
-            <span class="font-body-lg">Enfants/Étudiants</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
-            <span class="material-symbols-outlined">package_2</span>
-            <span class="font-body-lg">Forfaits</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
-            <span class="material-symbols-outlined">school</span>
-            <span class="font-body-lg">Enseignants</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
-            <span class="material-symbols-outlined">event_repeat</span>
-            <span class="font-body-lg">Séances</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
-            <span class="material-symbols-outlined">payments</span>
-            <span class="font-body-lg">Paiements</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="{% url 'portefeuilles:mon_portefeuille' %}">
-            <span class="material-symbols-outlined">account_balance_wallet</span>
-            <span class="font-body-lg">Portefeuille</span>
-        </a>
-        <div class="pt-4 pb-2 px-4 uppercase text-[10px] font-bold tracking-widest text-outline">Communication</div>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
-            <span class="material-symbols-outlined">notifications</span>
-            <span class="font-body-lg">Notifications</span>
-        </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
-            <span class="material-symbols-outlined">chat</span>
-            <span class="font-body-lg">Messages</span>
-        </a>
-    </nav>
-    <div class="mt-auto px-4 space-y-4">
-        <button class="w-full py-3 px-4 rounded-xl premium-gradient text-white font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
-            <span class="material-symbols-outlined text-sm">support_agent</span>
-            Support Client
-        </button>
-        <a class="flex items-center gap-3 py-2 text-on-surface-variant hover:text-error transition-colors" href="{% url 'authentication:deconnexion' %}">
-            <span class="material-symbols-outlined">logout</span>
-            <span class="font-body-lg">Déconnexion</span>
-        </a>
-    </div>
-</aside>
+<body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
 
-<!-- Top Navigation -->
-<header class="fixed top-0 right-0 left-[280px] h-20 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex items-center justify-between px-8 z-40">
-    <div class="flex items-center gap-4 bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant w-96 focus-within:ring-2 focus-within:ring-primary transition-all">
-        <span class="material-symbols-outlined text-outline">search</span>
-        <input class="bg-transparent border-none focus:ring-0 text-sm w-full outline-none" placeholder="Rechercher une séance, un enfant..." type="text"/>
-    </div>
-    <div class="flex items-center gap-6">
-        <div class="flex items-center gap-4 border-r border-outline-variant pr-6">
-            <button class="p-2 text-on-surface-variant hover:text-primary transition-colors relative">
-                <span class="material-symbols-outlined">help</span>
-            </button>
-            <button class="p-2 text-on-surface-variant hover:text-primary transition-colors relative">
-                <span class="material-symbols-outlined">notifications</span>
-                <span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full"></span>
-            </button>
-            <button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
-                <span class="material-symbols-outlined">settings</span>
-            </button>
-        </div>
-        <div class="flex items-center gap-3">
-            <div class="text-right">
-                <p class="font-semibold text-sm">{{ client.prenom }} {{ client.nom }}</p>
-                <p class="text-xs text-outline">Compte Parent</p>
-            </div>
-            <div class="w-10 h-10 rounded-full bg-primary-fixed-dim border-2 border-white soft-shadow flex items-center justify-center overflow-hidden">
-                {% if client.photo %}
-                    <img class="w-full h-full object-cover" src="{{ client.photo.url }}" alt="{{ client.prenom }}"/>
-                {% else %}
-                    <div class="w-full h-full flex items-center justify-center text-primary font-bold text-lg">
-                        {{ client.prenom|first|upper }}
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</header>
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+    <div class="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] animate-pulse-slow"></div>
+    <div class="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+</div>
 
-<!-- Main Content Area -->
-<main class="ml-[280px] mt-20 p-8 space-y-8">
-    <!-- Welcome Section -->
-    <section class="relative overflow-hidden rounded-[32px] bg-white border border-outline-variant flex flex-col md:flex-row items-center justify-between min-h-[340px] px-12 soft-shadow">
-        <div class="z-10 py-12 max-w-xl">
-            <p class="text-primary font-bold tracking-widest text-xs uppercase mb-2">Tableau de Bord</p>
-            <h2 class="font-display-lg text-display-lg text-on-background mb-4">Bienvenue, {{ client.prenom }} {{ client.nom }}</h2>
-            <p class="text-on-surface-variant text-body-lg mb-8">Nous sommes ravis de vous revoir. Voici un aperçu de la progression de vos enfants pour cette semaine.</p>
-            <div class="flex gap-4">
-                <button class="px-6 py-3 rounded-xl premium-gradient text-white font-bold hover:scale-105 transition-transform flex items-center gap-2">
-                    <span class="material-symbols-outlined">add_circle</span>
-                    Planifier une séance
+<div class="flex h-screen overflow-hidden">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
+        <div class="flex items-center gap-3 px-3 py-4 mb-6">
+            <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">change_history</span>
+            </div>
+            <span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Origami Privé</span>
+        </div>
+
+        <nav class="flex-1 space-y-1">
+            <!-- Dashboard -->
+            <a href="{% url 'clients:dashboard_parent' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <!-- Enfants -->
+            <a href="{% url 'clients:liste_enfants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">family_restroom</span>
+                <span>Mes Enfants</span>
+            </a>
+            <!-- Enseignants -->
+            <a href="{% url 'clients:liste_enseignants' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">school</span>
+                <span>Enseignants</span>
+            </a>
+            <!-- Séances -->
+            <a href="{% url 'clients:liste_seances' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+                <span>Séances</span>
+            </a>
+            <!-- Forfaits -->
+            <a href="{% url 'clients:liste_forfaits' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">sell</span>
+                <span>Forfaits</span>
+            </a>
+            <!-- Paiements -->
+            <a href="{% url 'clients:liste_paiements' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">payments</span>
+                <span>Paiements</span>
+            </a>
+            <!-- Profil -->
+            <a href="{% url 'clients:profil_parent' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">person</span>
+                <span>Mon Profil</span>
+            </a>
+            <!-- Portefeuille -->
+            <a href="{% url 'portefeuilles:mon_portefeuille' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+                <span>Portefeuille</span>
+            </a>
+            <!-- Notifications -->
+            <a href="{% url 'clients:notifications' %}" class="sidebar-link active">
+        <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">notifications</span>
+        <span>Notifications</span>
+        <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ non_lues|default:3 }}</span>
+    </a>
+            <!-- Paramètres -->
+           <a href="{% url 'clients:parametres' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">settings</span>
+                <span>Paramètres</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto pt-4 border-t border-outline-variant/30">
+            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
+                <span class="material-symbols-outlined text-[22px]">logout</span>
+                <span>Déconnexion</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 overflow-y-auto p-8">
+
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface">Bonjour, {{ client.prenom|default:"Parent" }}</h1>
+                <p class="text-on-surface-variant body-sm">Bienvenue sur votre espace parent</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
+                    <span class="material-symbols-outlined text-[24px]">notifications</span>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
-                <div class="px-6 py-3 rounded-xl bg-surface-container text-on-surface font-semibold flex items-center gap-2" id="dateDisplay">
-                    <span class="material-symbols-outlined">calendar_today</span>
-                    <span id="currentDate">Chargement...</span>
+                <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
+                    {{ client.prenom|slice:":1"|upper }}{{ client.nom|slice:":1"|upper|default:"P" }}
                 </div>
             </div>
         </div>
-        <div class="relative w-full md:w-1/2 h-[340px] flex justify-center items-center">
-            <img class="w-full h-full object-contain pointer-events-none scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8n1EGqnb_aYskdKlCqBTaoAluVwp92pWh_yvbfVetoKpOn8jmG7E08kqHPhneme8nmZc0AndxXbbHNWz_iBnWxOdvFyNxb5cw2qCBLtuJSPVYFwDqksSNyg6BZZZTm0E4h9_Ij7FXj-ijBOpnq9QIA1X52Dt84KFUFTogPMrGOum74hFJUWstrc2eZ_V-hqgmWGnxsX3EgtsMy2TuYx6KVXJ_r1Mz6Y4Vj_Xt2lFbmLEDSw10Mkdo0w"/>
-        </div>
-        <div class="absolute -bottom-12 -right-12 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
-        <div class="absolute -top-12 -left-12 w-48 h-48 bg-secondary/5 rounded-full blur-3xl"></div>
-    </section>
 
-    <!-- KPI Cards -->
-    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
-        <div class="glass-card p-6 rounded-[24px] flex items-center gap-5 soft-shadow hover:-translate-y-1 transition-transform">
-            <div class="w-14 h-14 rounded-2xl bg-primary-container/10 flex items-center justify-center text-primary">
-                <span class="material-symbols-outlined text-3xl">group</span>
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-primary">group</span>
+                    <span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">Enfants</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ nombre_enfants|default:0 }}</p>
+                <p class="text-sm text-on-surface-variant">Enfants inscrits</p>
             </div>
-            <div>
-                <p class="text-outline text-label-md">Enfants</p>
-                <p class="text-3xl font-bold text-on-surface">{{ nombre_enfants }}</p>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-secondary">inventory_2</span>
+                    <span class="text-xs font-bold text-secondary bg-secondary/10 px-3 py-1 rounded-full">Actifs</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ forfaits_actifs|default:0 }}</p>
+                <p class="text-sm text-on-surface-variant">Forfaits actifs</p>
             </div>
-        </div>
-        <div class="glass-card p-6 rounded-[24px] flex items-center gap-5 soft-shadow hover:-translate-y-1 transition-transform">
-            <div class="w-14 h-14 rounded-2xl bg-secondary-container/10 flex items-center justify-center text-secondary">
-                <span class="material-symbols-outlined text-3xl">inventory_2</span>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-orange-500">schedule</span>
+                    <span class="text-xs font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Restant</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ heures_restantes|default:0 }}h</p>
+                <p class="text-sm text-on-surface-variant">Heures restantes</p>
             </div>
-            <div>
-                <p class="text-outline text-label-md">Forfaits Actifs</p>
-                <p class="text-3xl font-bold text-on-surface">{{ forfaits_actifs }}</p>
-            </div>
-        </div>
-        <div class="glass-card p-6 rounded-[24px] flex items-center gap-5 soft-shadow hover:-translate-y-1 transition-transform">
-            <div class="w-14 h-14 rounded-2xl bg-tertiary-container/10 flex items-center justify-center text-tertiary">
-                <span class="material-symbols-outlined text-3xl">schedule</span>
-            </div>
-            <div>
-                <p class="text-outline text-label-md">Heures Restantes</p>
-                <p class="text-3xl font-bold text-on-surface">{{ heures_restantes }}h</p>
-            </div>
-        </div>
-        <div class="glass-card p-6 rounded-[24px] flex items-center gap-5 soft-shadow hover:-translate-y-1 transition-transform">
-            <div class="w-14 h-14 rounded-2xl bg-primary-fixed-dim/20 flex items-center justify-center text-primary">
-                <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">event_available</span>
-            </div>
-            <div>
-                <p class="text-outline text-label-md">Séances/Semaine</p>
-                <p class="text-3xl font-bold text-on-surface">{{ seances_semaine }}</p>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-purple-500">event_available</span>
+                    <span class="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Semaine</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ seances_semaine|default:0 }}</p>
+                <p class="text-sm text-on-surface-variant">Séances cette semaine</p>
             </div>
         </div>
-    </section>
 
-    <!-- Children Overview -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
-        <div class="lg:col-span-2 space-y-gutter">
-            <div class="flex items-center justify-between">
-                <h3 class="font-headline-lg text-title-md">Suivi des Enfants</h3>
-                <button class="text-primary font-semibold flex items-center gap-1 hover:underline">
-                    Gérer les profils <span class="material-symbols-outlined">arrow_forward</span>
-                </button>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-                {% for enfant in enfants %}
-                <div class="glass-card p-8 rounded-[24px] relative overflow-hidden flex flex-col h-full border-l-8 {% cycle 'border-primary' 'border-secondary' 'border-tertiary' %} group hover:border-secondary transition-all">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="flex items-center gap-4">
-                            <div class="w-16 h-16 rounded-full overflow-hidden border-4 border-white soft-shadow">
-                                {% if enfant.photo %}
-                                    <img class="w-full h-full object-cover" src="{{ enfant.photo.url }}" alt="{{ enfant.prenom }}"/>
-                                {% else %}
-                                    <div class="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold text-2xl">
-                                        {{ enfant.prenom|first|upper }}
-                                    </div>
-                                {% endif %}
+        <!-- Children & Quick Actions -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Children Cards -->
+            <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">family_restroom</span>
+                        Mes Enfants
+                    </h2>
+                    <a href="{% url 'clients:liste_enfants' %}" class="text-sm text-primary font-semibold hover:underline">Voir tout <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for enfant in enfants %}
+                    <div class="p-4 bg-background rounded-xl border border-outline-variant/20 hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-primary-light flex items-center justify-center text-primary font-bold text-lg">
+                                {{ enfant.prenom|first|upper }}
                             </div>
                             <div>
-                                <h4 class="font-bold text-xl">{{ enfant.prenom }}</h4>
-                                <p class="text-sm text-outline">{{ enfant.etablissement }}, {{ enfant.niveau }}</p>
+                                <h3 class="font-semibold text-on-surface">{{ enfant.prenom }}</h3>
+                                <p class="text-xs text-on-surface-variant">{{ enfant.etablissement }} • {{ enfant.niveau }}</p>
                             </div>
                         </div>
-                        <span class="{% cycle 'bg-primary-container/10 text-primary' 'bg-secondary-container/10 text-secondary' 'bg-tertiary-container/10 text-tertiary' %} px-3 py-1 rounded-full text-xs font-bold">{{ enfant.heures_restantes }}h restantes</span>
-                    </div>
-                    <div class="space-y-4 flex-1">
-                        <div class="flex items-center gap-3 text-sm text-on-surface-variant">
-                            <span class="material-symbols-outlined text-lg text-outline">school</span>
-                            <span>{{ enfant.nombre_enseignants }} enseignants attitrés</span>
+                        <div class="mt-3 flex items-center justify-between text-sm">
+                            <span class="text-on-surface-variant">{{ enfant.heures_restantes }}h restantes</span>
+                            <span class="text-primary font-semibold">{{ enfant.nombre_enseignants }} enseignants</span>
                         </div>
-                        <div class="p-4 rounded-xl premium-gradient-soft border border-primary/10">
-                            <p class="text-[10px] font-bold uppercase tracking-wider text-primary mb-1">Prochaine séance</p>
-                            <div class="flex justify-between items-center">
-                                <p class="font-bold">{{ enfant.prochaine_seance.matiere }}</p>
-                                <p class="text-primary font-bold">{{ enfant.prochaine_seance.date_heure }}</p>
+                        <div class="mt-2 flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                                <div class="h-full bg-primary-gradient rounded-full" style="width: {{ enfant.taux_progression }}%"></div>
                             </div>
+                            <span class="text-xs font-medium text-primary">{{ enfant.taux_progression }}%</span>
                         </div>
+                        <button onclick="window.location.href='#'" class="mt-3 w-full py-2 text-xs font-semibold text-primary border border-primary/20 rounded-xl hover:bg-primary/5 transition-colors">
+                            Voir les détails
+                        </button>
                     </div>
-                    <button class="mt-6 w-full py-3 border border-outline-variant rounded-xl font-bold hover:bg-surface-container transition-colors" onclick="window.location.href='#'">
-                        Voir les détails
-                    </button>
-                </div>
-                {% empty %}
-                <div class="glass-card p-8 rounded-[24px] text-center col-span-2">
-                    <p class="text-on-surface-variant">Aucun enfant inscrit pour le moment.</p>
-                    <button class="mt-4 px-6 py-3 rounded-xl premium-gradient text-white font-bold hover:scale-105 transition-transform">
-                        <span class="material-symbols-outlined">add_circle</span>
-                        Ajouter un enfant
-                    </button>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="space-y-gutter">
-            <h3 class="font-headline-lg text-title-md">Actions Rapides</h3>
-            <div class="glass-card p-4 rounded-[24px] space-y-3 soft-shadow">
-                <button class="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-primary-container/10 transition-colors group">
-                    <div class="w-12 h-12 rounded-xl bg-primary-container/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined">person_add</span>
-                    </div>
-                    <div class="text-left">
-                        <p class="font-bold">Ajouter un enfant</p>
-                        <p class="text-xs text-outline">Inscrire un nouvel élève</p>
-                    </div>
-                </button>
-                <button class="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-secondary-container/10 transition-colors group">
-                    <div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined">shopping_cart</span>
-                    </div>
-                    <div class="text-left">
-                        <p class="font-bold">Acheter un forfait</p>
-                        <p class="text-xs text-outline">Découvrir nos offres premium</p>
-                    </div>
-                </button>
-                <button class="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-tertiary-container/10 transition-colors group">
-                    <div class="w-12 h-12 rounded-xl bg-tertiary-container/10 flex items-center justify-center text-tertiary group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined">autorenew</span>
-                    </div>
-                    <div class="text-left">
-                        <p class="font-bold">Renouveler forfait</p>
-                        <p class="text-xs text-outline">Recharger des heures d'étude</p>
-                    </div>
-                </button>
-                <button class="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container-high transition-colors group" onclick="window.location.href='#'">
-                    <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-on-surface group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined">receipt_long</span>
-                    </div>
-                    <div class="text-left">
-                        <p class="font-bold">Voir paiements</p>
-                        <p class="text-xs text-outline">Historique des transactions</p>
-                    </div>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Charts Section -->
-    <section class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
-        <div class="glass-card p-8 rounded-[32px] soft-shadow">
-            <div class="flex items-center justify-between mb-8">
-                <h3 class="font-bold text-lg">Progression par enfant</h3>
-                <select class="bg-surface border-none text-xs font-bold text-outline rounded-lg focus:ring-0">
-                    <option>30 derniers jours</option>
-                    <option>7 derniers jours</option>
-                </select>
-            </div>
-            <div class="h-64 flex items-end justify-between gap-4 px-4">
-                {% for enfant in enfants %}
-                <div class="flex flex-col items-center gap-2 w-full">
-                    <div class="w-full bg-surface-container rounded-full h-40 relative">
-                        <div class="absolute bottom-0 w-full {% cycle 'bg-primary' 'bg-secondary' 'bg-tertiary' %} rounded-full" style="height: {{ enfant.taux_progression }}%;"></div>
-                    </div>
-                    <span class="text-xs font-bold text-outline">{{ enfant.prenom }}</span>
-                </div>
-                {% empty %}
-                <div class="w-full text-center text-on-surface-variant">Aucune donnée disponible</div>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="glass-card p-8 rounded-[32px] soft-shadow">
-            <div class="flex items-center justify-between mb-8">
-                <h3 class="font-bold text-lg">Consommation d'heures</h3>
-                <div class="flex gap-2">
-                    <span class="flex items-center gap-1 text-[10px] font-bold text-primary"><span class="w-2 h-2 rounded-full bg-primary"></span> Réel</span>
-                    <span class="flex items-center gap-1 text-[10px] font-bold text-outline"><span class="w-2 h-2 rounded-full bg-surface-variant"></span> Prévu</span>
-                </div>
-            </div>
-            <div class="relative h-64 w-full">
-                <svg class="w-full h-full" viewbox="0 0 400 150">
-                    <path d="M0,130 C50,110 100,120 150,80 C200,40 250,50 300,20 C350,0 400,10 400,10 L400,150 L0,150 Z" fill="url(#grad)" fill-opacity="0.1"></path>
-                    <path d="M0,130 C50,110 100,120 150,80 C200,40 250,50 300,20 C350,0 400,10 400,10" fill="none" stroke="#710fe5" stroke-width="3"></path>
-                    <defs>
-                        <linearGradient id="grad" x1="0%" x2="0%" y1="0%" y2="100%">
-                            <stop offset="0%" style="stop-color:#710fe5;stop-opacity:1"></stop>
-                            <stop offset="100%" style="stop-color:#710fe5;stop-opacity:0"></stop>
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <div class="absolute top-0 left-0 flex flex-col justify-between h-full text-[10px] text-outline opacity-50">
-                    <span>50h</span>
-                    <span>25h</span>
-                    <span>0h</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Upcoming Sessions Table -->
-    <section class="glass-card rounded-[32px] overflow-hidden soft-shadow">
-        <div class="p-8 border-b border-outline-variant flex justify-between items-center">
-            <h3 class="font-headline-lg text-title-md">Prochaines Séances</h3>
-            <button class="px-4 py-2 rounded-lg bg-surface-container-high font-bold text-xs hover:bg-primary hover:text-white transition-all">Voir tout le calendrier</button>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead class="bg-surface-container-low text-outline text-label-md uppercase">
-                    <tr>
-                        <th class="px-8 py-4">Enfant</th>
-                        <th class="px-8 py-4">Matière</th>
-                        <th class="px-8 py-4">Enseignant</th>
-                        <th class="px-8 py-4">Date & Heure</th>
-                        <th class="px-8 py-4">Status</th>
-                        <th class="px-8 py-4"></th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-outline-variant">
-                    {% for seance in prochaines_seances %}
-                    <tr class="hover:bg-surface-container-lowest transition-colors">
-                        <td class="px-8 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-{{ seance.matiere_color }}-container/20 flex items-center justify-center text-{{ seance.matiere_color }} text-[10px] font-bold">{{ seance.enfant_initial }}</div>
-                                <span class="font-semibold text-sm">{{ seance.enfant }}</span>
-                            </div>
-                        </td>
-                        <td class="px-8 py-5">
-                            <span class="px-3 py-1 bg-{{ seance.matiere_color }}-container/10 text-{{ seance.matiere_color }} text-xs font-bold rounded-full">{{ seance.matiere }}</span>
-                        </td>
-                        <td class="px-8 py-5 text-sm text-on-surface-variant">{{ seance.enseignant }}</td>
-                        <td class="px-8 py-5">
-                            <div class="text-sm font-bold">{{ seance.date }}</div>
-                            <div class="text-xs text-outline">{{ seance.heure }}</div>
-                        </td>
-                        <td class="px-8 py-5">
-                            <span class="flex items-center gap-1.5 text-xs font-bold text-tertiary">
-                                <span class="w-2 h-2 rounded-full bg-tertiary {% if seance.date == "Aujourd'hui" %}animate-pulse{% endif %}"></span>
-                                {{ seance.statut }}
-                            </span>
-                        </td>
-                        <td class="px-8 py-5">
-                            <button class="p-2 rounded-lg hover:bg-surface-container-high transition-colors">
-                                <span class="material-symbols-outlined text-outline">more_horiz</span>
-                            </button>
-                        </td>
-                    </tr>
                     {% empty %}
-                    <tr>
-                        <td colspan="6" class="px-8 py-10 text-center text-on-surface-variant">
-                            <span class="material-symbols-outlined text-4xl block mb-2">inbox</span>
-                            Aucune séance prévue pour le moment
-                        </td>
-                    </tr>
+                    <p class="text-center text-on-surface-variant py-8 col-span-2">Aucun enfant inscrit</p>
                     {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
+                </div>
+            </div>
 
-    <!-- Payment Summary Bento -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-gutter pb-8">
-        <div class="glass-card p-8 rounded-[32px] soft-shadow relative overflow-hidden flex flex-col justify-between group">
-            <div class="z-10">
-                <p class="text-outline text-label-md mb-2">Total Payé (2023)</p>
-                <h4 class="text-4xl font-extrabold text-on-surface">{{ total_paye }} MAD</h4>
+            <!-- Quick Actions -->
+            <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
+                    <span class="material-symbols-outlined text-primary">bolt</span>
+                    Actions rapides
+                </h2>
+                <div class="space-y-3">
+                    <button onclick="window.location.href='{% url 'clients:ajouter_enfant' %}'" class="w-full flex items-center gap-3 p-3 bg-background rounded-xl border border-outline-variant/20 hover:border-primary/40 transition-colors">
+                        <span class="material-symbols-outlined text-primary">person_add</span>
+                        <span class="text-sm font-medium">Ajouter un enfant</span>
+                    </button>
+                    <button onclick="window.location.href='{% url 'clients:liste_forfaits' %}'" class="w-full flex items-center gap-3 p-3 bg-background rounded-xl border border-outline-variant/20 hover:border-secondary/40 transition-colors">
+                        <span class="material-symbols-outlined text-secondary">shopping_cart</span>
+                        <span class="text-sm font-medium">Acheter un forfait</span>
+                    </button>
+                    <button onclick="window.location.href='{% url 'clients:liste_seances' %}'" class="w-full flex items-center gap-3 p-3 bg-background rounded-xl border border-outline-variant/20 hover:border-tertiary/40 transition-colors">
+                        <span class="material-symbols-outlined text-tertiary">event_repeat</span>
+                        <span class="text-sm font-medium">Planifier une séance</span>
+                    </button>
+                    <button onclick="window.location.href='{% url 'clients:liste_paiements' %}'" class="w-full flex items-center gap-3 p-3 bg-background rounded-xl border border-outline-variant/20 hover:border-primary/40 transition-colors">
+                        <span class="material-symbols-outlined text-primary">receipt_long</span>
+                        <span class="text-sm font-medium">Voir les paiements</span>
+                    </button>
+                </div>
             </div>
-            <div class="z-10 mt-6 flex items-center gap-2 text-primary font-bold text-sm">
-                <span class="material-symbols-outlined">trending_up</span>
-                +12% par rapport à l'année dernière
-            </div>
-            <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-primary/5 rounded-full group-hover:scale-125 transition-transform duration-500"></div>
-        </div>
-        <div class="glass-card p-8 rounded-[32px] soft-shadow relative overflow-hidden flex flex-col justify-between border-b-4 border-error/20">
-            <div>
-                <p class="text-outline text-label-md mb-2">Paiements en attente</p>
-                <h4 class="text-4xl font-extrabold text-error">0 MAD</h4>
-            </div>
-            <div class="mt-6 flex items-center gap-2 text-on-surface-variant font-bold text-sm">
-                <span class="material-symbols-outlined text-tertiary">check_circle</span>
-                Tous vos règlements sont à jour
-            </div>
-        </div>
-        <div class="premium-gradient p-8 rounded-[32px] shadow-xl relative overflow-hidden flex flex-col justify-between text-white">
-            <div class="relative z-10">
-                <p class="text-white/70 text-label-md mb-2">Solde Portefeuille</p>
-                <h4 class="text-4xl font-extrabold">{{ solde_portefeuille|floatformat:0 }} MAD</h4>
-            </div>
-            <button class="relative z-10 mt-6 w-full py-3 bg-white text-primary font-bold rounded-xl hover:bg-surface-container transition-colors shadow-lg shadow-black/10" onclick="window.location.href='{% url 'portefeuilles:mon_portefeuille' %}'">
-                Recharger le compte
-            </button>
-            <div class="absolute -right-12 -top-12 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
-            <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-black/10 rounded-full blur-2xl"></div>
-        </div>
-    </section>
-</main>
 
-<!-- JavaScript -->
-<script>
-    // Current Date Loader
-    const dateElement = document.getElementById('currentDate');
-    if (dateElement) {
-        const now = new Date();
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const formatted = now.toLocaleDateString('fr-FR', options);
-        dateElement.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
-    }
+        </div>
 
-    // Glass card hover effects
-    document.querySelectorAll('.glass-card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.borderColor = 'rgba(139, 61, 255, 0.4)';
-        });
-        card.addEventListener('mouseleave', () => {
-            card.style.borderColor = 'rgba(233, 236, 239, 1)';
-        });
-    });
-</script>
+        <!-- Prochaines séances & Statistiques -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+
+            <!-- Prochaines séances -->
+            <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">calendar_today</span>
+                        Prochaines séances
+                    </h2>
+                    <a href="{% url 'clients:liste_seances' %}" class="text-sm text-primary font-semibold hover:underline">Voir tout <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+                </div>
+                <div class="space-y-3">
+                    {% for seance in prochaines_seances %}
+                    <div class="flex items-center gap-3 p-3 bg-background rounded-xl border border-outline-variant/20">
+                        <div class="w-12 h-12 rounded-xl bg-primary-lighter flex flex-col items-center justify-center text-primary border border-primary-light">
+                            <span class="text-[10px] font-bold uppercase">{{ seance.date|slice:":3" }}</span>
+                            <span class="text-lg font-bold">{{ seance.date|slice:"4:6" }}</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-on-surface text-sm">{{ seance.matiere }}</p>
+                            <p class="text-xs text-on-surface-variant">{{ seance.enseignant }} • {{ seance.heure }}</p>
+                            <p class="text-xs text-primary mt-0.5">{{ seance.enfant }}</p>
+                        </div>
+                        <span class="px-2 py-1 rounded-full text-[10px] font-bold bg-{{ seance.couleur_statut }}/10 text-{{ seance.couleur_statut }}">
+                            {{ seance.statut }}
+                        </span>
+                    </div>
+                    {% empty %}
+                    <p class="text-center text-on-surface-variant py-8">Aucune séance à venir</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Solde & Total payé -->
+            <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
+                    <span class="material-symbols-outlined text-primary">payments</span>
+                    Résumé financier
+                </h2>
+                <div class="space-y-4">
+                    <div class="p-4 bg-primary-gradient rounded-xl text-white">
+                        <p class="text-sm text-white/80">Solde portefeuille</p>
+                        <p class="text-2xl font-bold">{{ solde_portefeuille|floatformat:0 }} MAD</p>
+                        <button onclick="window.location.href='{% url 'portefeuilles:mon_portefeuille' %}'" class="mt-3 w-full py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors">
+                            Recharger
+                        </button>
+                    </div>
+                    <div class="p-4 bg-background rounded-xl border border-outline-variant/20">
+                        <div class="flex justify-between">
+                            <span class="text-on-surface-variant">Total payé</span>
+                            <span class="font-semibold">{{ total_paye|default:0 }} MAD</span>
+                        </div>
+                        <div class="flex justify-between mt-2">
+                            <span class="text-on-surface-variant">Paiements en attente</span>
+                            <span class="font-semibold text-green-600">0 MAD</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
 </body>
 </html>
