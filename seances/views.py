@@ -827,3 +827,245 @@ def supprimer_reservation(request, affectation_id):
         return JsonResponse({'error': "Une erreur est survenue lors de la suppression."}, status=500)
 
     return JsonResponse({'success': True})
+
+# ============================================================
+# PAGE DE RÉSERVATION POUR PARENT
+# ============================================================
+
+@login_required
+def reserver_seance_parent(request):
+    """Page de réservation de séance pour un parent (pour ses enfants)"""
+    
+    # Vérifier que l'utilisateur est un parent
+    parent = Client.objects.filter(
+        utilisateur=request.user,
+        type_client='PARENT'
+    ).first()
+    
+    if not parent:
+        messages.warning(request, "Vous devez être un parent pour accéder à cette page.")
+        return redirect('clients:dashboard_parent')
+    
+    # Récupérer les enfants du parent
+    enfants = Client.objects.filter(
+        parent=parent,
+        type_client='ETUDIANT'
+    ).select_related('utilisateur')
+    
+    if not enfants.exists():
+        messages.warning(request, "Vous n'avez pas encore d'enfant inscrit. Ajoutez un enfant d'abord.")
+        return redirect('clients:liste_enfants')
+    
+    # Récupérer les matières disponibles
+    matieres_disponibles = list(
+        Enseignant.objects.exclude(matiere__isnull=True)
+        .exclude(matiere__exact='')
+        .values_list('matiere', flat=True)
+        .distinct()
+    )
+    
+    if not matieres_disponibles:
+        matieres_disponibles = [
+            'Mathématiques', 'Physique', 'Chimie', 'SVT',
+            'Français', 'Anglais', 'Histoire', 'Géographie',
+            'Philosophie', 'Informatique', 'Programmation',
+            'Sciences Economiques', 'Comptabilité', 'Arabe',
+            'Espagnol', 'Allemand'
+        ]
+    
+    # Solde du portefeuille du parent
+    portefeuille = Portefeuille.objects.filter(utilisateur=request.user).first()
+    solde_portefeuille = portefeuille.solde if portefeuille else 0
+    
+    context = {
+        'client': parent,
+        'enfants': enfants,
+        'matieres_disponibles': matieres_disponibles,
+        'solde_portefeuille': solde_portefeuille,
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'non_lues': 0,  # À implémenter selon ton système de notifications
+    }
+    
+    return render(request, 'parent/reservation.html', context)
+
+
+# ============================================================
+# API : CONFIRMATION DE RÉSERVATION PAR PARENT
+# ============================================================
+
+@login_required
+def confirmer_reservation_parent(request):
+    """
+    Version parent de confirmer_reservation.
+    La seule différence est que l'enfant_id est passé dans chaque séance,
+    et l'affectation est créée pour l'étudiant (enfant) plutôt que pour le parent.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
+    
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, TypeError):
+        return JsonResponse({'error': 'Données invalides'}, status=400)
+    
+    mode_paiement = data.get('mode_paiement')
+    seances_data = data.get('seances', [])
+    preferences = data.get('preferences', {})
+    
+    if mode_paiement not in ('portefeuille', 'carte', 'virement'):
+        return JsonResponse({'error': 'Mode de paiement invalide'}, status=400)
+    
+    if not seances_data:
+        return JsonResponse({'error': 'Aucune séance à réserver'}, status=400)
+    
+    # Vérifier que le parent existe
+    parent = Client.objects.filter(
+        utilisateur=request.user,
+        type_client='PARENT'
+    ).first()
+    
+    if not parent:
+        return JsonResponse({'error': 'Profil parent introuvable'}, status=400)
+    
+    # Vérifier chaque séance
+    for s in seances_data:
+        # Vérifier l'enfant
+        enfant_id = s.get('enfant_id')
+        if not enfant_id:
+            return JsonResponse({'error': "Veuillez sélectionner un enfant pour chaque séance."}, status=400)
+        
+        enfant = Client.objects.filter(
+            id=enfant_id,
+            parent=parent,
+            type_client='ETUDIANT'
+        ).first()
+        
+        if not enfant:
+            return JsonResponse({'error': f"L'enfant sélectionné n'existe pas ou ne vous est pas associé."}, status=400)
+        
+        # Vérifier le professeur
+        try:
+            prof_id = int(s.get('professeur_id', -1))
+        except (TypeError, ValueError):
+            prof_id = -1
+        
+        if prof_id < 0:
+            return JsonResponse({
+                'error': f"Le professeur choisi pour « {s.get('matiere')} » n'est pas disponible pour le moment. Merci de recharger les suggestions."
+            }, status=400)
+        
+        enseignant = Enseignant.objects.filter(
+            id_enseignant=prof_id,
+            disponible=True
+        ).first()
+        
+        if not enseignant:
+            return JsonResponse({
+                'error': f"Le professeur choisi pour « {s.get('matiere')} » n'est plus disponible. Veuillez rafraîchir les suggestions."
+            }, status=400)
+    
+    try:
+        total = sum(Decimal(str(s['tarif'])) for s in seances_data)
+    except (KeyError, TypeError, ValueError):
+        return JsonResponse({'error': 'Tarifs invalides'}, status=400)
+    
+    portefeuille = Portefeuille.objects.filter(utilisateur=request.user).first()
+    
+    if mode_paiement == 'portefeuille':
+        solde_actuel = portefeuille.solde if portefeuille else Decimal('0')
+        if not portefeuille or solde_actuel < total:
+            return JsonResponse({
+                'error': 'Solde insuffisant dans le portefeuille',
+                'solde': float(solde_actuel),
+                'total': float(total),
+            }, status=400)
+    
+    statut_affectation = 'active' if mode_paiement == 'portefeuille' else 'en_attente'
+    statut_paiement = {
+        'portefeuille': 'paye',
+        'carte': 'en_attente_carte',
+        'virement': 'en_attente_virement',
+    }[mode_paiement]
+    statut_seance = 'prevue' if mode_paiement == 'portefeuille' else 'reportee'
+    
+    seances_creees_ids = []
+    
+    try:
+        with transaction.atomic():
+            if mode_paiement == 'portefeuille':
+                portefeuille.solde -= total
+                portefeuille.save()
+                Transaction.objects.create(
+                    utilisateur=request.user,
+                    montant=-total,
+                    type_transaction='paiement_seance_parent',
+                    description=f"Paiement de {len(seances_data)} séance(s) pour enfant(s)",
+                )
+            
+            for s in seances_data:
+                # Récupérer l'enfant
+                enfant = Client.objects.get(id=s['enfant_id'], parent=parent, type_client='ETUDIANT')
+                
+                enseignant = Enseignant.objects.filter(
+                    id_enseignant=s['professeur_id'],
+                    disponible=True
+                ).select_related('utilisateur').first()
+                
+                if not enseignant:
+                    raise ValueError(f"Professeur introuvable ou indisponible (id={s.get('professeur_id')})")
+                
+                forfait = Forfait.objects.first()
+                if not forfait:
+                    raise ValueError("Aucun forfait disponible en base")
+                
+                # Créer l'affectation pour l'ENFANT (utilisateur de l'enfant)
+                affectation = Affectation.objects.create(
+                    utilisateur=enfant.utilisateur,  # 👈 L'utilisateur de l'enfant
+                    enseignant=enseignant,
+                    forfait=forfait,
+                    matiere=s['matiere'],
+                    prix_renumeration=float(s['tarif']),
+                    statut_paiement=statut_paiement,
+                    statut_affectation=statut_affectation,
+                    heures_restantes=1,
+                    # Optionnel : ajouter un champ pour le parent qui a payé
+                )
+                
+                seance = Seance.objects.create(
+                    affectation=affectation,
+                    date=s['date'],
+                    heure=s['heure'],
+                    duree=s.get('duree', '1h'),
+                    type_seance=s['matiere'],
+                    statut=statut_seance,
+                )
+                seances_creees_ids.append(seance.id)
+    
+    except Client.DoesNotExist:
+        return JsonResponse({'error': "L'enfant sélectionné n'existe pas ou ne vous est pas associé."}, status=400)
+    except ValueError as e:
+        logger.error(f"Erreur confirmation réservation parent: {e}")
+        return JsonResponse({'error': str(e)}, status=400)
+    except Exception as e:
+        logger.exception("Erreur inattendue lors de la confirmation de réservation parent")
+        return JsonResponse({'error': "Une erreur est survenue, veuillez réessayer."}, status=500)
+    
+    if preferences:
+        logger.info(
+            "Préférences pédagogiques renseignées par le parent %s pour les séances %s : %s",
+            request.user.id, seances_creees_ids, preferences,
+        )
+    
+    payload = {
+        'success': True,
+        'statut_paiement': statut_paiement,
+        'seances_ids': seances_creees_ids,
+        'total': float(total),
+    }
+    
+    if mode_paiement == 'carte':
+        payload['redirect_url'] = None
+        payload['message'] = "Redirection vers le paiement par carte à implémenter (CMI/Stripe)."
+    
+    return JsonResponse(payload)

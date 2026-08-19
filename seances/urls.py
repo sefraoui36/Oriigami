@@ -10,5 +10,6 @@ urlpatterns = [
     path('suggerer-professeurs-multiples/', views.suggerer_professeurs_multiples, name='suggerer_professeurs_multiples'),
     path('nouvelle-reservation/', views.reserver_seance, name='nouvelle_reservation'),
     path('confirmer-reservation/', views.confirmer_reservation, name='confirmer_reservation'),
+    path('confirmer-reservation-parent/', views.confirmer_reservation_parent, name='confirmer_reservation_parent'), 
     path('supprimer-reservation/<int:affectation_id>/', views.supprimer_reservation, name='supprimer_reservation'),
 ]
