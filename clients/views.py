@@ -7,6 +7,7 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 from .models import Client
 
+
 @login_required
 def dashboard_parent(request):
     """Dashboard pour les parents"""
@@ -75,6 +76,7 @@ def dashboard_parent(request):
     }
     
     return render(request, 'parent/dashboard.html', context)
+
 
 @login_required
 def liste_enfants(request):
@@ -155,12 +157,14 @@ def liste_enfants(request):
     
     return render(request, 'parent/enfants.html', context)
 
+
 def calculate_age(date_naissance):
     """Calcule l'âge à partir de la date de naissance"""
     if not date_naissance:
         return None
     today = timezone.now().date()
     return today.year - date_naissance.year - ((today.month, today.day) < (date_naissance.month, date_naissance.day))
+
 
 def get_prochaines_seances_parent(parent, enfants):
     """Récupère les prochaines séances pour tous les enfants du parent"""
@@ -200,6 +204,7 @@ def get_prochaines_seances_parent(parent, enfants):
     
     return prochaines_seances
 
+
 def get_stats_consommation(enfants):
     """Récupère les statistiques de consommation par enfant"""
     stats = []
@@ -218,6 +223,7 @@ def get_stats_consommation(enfants):
     
     return stats
 
+
 def get_recommandation(enfants):
     """Génère une recommandation basée sur les données des enfants"""
     for enfant in enfants:
@@ -228,6 +234,7 @@ def get_recommandation(enfants):
                 'type': 'warning'
             }
     return None
+
 
 @login_required
 def creer_profil_parent(request):
@@ -253,6 +260,7 @@ def creer_profil_parent(request):
         return redirect('clients:dashboard_parent')
     
     return render(request, 'clients/creer_profil_parent.html')
+
 
 @login_required
 def ajouter_enfant(request):
@@ -292,6 +300,7 @@ def ajouter_enfant(request):
     
     messages.success(request, f"{prenom} {nom} a été ajouté avec succès !")
     return redirect('clients:liste_enfants')
+
 
 @login_required
 def liste_enseignants(request):
@@ -426,6 +435,7 @@ def liste_enseignants(request):
     
     return render(request, 'parent/enseignant.html', context)
 
+
 def get_disponibilites_enseignant(enseignant):
     """Récupère les disponibilités d'un enseignant"""
     # À adapter selon votre modèle de disponibilités
@@ -441,6 +451,7 @@ def get_disponibilites_enseignant(enseignant):
         {'jour': 'Lundi - Jeudi', 'heure': '17:00 - 20:00'},
         {'jour': 'Samedi', 'heure': '09:00 - 13:00'},
     ]
+
 
 @login_required
 def liste_forfaits(request):
@@ -524,6 +535,7 @@ def liste_forfaits(request):
     
     return render(request, 'parent/forfaits.html', context)
 
+
 def get_offres_forfaits():
     """Récupère les offres de forfaits disponibles"""
     return [
@@ -565,6 +577,7 @@ def get_offres_forfaits():
         }
     ]
 
+
 def get_recommandation_forfait(forfaits_enfants):
     """Génère une recommandation basée sur les forfaits des enfants"""
     for f in forfaits_enfants:
@@ -581,6 +594,7 @@ def get_recommandation_forfait(forfaits_enfants):
                 'enfant': f['enfant'].prenom
             }
     return None
+
 
 @login_required
 def acheter_forfait(request):
@@ -643,6 +657,7 @@ def acheter_forfait(request):
     
     messages.success(request, f"Forfait {offre['nom']} acheté avec succès pour {enfant.prenom} !")
     return redirect('clients:liste_forfaits')
+
 
 @login_required
 def liste_seances(request):
@@ -832,6 +847,7 @@ def liste_seances(request):
     
     return render(request, 'parent/seances.html', context)
 
+
 def get_date_affichage(date):
     """Retourne une date formatée pour l'affichage"""
     aujourdhui = timezone.now().date()
@@ -844,6 +860,7 @@ def get_date_affichage(date):
     else:
         jours_semaine = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
         return jours_semaine[date.weekday()]
+
 
 def get_matiere_icone(matiere):
     """Retourne l'icône correspondante à la matière"""
@@ -869,6 +886,7 @@ def get_matiere_icone(matiere):
                 return icon
     return 'school'
 
+
 def get_matiere_couleur(matiere):
     """Retourne la couleur correspondante à la matière"""
     couleurs = {
@@ -893,12 +911,14 @@ def get_matiere_couleur(matiere):
                 return color
     return 'primary'
 
+
+# ✅ VERSION CORRECTE - UNE SEULE FOIS
 @login_required
 def profil_parent(request):
     """Vue pour afficher et modifier le profil du parent"""
     from django.contrib.auth import update_session_auth_hash
     from django.contrib.auth.forms import PasswordChangeForm
-    from utilisateurs.models import Utilisateur as AppUtilisateur  # 🔥 AJOUTER CETTE IMPORTATION
+    from utilisateurs.models import Utilisateur as AppUtilisateur  # 🔥 IMPORTANT !
     
     # Récupérer le client parent connecté
     client = Client.objects.filter(utilisateur=request.user, type_client='PARENT').first()
@@ -1075,178 +1095,7 @@ def profil_parent(request):
     }
     
     return render(request, 'parent/profil.html', context)
-    """Vue pour afficher et modifier le profil du parent"""
-    from django.contrib.auth import update_session_auth_hash
-    from django.contrib.auth.forms import PasswordChangeForm
-    
-    # Récupérer le client parent connecté
-    client = Client.objects.filter(utilisateur=request.user, type_client='PARENT').first()
-    
-    if not client:
-        messages.warning(request, "Vous n'avez pas encore de profil parent. Veuillez en créer un.")
-        return redirect('clients:creer_profil_parent')
-    
-    # Récupérer les enfants du parent
-    enfants = Client.objects.filter(parent=client, type_client='ETUDIANT')
-    
-    # 🔥 Récupérer les utilisateurs des enfants
-    enfants_utilisateurs = [enfant.utilisateur for enfant in enfants]
-    
-    # Récupérer les forfaits actifs (à adapter)
-    from forfaits.models import Forfait
-    forfaits_actifs = Forfait.objects.filter(utilisateur=request.user).count()
-    
-    # Récupérer le solde du portefeuille
-    solde_portefeuille = 0
-    try:
-        from portefeuilles.models import Portefeuille
-        portefeuille = Portefeuille.objects.filter(utilisateur=request.user).first()
-        if portefeuille:
-            solde_portefeuille = portefeuille.solde
-    except:
-        pass
-    
-    # Heures restantes (à adapter)
-    heures_restantes = 42
-    heures_total = 60
-    
-    # Dernières transactions (à adapter)
-    dernieres_transactions = []
-    try:
-        from portefeuilles.models import Transaction
-        transactions = Transaction.objects.filter(
-            portefeuille__utilisateur=request.user
-        ).order_by('-date_creation')[:3]
-        for t in transactions:
-            dernieres_transactions.append({
-                'date': t.date_creation.strftime('%d %b %Y'),
-                'description': t.description,
-                'montant': f"{t.montant:.2f} €",
-                'statut': 'Payé' if t.statut == 'COMPLETE' else 'En attente'
-            })
-    except:
-        pass
-    
-    # Prochain cours
-    prochain_cours = None
-    try:
-        from seances.models import Seance
-        from affectations.models import Affectation
-        from datetime import datetime, timedelta
-        
-        affectations = Affectation.objects.filter(
-            utilisateur__in=enfants_utilisateurs,
-            statut_affectation='active'
-        )
-        prochaine_seance = Seance.objects.filter(
-            affectation__in=affectations,
-            date__gte=datetime.now().date(),
-            statut='prevue'
-        ).order_by('date', 'heure').first()
-        
-        if prochaine_seance:
-            enseignant = None
-            if prochaine_seance.affectation and prochaine_seance.affectation.rh:
-                from enseignants.models import Enseignant
-                enseignant = Enseignant.objects.filter(
-                    utilisateur=prochaine_seance.affectation.rh.utilisateur
-                ).first()
-            
-            prochain_cours = {
-                'enseignant': f"{enseignant.utilisateur.first_name} {enseignant.utilisateur.last_name}" if enseignant and enseignant.utilisateur else 'Enseignant',
-                'matiere': prochaine_seance.affectation.matiere if prochaine_seance.affectation else 'Cours',
-                'enfant': prochaine_seance.affectation.utilisateur.prenom if prochaine_seance.affectation and prochaine_seance.affectation.utilisateur else 'Enfant',
-                'date': prochaine_seance.date.strftime('%d/%m/%Y'),
-                'heure': prochaine_seance.heure.strftime('%H:%M') if prochaine_seance.heure else '--:--',
-                'duree': prochaine_seance.duree or '1h00'
-            }
-    except:
-        pass
-    
-    # Gestion du formulaire de modification du profil
-    if request.method == 'POST':
-        # Récupérer les données modifiées
-        nom = request.POST.get('nom')
-        prenom = request.POST.get('prenom')
-        telephone = request.POST.get('telephone')
-        adresse = request.POST.get('adresse')
-        date_naissance = request.POST.get('date_naissance')
-        
-        # Mettre à jour le client
-        if nom:
-            client.nom = nom
-        if prenom:
-            client.prenom = prenom
-        if telephone:
-            client.telephone = telephone
-        if adresse:
-            client.adresse = adresse
-        if date_naissance:
-            client.date_naissance = date_naissance
-        
-        client.save()
-        
-        # Mettre à jour l'utilisateur
-        user = request.user
-        if prenom:
-            user.first_name = prenom
-        if nom:
-            user.last_name = nom
-        user.save()
-        
-        messages.success(request, "Votre profil a été mis à jour avec succès !")
-        return redirect('clients:profil_parent')
-    
-    # Données pour le template
-    enfants_data = []
-    for enfant in enfants:
-        # Récupérer les matières de l'enfant (à adapter)
-        matieres = []
-        try:
-            from affectations.models import Affectation
-            affectations = Affectation.objects.filter(
-                utilisateur=enfant.utilisateur,
-                statut_affectation='active'
-            )
-            for aff in affectations:
-                if aff.matiere:
-                    matieres.append(aff.matiere)
-        except:
-            pass
-        
-        enfants_data.append({
-            'id': enfant.id_client,
-            'prenom': enfant.prenom,
-            'nom': enfant.nom,
-            'niveau': enfant.niveau_scolaire or 'Niveau',
-            'matieres': matieres[:3] if matieres else ['Mathématiques', 'Français'],
-            'statut': 'Actif'
-        })
-    
-    # Préférences du système
-    preferences = {
-        'langue': 'Français',
-        'fuseau_horaire': 'Europe/Paris (UTC+1)',
-        'format_date': 'DD/MM/YYYY'
-    }
-    
-    context = {
-        'client': client,
-        'user': request.user,
-        'enfants': enfants_data,
-        'forfaits_actifs': forfaits_actifs,
-        'solde_portefeuille': solde_portefeuille,
-        'heures_restantes': heures_restantes,
-        'heures_total': heures_total,
-        'dernieres_transactions': dernieres_transactions,
-        'prochain_cours': prochain_cours,
-        'preferences': preferences,
-        'nombre_enfants': len(enfants_data),
-        'first_name': request.user.first_name,
-        'last_name': request.user.last_name,
-    }
-    
-    return render(request, 'parent/profil.html', context)
+
 
 @login_required
 def liste_paiements(request):
@@ -1395,6 +1244,8 @@ def liste_paiements(request):
     }
     
     return render(request, 'parent/paiement.html', context)
+
+
 @login_required
 def notifications(request):
     """Vue pour afficher les notifications du parent"""
@@ -1482,7 +1333,7 @@ def notifications(request):
                 'icone': 'calendar_month',
                 'couleur': 'primary',
                 'action_label': 'Détails de la séance',
-                'action_url': '/clients/seances/',  # ✅ URL directe
+                'action_url': '/clients/seances/',
                 'seance_id': seance.id,
             })
     except Exception as e:
@@ -1521,7 +1372,7 @@ def notifications(request):
                 'icone': 'payments',
                 'couleur': 'tertiary',
                 'action_label': 'Voir les détails',
-                'action_url': '/clients/paiements/',  # ✅ URL directe
+                'action_url': '/clients/paiements/',
                 'transaction_id': transaction.id,
             })
     except Exception as e:
@@ -1540,9 +1391,7 @@ def notifications(request):
                 ).order_by('-date')[:2]
                 
                 for forfait in forfaits:
-                    # Vérifier si le forfait est presque épuisé (seuil)
                     if forfait.nombre_heure <= forfait.seuil:
-                        # ✅ CORRECTION : Ne pas utiliser {% url %} dans le code Python
                         notifications_data.append({
                             'id': f"forfait_{forfait.id}",
                             'type': 'forfait',
@@ -1553,7 +1402,7 @@ def notifications(request):
                             'icone': 'warning',
                             'couleur': 'orange',
                             'action_label': 'Recharger le forfait',
-                            'action_url': '/clients/forfaits/',  # ✅ URL directe
+                            'action_url': '/clients/forfaits/',
                             'forfait_id': forfait.id,
                         })
     except Exception as e:
@@ -1600,6 +1449,8 @@ def notifications(request):
     }
     
     return render(request, 'parent/notifications.html', context)
+
+
 @login_required
 def parametres(request):
     """Vue pour afficher les paramètres du parent"""
@@ -1618,7 +1469,6 @@ def parametres(request):
     # ============================================
     
     # 1. Langue et région (à adapter selon votre modèle)
-    # Si vous avez un modèle de préférences utilisateur
     try:
         from preferences.models import Preference
         preference = Preference.objects.filter(utilisateur=request.user).first()
@@ -1641,7 +1491,7 @@ def parametres(request):
         devise = 'MAD'
         theme = 'clair'
     
-    # 2. Notifications (récupérer les préférences)
+    # 2. Notifications
     try:
         from notifications.models import PreferenceNotification
         pref_notif = PreferenceNotification.objects.filter(utilisateur=request.user).first()
@@ -1661,8 +1511,7 @@ def parametres(request):
         rappel_paiement = True
         promotions = False
     
-    # 3. Sécurité (récupérer les infos)
-    # Nombre de connexions ou appareils (à adapter)
+    # 3. Sécurité
     appareils_connectes = 2
     
     # 4. Méthodes de paiement (à adapter)
@@ -1708,7 +1557,6 @@ def parametres(request):
     except:
         total_transactions = 0
     
-    # Context pour le template
     context = {
         'client': client,
         'enfants': enfants,

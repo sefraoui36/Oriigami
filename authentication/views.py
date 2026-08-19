@@ -15,17 +15,25 @@ from forfaits.models import Forfait
 from enseignants.models import Enseignant
 from django.utils import timezone
 from datetime import timedelta
+from django.urls import reverse
+
 
 def inscription(request):
+    """
+    Page d'inscription - Gère Parent ET Étudiant
+    - Parent : crée son compte + ses enfants (sans compte)
+    - Étudiant : crée son compte (sans choix de parent)
+    """
+    
     if request.method == 'POST':
         form = InscriptionForm(request.POST)
         if form.is_valid():
             user = form.save()
             
-            # 🔥 Récupérer le type_client et le mettre en minuscules
             type_client = request.POST.get('type_client', 'parent').lower()
             print(f"🔍 [DEBUG] type_client reçu: {type_client}")
             
+            # Créer le client
             client = Client.objects.create(
                 utilisateur=user,
                 nom=form.cleaned_data['nom'],
@@ -36,6 +44,9 @@ def inscription(request):
             )
             print(f"✅ [DEBUG] Client créé: {client.id_client} - Type: {client.type_client}")
             
+            # ============================================
+            # 🔥 CAS PARENT : Créer les enfants
+            # ============================================
             if type_client == 'parent':
                 noms_enfants = request.POST.getlist('nom_enfant[]')
                 prenoms_enfants = request.POST.getlist('prenom_enfant[]')
@@ -55,17 +66,47 @@ def inscription(request):
                             niveau_scolaire=niveaux_enfants[i] if i < len(niveaux_enfants) else '',
                             etablissement=etablissements_enfants[i] if i < len(etablissements_enfants) else ''
                         )
+                        print(f"✅ [DEBUG] Enfant créé: {prenoms_enfants[i]} {noms_enfants[i]}")
+                
+                messages.success(request, "✅ Compte parent créé avec succès !")
+                print("🔄 [DEBUG] Redirection vers connexion")
+                return redirect('authentication:connexion')
             
-            messages.success(request, "Inscription réussie ! Veuillez vous connecter pour accéder à votre espace.")
+            # ============================================
+            # 🔥 CAS ÉTUDIANT (sans choix de parent)
+            # ============================================
+            elif type_client == 'etudiant':
+                # Récupérer les informations supplémentaires de l'étudiant
+                niveau_etude = request.POST.get('niveau_etude', '')
+                etablissement = request.POST.get('etablissement', '')
+                
+                # Mettre à jour les informations de l'étudiant
+                client.niveau_scolaire = niveau_etude
+                client.etablissement = etablissement
+                client.save()
+                
+                messages.success(request, "✅ Compte étudiant créé avec succès !")
+                print("🔄 [DEBUG] Redirection vers connexion")
+                return redirect('authentication:connexion')
+            
+            # Cas par défaut (normalement jamais atteint)
+            messages.success(request, "Inscription réussie ! Veuillez vous connecter.")
+            print("🔄 [DEBUG] Redirection vers connexion (défaut)")
             return redirect('authentication:connexion')
+            
         else:
+            print("❌ [DEBUG] Formulaire invalide")
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f"{field}: {error}")
+    
     else:
         form = InscriptionForm()
     
-    return render(request, 'clients/inscription.html', {'form': form})
+    return render(request, 'clients/inscription.html', {
+        'form': form,
+    })
+
 
 def connexion(request):
     if request.method == 'POST':
@@ -81,7 +122,7 @@ def connexion(request):
             if client:
                 print(f"🔍 [DEBUG] Type client: {client.type_client}")
             
-            # 🔥 REDIRECTION CORRECTE selon le type de client (en minuscules)
+            # 🔥 REDIRECTION CORRECTE selon le type de client
             if client:
                 if client.type_client == 'parent':
                     print("👉 [DEBUG] Redirection vers dashboard_parent")
@@ -89,6 +130,9 @@ def connexion(request):
                 elif client.type_client == 'etudiant':
                     print("👉 [DEBUG] Redirection vers authentication:dashboard")
                     return redirect('authentication:dashboard')
+                elif client.type_client == 'enseignant':
+                    print("👉 [DEBUG] Redirection vers dashboard_enseignant")
+                    return redirect('enseignants:dashboard')
             
             # Par défaut, rediriger vers le dashboard étudiant
             print("👉 [DEBUG] Redirection par défaut vers authentication:dashboard")
@@ -100,40 +144,58 @@ def connexion(request):
     
     return render(request, 'clients/connexion.html', {'form': form})
 
+
 @login_required
 def deconnexion(request):
     logout(request)
     messages.info(request, "Vous êtes déconnecté. À bientôt !")
     return redirect('authentication:connexion')
 
+
 @login_required
 def dashboard(request):
+    """
+    Dashboard étudiant
+    Affiche les informations de l'étudiant, ses cours, ses séances, etc.
+    """
     user = request.user
     
+    # Récupérer le client
     client = Client.objects.filter(utilisateur=user).first()
     
-    # 🔥 Si c'est un parent, rediriger vers le dashboard parent (en minuscules)
+    # 🔥 Si c'est un parent, rediriger vers le dashboard parent
     if client and client.type_client == 'parent':
         print("👉 [DEBUG] Parent détecté dans dashboard, redirection vers clients:dashboard_parent")
         return redirect('clients:dashboard_parent')
     
-    etudiant = None
-    if client:
-        try:
-            etudiant = Etudiant.objects.filter(client=client).first()
-        except:
-            pass
+    # 🔥 Si c'est un enseignant, rediriger vers le dashboard enseignant
+    if client and client.type_client == 'enseignant':
+        print("👉 [DEBUG] Enseignant détecté dans dashboard")
+        return render(request, 'enseignants/dashboard.html', {'user': user, 'client': client})
     
-    cours_actifs = 0
-    cours_termines = 0
-    if etudiant:
-        try:
-            seances_etudiant = Seance.objects.filter(affectation__etudiant=etudiant)
-            cours_actifs = seances_etudiant.filter(statut__in=['prevue', 'en_cours']).count()
-            cours_termines = seances_etudiant.filter(statut='termine').count()
-        except:
-            pass
+    # ============================================
+    # 🔥 DASHBOARD ÉTUDIANT
+    # ============================================
     
+    # 🔥 Récupérer le parent de l'étudiant (peut être None)
+    parent = client.parent if client else None
+    
+    # Récupérer les affectations de l'étudiant
+    affectations = Affectation.objects.filter(
+        utilisateur=user,  # 🔥 L'utilisateur de l'étudiant
+        statut_affectation='active'
+    )
+    
+    # Statistiques des cours
+    cours_actifs = affectations.count()
+    
+    # Récupérer les séances de l'étudiant
+    seances_etudiant = Seance.objects.filter(
+        affectation__in=affectations
+    )
+    cours_termines = seances_etudiant.filter(statut='termine').count()
+    
+    # Heures restantes (à partir du forfait)
     heures_restantes = 0
     try:
         forfait = Forfait.objects.filter(utilisateur=user).first()
@@ -142,88 +204,85 @@ def dashboard(request):
     except:
         pass
     
+    # Moyenne générale
     moyenne_generale = 0
-    if etudiant:
-        try:
-            seances = Seance.objects.filter(affectation__etudiant=etudiant)
-            notes = [s.qualite for s in seances if s.qualite]
-            if notes:
-                moyenne_generale = sum(notes) / len(notes)
-        except:
-            pass
-    
-    cours_list = []
     try:
-        affectations = Affectation.objects.filter(etudiant=etudiant, statut_affectation='active')[:3]
-        for aff in affectations:
-            total_seances = Seance.objects.filter(affectation=aff).count()
-            seances_terminees = Seance.objects.filter(affectation=aff, statut='termine').count()
-            progression = int((seances_terminees / total_seances * 100)) if total_seances > 0 else 0
+        notes = [s.qualite for s in seances_etudiant if s.qualite]
+        if notes:
+            moyenne_generale = sum(notes) / len(notes)
+    except:
+        pass
+    
+    # Liste des cours
+    cours_list = []
+    for aff in affectations[:3]:
+        total_seances = Seance.objects.filter(affectation=aff).count()
+        seances_terminees = Seance.objects.filter(affectation=aff, statut='termine').count()
+        progression = int((seances_terminees / total_seances * 100)) if total_seances > 0 else 0
+        
+        professeur = "Enseignant"
+        if aff.rh:
+            try:
+                enseignant = Enseignant.objects.filter(utilisateur=aff.rh.utilisateur).first()
+                if enseignant and enseignant.utilisateur:
+                    professeur = f"{enseignant.utilisateur.first_name} {enseignant.utilisateur.last_name}"
+            except:
+                pass
+        
+        cours_list.append({
+            'nom': aff.matiere or 'Cours',
+            'professeur': professeur,
+            'seances_restantes': int(aff.heures_restantes) if aff.heures_restantes else 0,
+            'progression': progression,
+            'icone': get_matiere_icone(aff.matiere),
+            'couleur': get_matiere_couleur(aff.matiere)
+        })
+    
+    if not cours_list:
+        cours_list = []
+    
+    # Prochaines séances
+    prochaines_seances = []
+    try:
+        seances = Seance.objects.filter(
+            affectation__in=affectations,
+            statut='prevue',
+            date__gte=timezone.now().date()
+        ).order_by('date', 'heure')[:3]
+        
+        for seance in seances:
+            jour = seance.date.strftime('%a')
+            jours_fr = {
+                'Mon': 'Lun', 'Tue': 'Mar', 'Wed': 'Mer', 
+                'Thu': 'Jeu', 'Fri': 'Ven', 'Sat': 'Sam', 'Sun': 'Dim'
+            }
+            jour_fr = jours_fr.get(jour, jour)
+            
+            matiere = seance.affectation.matiere if seance.affectation else 'Cours'
+            heure = seance.heure.strftime('%H:%M') if seance.heure else '--:--'
+            duree = seance.duree if seance.duree else '1h'
             
             professeur = "Enseignant"
-            if aff.rh:
+            if seance.affectation and seance.affectation.rh:
                 try:
-                    enseignant = Enseignant.objects.filter(utilisateur=aff.rh.utilisateur).first()
+                    enseignant = Enseignant.objects.filter(utilisateur=seance.affectation.rh.utilisateur).first()
                     if enseignant and enseignant.utilisateur:
                         professeur = f"{enseignant.utilisateur.first_name} {enseignant.utilisateur.last_name}"
                 except:
                     pass
             
-            cours_list.append({
-                'nom': aff.matiere or 'Cours',
+            prochaines_seances.append({
+                'jour': jour_fr,
+                'date': seance.date.strftime('%d'),
+                'matiere': matiere,
+                'heure': f"{heure} - {duree}",
                 'professeur': professeur,
-                'seances_restantes': int(aff.heures_restantes) if aff.heures_restantes else 0,
-                'progression': progression,
-                'icone': get_matiere_icone(aff.matiere),
-                'couleur': get_matiere_couleur(aff.matiere)
+                'couleur': get_matiere_couleur(matiere)
             })
     except:
         pass
     
-    if not cours_list:
-        cours_list = []
-
-    prochaines_seances = []
-    try:
-        if etudiant:
-            seances = Seance.objects.filter(
-                affectation__etudiant=etudiant,
-                statut='prevue',
-                date__gte=timezone.now().date()
-            ).order_by('date', 'heure')[:3]
-            
-            for seance in seances:
-                jour = seance.date.strftime('%a')
-                jours_fr = {
-                    'Mon': 'Lun', 'Tue': 'Mar', 'Wed': 'Mer', 
-                    'Thu': 'Jeu', 'Fri': 'Ven', 'Sat': 'Sam', 'Sun': 'Dim'
-                }
-                jour_fr = jours_fr.get(jour, jour)
-                
-                matiere = seance.affectation.matiere if seance.affectation else 'Cours'
-                heure = seance.heure.strftime('%H:%M') if seance.heure else '--:--'
-                duree = seance.duree if seance.duree else '1h'
-                
-                professeur = "Enseignant"
-                if seance.affectation and seance.affectation.rh:
-                    try:
-                        enseignant = Enseignant.objects.filter(utilisateur=seance.affectation.rh.utilisateur).first()
-                        if enseignant and enseignant.utilisateur:
-                            professeur = f"{enseignant.utilisateur.first_name} {enseignant.utilisateur.last_name}"
-                    except:
-                        pass
-                
-                prochaines_seances.append({
-                    'jour': jour_fr,
-                    'date': seance.date.strftime('%d'),
-                    'matiere': matiere,
-                    'heure': f"{heure} - {duree}",
-                    'professeur': professeur,
-                    'couleur': get_matiere_couleur(matiere)
-                })
-    except:
-        pass
-
+    # Notifications
     notifications_list = []
     try:
         notifications = Notification.objects.filter(
@@ -251,6 +310,7 @@ def dashboard(request):
     except:
         pass
     
+    # Progression globale
     progression = {
         'pourcentage': 0,
         'cours_completes': 0,
@@ -261,42 +321,45 @@ def dashboard(request):
         'heures_total': 0
     }
     
-    if etudiant:
-        try:
-            seances = Seance.objects.filter(affectation__etudiant=etudiant)
-            total = seances.count()
-            terminees = seances.filter(statut='termine').count()
-            
-            progression['cours_completes'] = terminees
-            progression['total_cours'] = total
-            progression['pourcentage'] = int((terminees / total * 100)) if total > 0 else 0
-            
-            heures = 0
-            for s in seances.filter(statut='termine'):
-                if s.duree:
-                    try:
-                        duree_str = s.duree.replace('h', '').strip()
-                        if 'min' in duree_str:
-                            parts = duree_str.split('h')
-                            if len(parts) == 2:
-                                heures += float(parts[0]) + float(parts[1].replace('min', '')) / 60
-                        else:
-                            heures += float(duree_str)
-                    except:
-                        pass
-            progression['heures_effectuees'] = int(heures)
-            
-            if forfait:
-                progression['heures_total'] = forfait.nombre_heure
-        except:
-            pass
-
+    try:
+        seances = Seance.objects.filter(affectation__in=affectations)
+        total = seances.count()
+        terminees = seances.filter(statut='termine').count()
+        
+        progression['cours_completes'] = terminees
+        progression['total_cours'] = total
+        progression['pourcentage'] = int((terminees / total * 100)) if total > 0 else 0
+        
+        heures = 0
+        for s in seances.filter(statut='termine'):
+            if s.duree:
+                try:
+                    duree_str = s.duree.replace('h', '').strip()
+                    if 'min' in duree_str:
+                        parts = duree_str.split('h')
+                        if len(parts) == 2:
+                            heures += float(parts[0]) + float(parts[1].replace('min', '')) / 60
+                    else:
+                        heures += float(duree_str)
+                except:
+                    pass
+        progression['heures_effectuees'] = int(heures)
+        
+        if forfait:
+            progression['heures_total'] = forfait.nombre_heure
+    except:
+        pass
+    
+    # ============================================
+    # 🔥 CONTEXTE POUR LE TEMPLATE
+    # ============================================
     context = {
         'user': user,
         'first_name': user.first_name,
         'last_name': user.last_name,
         'client': client,
-        'etudiant': etudiant,
+        'parent': parent,  # 🔥 Le parent de l'étudiant (peut être None)
+        'affectations': affectations,
         'cours_actifs': cours_actifs,
         'cours_termines': cours_termines,
         'heures_restantes': heures_restantes,
@@ -304,12 +367,16 @@ def dashboard(request):
         'cours': cours_list,
         'prochaines_seances': prochaines_seances,
         'notifications': notifications_list,
-        'progression': progression
+        'progression': progression,
+        'nombre_affectations': affectations.count(),
+        'est_etudiant': True,
     }
     
     return render(request, 'etudiants/dashboard.html', context)
 
+
 def get_matiere_icone(matiere):
+    """Retourne l'icône correspondante à la matière"""
     icones = {
         'math': 'calculate',
         'mathématiques': 'calculate',
@@ -332,7 +399,9 @@ def get_matiere_icone(matiere):
                 return icon
     return 'school'
 
+
 def get_matiere_couleur(matiere):
+    """Retourne la couleur correspondante à la matière"""
     couleurs = {
         'math': 'primary',
         'mathématiques': 'primary',

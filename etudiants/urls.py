@@ -14,4 +14,5 @@ urlpatterns = [
     path('avis/', views.avis, name='avis'),
     path('notifications/', views.notifications, name='notifications'),
     path('parametres/', views.parametres, name='parametres'),
+    path('reservations-parent/', views.reservations_parent, name='reservations_parent'),
 ]

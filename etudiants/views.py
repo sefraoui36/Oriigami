@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.db.models import Count, Sum, Q, Avg
+from django.db.models import Count, Sum, Q, Avg, Prefetch
 from django.utils import timezone
 from clients.models import Client
 from etudiants.models import Etudiant
@@ -19,103 +20,82 @@ from authentication.models import Utilisateur
 from avis.models import Avis
 from .forms import ParametresForm, SecuriteForm, NotificationPreferencesForm, AvisForm
 
+
 @login_required
 def profil(request):
     user = request.user
     client = Client.objects.filter(utilisateur=user).first()
-    
-    # ===== GESTION DES ACTIONS POST =====
+
     if request.method == 'POST':
         action = request.POST.get('action')
-        
-        # 1. Mettre à jour le profil
+
         if action == 'update_profile':
             first_name = request.POST.get('first_name')
             last_name = request.POST.get('last_name')
             email = request.POST.get('email')
             telephone = request.POST.get('telephone')
             adresse = request.POST.get('adresse')
-            
-            # Mettre à jour l'utilisateur
+
             if first_name:
                 user.first_name = first_name.strip()
             if last_name:
                 user.last_name = last_name.strip()
             if email:
                 user.email = email.strip()
-                user.username = email.strip()  # Django utilise username pour l'authentification
+                user.username = email.strip()
             if telephone:
                 user.telephone = telephone.strip()
             if adresse:
                 user.adresse_actuelle = adresse.strip()
-            
+
             user.save()
-            
-            # Mettre à jour le client si nécessaire
+
             if client and adresse:
                 client.adresse = adresse.strip()
                 client.nom = last_name.strip() if last_name else client.nom
                 client.prenom = first_name.strip() if first_name else client.prenom
                 client.telephone = telephone.strip() if telephone else client.telephone
                 client.save()
-            
+
             messages.success(request, "✅ Vos informations ont été mises à jour avec succès !")
             return redirect('etudiants:profil')
-        
-        # 2. Changer le mot de passe
+
         elif action == 'change_password':
             current_password = request.POST.get('current_password')
             new_password = request.POST.get('new_password')
             confirm_password = request.POST.get('confirm_password')
-            
-            # Vérifier le mot de passe actuel
+
             if not user.check_password(current_password):
                 messages.error(request, "❌ Le mot de passe actuel est incorrect.")
                 return redirect('etudiants:profil')
-            
-            # Vérifier que les nouveaux mots de passe correspondent
+
             if new_password != confirm_password:
                 messages.error(request, "❌ Les mots de passe ne correspondent pas.")
                 return redirect('etudiants:profil')
-            
-            # Vérifier la longueur du nouveau mot de passe
+
             if len(new_password) < 8:
                 messages.error(request, "❌ Le mot de passe doit contenir au moins 8 caractères.")
                 return redirect('etudiants:profil')
-            
-            # Changer le mot de passe
+
             user.set_password(new_password)
             user.save()
-            
-            # Garder l'utilisateur connecté après changement de mot de passe
             update_session_auth_hash(request, user)
-            
+
             messages.success(request, "✅ Votre mot de passe a été changé avec succès !")
             return redirect('etudiants:profil')
-        
-        # 3. Supprimer le compte
+
         elif action == 'delete_account':
-            # Déconnecter l'utilisateur
             from django.contrib.auth import logout
             logout(request)
-            
-            # Supprimer l'utilisateur (cascade supprime aussi les clients)
             user.delete()
-            
             messages.success(request, "Votre compte a été supprimé avec succès.")
             return redirect('authentication:connexion')
-        
-        # 4. Activer/Désactiver la 2FA
+
         elif action == 'toggle_2fa':
             enabled = request.POST.get('enabled') == 'true'
-            # Ajoutez ce champ dans votre modèle Utilisateur si nécessaire
-            # user.two_factor_enabled = enabled
-            # user.save()
-            
             messages.success(request, f"✅ Authentification à deux facteurs {'activée' if enabled else 'désactivée'}")
             return redirect('etudiants:profil')
-    
-    # ===== AFFICHAGE DU PROFIL =====
+
     context = {
         'user': user,
         'first_name': user.first_name,
@@ -126,44 +106,42 @@ def profil(request):
         'date_naissance': user.date_naissance,
         'client': client,
     }
-    
+
     return render(request, 'etudiants/profil.html', context)
+
 
 @login_required
 def enseignants(request):
     user = request.user
     enseignants_list = []
     total_enseignants = 0
-    
+
     try:
-        client = Client.objects.filter(utilisateur=user).first()
-        etudiant = Etudiant.objects.filter(client=client).first()
-        
-        if etudiant:
-            affectations = Affectation.objects.filter(etudiant=etudiant)
-            
+        # ✅ Ne dépend plus du modèle Etudiant (souvent absent)
+        client = Client.objects.filter(utilisateur=user, type_client='ETUDIANT').first()
+
+        if client:
+            affectations = Affectation.objects.filter(
+                utilisateur=user
+            ).select_related('enseignant', 'enseignant__utilisateur')  # 🔥 remplace 'rh', 'rh__utilisateur'
+
             for aff in affectations:
-                if aff.rh and aff.rh.utilisateur:
-                    enseignant_user = aff.rh.utilisateur
-                    
-                    try:
-                        enseignant = Enseignant.objects.get(utilisateur=enseignant_user)
-                    except Enseignant.DoesNotExist:
-                        enseignant = None
-                    
+                if aff.enseignant and aff.enseignant.utilisateur:  # 🔥 remplace aff.rh
+                    enseignant_user = aff.enseignant.utilisateur
+
                     seances = Seance.objects.filter(affectation=aff)
-                    seances_completees = seances.filter(statut='termine').count()
+                    seances_completees = seances.filter(statut='terminee').count()  # 🔥 'terminee'
                     seances_prevues = seances.filter(statut='prevue').count()
                     total_seances = seances.count()
-                    
+
                     progression = int((seances_completees / total_seances * 100)) if total_seances > 0 else 0
-                    
+
                     forfait = Forfait.objects.filter(utilisateur=user).first()
                     forfait_nom = forfait.type if forfait else "Standard"
                     forfait_heures = forfait.nombre_heure if forfait else 0
-                    
+
                     heures_restantes = aff.heures_restantes if aff.heures_restantes else 0
-                    
+
                     enseignants_list.append({
                         'nom': f"{enseignant_user.first_name} {enseignant_user.last_name}",
                         'matiere': aff.matiere,
@@ -179,14 +157,12 @@ def enseignants(request):
                         'note': 4.5,
                         'experience': enseignant_user.experiences.count() if hasattr(enseignant_user, 'experiences') else 0,
                     })
-                    
+
             total_enseignants = len(enseignants_list)
-            
-    except Client.DoesNotExist:
-        pass
+
     except Exception as e:
         print(f"Erreur: {e}")
-    
+
     context = {
         'user': user,
         'first_name': user.first_name,
@@ -196,104 +172,160 @@ def enseignants(request):
     }
     return render(request, 'etudiants/enseignants.html', context)
 
+
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+# ... (garde tous les autres imports existants)
+
+
 @login_required
 def seances(request):
     user = request.user
     seances_a_venir = []
     seances_terminees = []
     ia_recommendations = []
-    
-    # Statistiques
+    mes_reservations = []
+
     total_seances = 0
     heures_restantes = 0
     heures_total = 0
-    presence_data = []
-    focus_score = 0
-    
+
+    total_reservations = 0
+    reservations_en_attente = 0
+    reservations_confirmees = 0
+    matieres_reservees = set()
+    profs_reserves = set()
+
     try:
-        client = Client.objects.filter(utilisateur=user).first()
-        etudiant = Etudiant.objects.filter(client=client).first()
-        
-        if etudiant:
-            # Récupérer les séances à venir
+        client = Client.objects.filter(utilisateur_id=user.id, type_client='ETUDIANT').first()
+
+        if client:
             seances_a_venir = Seance.objects.filter(
-                affectation__etudiant=etudiant,
+                affectation__utilisateur_id=user.id,
                 statut='prevue',
                 date__gte=timezone.now().date()
             ).order_by('date', 'heure')[:5]
-            
-            # Récupérer les séances terminées
+
             seances_terminees = Seance.objects.filter(
-                affectation__etudiant=etudiant,
-                statut='termine'
+                affectation__utilisateur_id=user.id,
+                statut='terminee'
             ).order_by('-date')[:5]
-            
-            # Récupérer les recommandations IA
+
             ia_recommendations = IaRecommendations.objects.filter(
-                utilisateur=user
+                utilisateur_id=user.id
             ).order_by('-date')[:3]
-            
-            # Calculer les statistiques
-            all_seances = Seance.objects.filter(affectation__etudiant=etudiant)
+
+            all_seances = Seance.objects.filter(affectation__utilisateur_id=user.id)
             total_seances = all_seances.count()
-            seances_terminees_count = all_seances.filter(statut='termine').count()
-            
-            # Heures restantes (depuis le forfait)
-            forfait = Forfait.objects.filter(utilisateur=user).first()
+            seances_terminees_count = all_seances.filter(statut='terminee').count()
+
+            forfait = Forfait.objects.filter(utilisateur_id=user.id).first()
             if forfait:
                 heures_total = forfait.nombre_heure or 0
-                heures_utilisees = seances_terminees_count * 2  # 2h par séance
+                heures_utilisees = seances_terminees_count * 2
                 heures_restantes = max(0, heures_total - heures_utilisees)
-            
-            # Calcul du Focus Score (moyenne des notes ou progression)
-            if seances_terminees_count > 0:
-                notes = [s.qualite for s in all_seances if s.qualite]
-                if notes:
-                    notes_float = []
-                    for n in notes:
-                        try:
-                            notes_float.append(float(n))
-                        except:
-                            pass
-                    if notes_float:
-                        focus_score = int((sum(notes_float) / len(notes_float)) * 20)  # Convertir /5 en %
-                        focus_score = min(100, max(0, focus_score))
-            
-            # Données pour l'assiduité (derniers 5 jours)
-            today = timezone.now().date()
-            for i in range(4, -1, -1):
-                day = today - timedelta(days=i)
-                seances_day = Seance.objects.filter(
-                    affectation__etudiant=etudiant,
-                    date=day
+
+            affectations = Affectation.objects.filter(
+                utilisateur_id=user.id
+            ).select_related(
+                'enseignant', 'enseignant__utilisateur', 'forfait'
+            ).prefetch_related(
+                Prefetch('seances', queryset=Seance.objects.all().order_by('date', 'heure'))
+            ).order_by('-date_creation')
+
+            total_reservations = affectations.count()
+
+            for aff in affectations:
+                enseignant_nom = "Non assigné"
+                if aff.enseignant and aff.enseignant.utilisateur:
+                    enseignant_nom = aff.enseignant.utilisateur.get_full_name() or aff.enseignant.utilisateur.username
+                    profs_reserves.add(enseignant_nom)
+
+                matieres_reservees.add(aff.matiere)
+
+                seances_aff = list(aff.seances.all())
+                prochaine_seance = next(
+                    (s for s in seances_aff if s.statut == 'prevue' and s.date >= timezone.now().date()),
+                    None
                 )
-                total_day = seances_day.count()
-                present_day = seances_day.filter(statut='termine').count()
-                if total_day > 0:
-                    presence_pct = int((present_day / total_day) * 100)
+
+                if aff.statut_affectation == 'en_attente':
+                    statut_reservation = 'en_attente'
+                    statut_label = 'En attente'
+                    statut_couleur = 'orange'
+                    reservations_en_attente += 1
+                elif aff.statut_affectation == 'active':
+                    statut_reservation = 'active'
+                    statut_label = 'Confirmée'
+                    statut_couleur = 'green'
+                    reservations_confirmees += 1
                 else:
-                    presence_pct = 0
-                presence_data.append({
-                    'day': day.strftime('%a'),
-                    'presence': presence_pct,
-                    'is_high': presence_pct >= 80,
-                    'is_medium': 50 <= presence_pct < 80,
-                    'is_low': presence_pct < 50,
+                    statut_reservation = 'inconnu'
+                    statut_label = aff.statut_affectation
+                    statut_couleur = 'gray'
+
+                # 🔥 NOUVEAU : détail de chaque séance de cette réservation,
+                # utilisé pour peupler le modal côté template (via JSON).
+                seances_detail = []
+                statut_seance_label = {
+                    'prevue': 'Prévue',
+                    'terminee': 'Terminée',
+                    'annulee': 'Annulée',
+                    'reportee': 'En attente de paiement',
+                }
+                statut_seance_couleur = {
+                    'prevue': 'blue',
+                    'terminee': 'green',
+                    'annulee': 'red',
+                    'reportee': 'orange',
+                }
+                for s in seances_aff:
+                    seances_detail.append({
+                        'matiere': aff.matiere_personnalise or aff.matiere,
+                        'date': s.date.strftime('%d/%m/%Y') if s.date else '',
+                        'heure': s.heure.strftime('%H:%M') if s.heure else '',
+                        'duree': s.duree,
+                        'statut': s.statut,
+                        'statut_label': statut_seance_label.get(s.statut, s.statut),
+                        'statut_couleur': statut_seance_couleur.get(s.statut, 'gray'),
+                    })
+
+                mes_reservations.append({
+                    'id': aff.id,
+                    'matiere': aff.matiere,
+                    'matiere_personnalise': aff.matiere_personnalise,
+                    'enseignant_nom': enseignant_nom,
+                    'statut_reservation': statut_reservation,
+                    'statut_label': statut_label,
+                    'statut_couleur': statut_couleur,
+                    'date_creation': aff.date_creation,
+                    'total_seances': len(seances_aff),
+                    'seances_prevues': sum(1 for s in seances_aff if s.statut == 'prevue'),
+                    'seances_terminees': sum(1 for s in seances_aff if s.statut == 'terminee'),
+                    'prochaine_seance': prochaine_seance,
+                    'seances_detail': seances_detail,  # 🔥 utilisé seulement pour le JSON
                 })
-            
-            # Si pas de données de présence, générer des valeurs par défaut
-            if not presence_data:
-                presence_data = [
-                    {'day': 'Lun', 'presence': 0, 'is_high': False, 'is_medium': False, 'is_low': True},
-                    {'day': 'Mar', 'presence': 0, 'is_high': False, 'is_medium': False, 'is_low': True},
-                    {'day': 'Mer', 'presence': 0, 'is_high': False, 'is_medium': False, 'is_low': True},
-                    {'day': 'Jeu', 'presence': 0, 'is_high': False, 'is_medium': False, 'is_low': True},
-                    {'day': 'Ven', 'presence': 0, 'is_high': False, 'is_medium': False, 'is_low': True},
-                ]
-            
+
     except Exception as e:
         print(f"Erreur seances: {e}")
-    
+
+    # 🔥 NOUVEAU : on prépare un JSON léger (id + prof + détail des séances)
+    # que le JS utilisera pour peupler le modal au clic, sans requête AJAX.
+    reservations_json = json.dumps(
+        [
+            {
+                'id': r['id'],
+                'matiere': r['matiere_personnalise'] or r['matiere'],
+                'enseignant_nom': r['enseignant_nom'],
+                'statut_label': r['statut_label'],
+                'statut_couleur': r['statut_couleur'],
+                'seances': r['seances_detail'],
+            }
+            for r in mes_reservations
+        ],
+        cls=DjangoJSONEncoder
+    )
+
     context = {
         'user': user,
         'first_name': user.first_name,
@@ -304,11 +336,18 @@ def seances(request):
         'total_seances': total_seances,
         'heures_restantes': heures_restantes,
         'heures_total': heures_total,
-        'presence_data': presence_data,
-        'focus_score': focus_score,
-        'focus_status': 'Optimal' if focus_score >= 80 else 'Bon' if focus_score >= 60 else 'À améliorer',
+        'mes_reservations': mes_reservations,
+        'reservations_json': reservations_json,  # 🔥 nouveau
+        'total_reservations': total_reservations,
+        'reservations_en_attente': reservations_en_attente,
+        'reservations_confirmees': reservations_confirmees,
+        'nb_matieres_reservees': len(matieres_reservees),
+        'nb_profs_reserves': len(profs_reserves),
+        'matieres_reservees': list(matieres_reservees),
+        'profs_reserves': list(profs_reserves),
     }
     return render(request, 'etudiants/seances.html', context)
+
 
 @login_required
 def forfait(request):
@@ -328,66 +367,67 @@ def forfait(request):
     prochaine_seance = None
     historique_seances = []
     paiements = []
-    
+
     try:
         forfait = Forfait.objects.filter(utilisateur=user).first()
-        
+
         if forfait:
             forfait_nom = forfait.type if forfait.type else "Forfait Standard"
             forfait_heures = forfait.nombre_heure if forfait.nombre_heure else 0
             date_achat = forfait.date if forfait.date else None
             montant = forfait.prix if forfait.prix else 0
             id_forfait = f"#PKG-{forfait.id_forfait:04d}" if forfait.id_forfait else "#PKG-0001"
-            
+
             try:
-                client = Client.objects.filter(utilisateur=user).first()
-                etudiant = Etudiant.objects.filter(client=client).first()
-                
-                if etudiant:
-                    seances = Seance.objects.filter(affectation__etudiant=etudiant, statut='termine')
+                # ✅ Ne dépend plus du modèle Etudiant
+                client = Client.objects.filter(utilisateur=user, type_client='ETUDIANT').first()
+
+                if client:
+                    # 🔥 CORRIGÉ : affectation__utilisateur (pas affectation__etudiant, qui n'existe pas)
+                    seances = Seance.objects.filter(affectation__utilisateur=user, statut='terminee')
                     heures_utilisees = seances.count() * 2
-                    
+
                     heures_restantes = forfait_heures - heures_utilisees
                     if heures_restantes < 0:
                         heures_restantes = 0
-                    
+
                     if forfait_heures > 0:
                         pourcentage = int((heures_utilisees / forfait_heures) * 100)
                         if pourcentage > 100:
                             pourcentage = 100
-                    
+
                     statut_paiement = "Payé" if forfait.prix and forfait.prix > 0 else "En attente"
-                    
+
                     prochaine_seance = Seance.objects.filter(
-                        affectation__etudiant=etudiant,
+                        affectation__utilisateur=user,
                         statut='prevue',
                         date__gte=timezone.now().date()
                     ).order_by('date', 'heure').first()
-                    
-                    affectation = Affectation.objects.filter(etudiant=etudiant).first()
-                    if affectation and affectation.rh and affectation.rh.utilisateur:
-                        enseignant_user = affectation.rh.utilisateur
+
+                    # 🔥 CORRIGÉ : filtre sur utilisateur, et enseignant au lieu de rh
+                    affectation = Affectation.objects.filter(
+                        utilisateur=user
+                    ).select_related('enseignant', 'enseignant__utilisateur').first()
+
+                    if affectation and affectation.enseignant and affectation.enseignant.utilisateur:
+                        enseignant_user = affectation.enseignant.utilisateur
                         enseignant_nom = f"{enseignant_user.first_name} {enseignant_user.last_name}"
                         enseignant_matiere = affectation.matiere
-                    
+
                     historique_seances = Seance.objects.filter(
-                        affectation__etudiant=etudiant
+                        affectation__utilisateur=user
                     ).order_by('-date', '-heure')[:10]
-                    
+
                     paiements = DemandePaiement.objects.filter(
                         utilisateur=user
                     ).order_by('-date_demande')[:5]
-                    
-            except Client.DoesNotExist:
-                pass
+
             except Exception as e:
                 print(f"Erreur calcul: {e}")
-                
-    except Forfait.DoesNotExist:
-        pass
+
     except Exception as e:
         print(f"Erreur forfait: {e}")
-    
+
     context = {
         'user': user,
         'first_name': user.first_name,
@@ -411,6 +451,7 @@ def forfait(request):
     }
     return render(request, 'etudiants/forfait.html', context)
 
+
 @login_required
 def portefeuille(request):
     user = request.user
@@ -424,38 +465,39 @@ def portefeuille(request):
     statut = "Actif"
     dernier_update = "Aujourd'hui"
     validite = "Illimitée"
-    
+
     try:
         portefeuille = Portefeuille.objects.filter(utilisateur=user).first()
         if portefeuille:
             solde = portefeuille.solde if portefeuille.solde else 0
             id_portefeuille = f"#OP-{portefeuille.id_portefeuille:05d}" if portefeuille.id_portefeuille else "#OP-00001"
-    except:
+    except Exception:
         pass
-    
+
     try:
         transactions = DemandePaiement.objects.filter(utilisateur=user).order_by('-date_demande')[:10]
-        
+
         recharges = DemandePaiement.objects.filter(utilisateur=user, type_demande='recharge', statut='complete')
         for r in recharges:
             total_recharge += r.montant if r.montant else 0
-        
+
         depenses = DemandePaiement.objects.filter(utilisateur=user, type_demande='paiement', statut='complete')
         for d in depenses:
             total_depense += d.montant if d.montant else 0
-        
+
         try:
-            client = Client.objects.filter(utilisateur=user).first()
-            etudiant = Etudiant.objects.filter(client=client).first()
-            if etudiant:
-                seances = Seance.objects.filter(affectation__etudiant=etudiant)
+            # ✅ Ne dépend plus du modèle Etudiant
+            client = Client.objects.filter(utilisateur=user, type_client='ETUDIANT').first()
+            if client:
+                # 🔥 CORRIGÉ : affectation__utilisateur au lieu de affectation__etudiant
+                seances = Seance.objects.filter(affectation__utilisateur=user)
                 total_heures = seances.count() * 2
-        except:
+        except Exception:
             pass
-            
+
     except Exception as e:
         print(f"Erreur portefeuille: {e}")
-    
+
     context = {
         'user': user,
         'first_name': user.first_name,
@@ -474,12 +516,13 @@ def portefeuille(request):
     }
     return render(request, 'etudiants/portefeuille.html', context)
 
+
 @login_required
 def progression(request):
     user = request.user
     progression_data = {
-        'total': 0, 
-        'terminees': 0, 
+        'total': 0,
+        'terminees': 0,
         'pourcentage': 0,
         'presence': 0,
         'heures_completees': 0,
@@ -489,87 +532,84 @@ def progression(request):
         'evaluations': [],
         'timeline': [],
     }
-    
+
     try:
-        client = Client.objects.filter(utilisateur=user).first()
-        etudiant = Etudiant.objects.filter(client=client).first()
-        
-        if etudiant:
-            seances = Seance.objects.filter(affectation__etudiant=etudiant)
+        # ✅ Ne dépend plus du modèle Etudiant
+        client = Client.objects.filter(utilisateur=user, type_client='ETUDIANT').first()
+
+        if client:
+            seances = Seance.objects.filter(affectation__utilisateur=user)
             total = seances.count()
-            terminees = seances.filter(statut='termine').count()
+            terminees = seances.filter(statut='terminee').count()  # 🔥 'terminee'
             prevues = seances.filter(statut='prevue').count()
-            
+
             progression_data['total'] = total
             progression_data['terminees'] = terminees
             progression_data['pourcentage'] = int((terminees / total * 100)) if total > 0 else 0
-            
+
             progression_data['heures_completees'] = terminees * 2
             progression_data['heures_restantes'] = prevues * 2
-            
-            toutes_les_seances = Seance.objects.filter(affectation__etudiant=etudiant)
-            total_seances_prevues = toutes_les_seances.count()
-            seances_present = toutes_les_seances.filter(statut='termine').count()
-            
-            if total_seances_prevues > 0:
-                taux_presence = int((seances_present / total_seances_prevues) * 100)
-            else:
-                taux_presence = 0
-            
-            progression_data['presence'] = taux_presence
-            
+
+            if total > 0:
+                progression_data['presence'] = int((terminees / total) * 100)
+
             notes = [s.qualite for s in seances if s.qualite]
             if notes:
                 notes_float = []
                 for n in notes:
                     try:
                         notes_float.append(float(n))
-                    except:
+                    except Exception:
                         pass
                 if notes_float:
                     progression_data['note_moyenne'] = round(sum(notes_float) / len(notes_float), 1)
-            
-            affectations = Affectation.objects.filter(etudiant=etudiant)
+
+            affectations = Affectation.objects.filter(utilisateur=user)
             matieres = []
             for aff in affectations:
                 seances_aff = Seance.objects.filter(affectation=aff)
                 total_aff = seances_aff.count()
-                terminees_aff = seances_aff.filter(statut='termine').count()
+                terminees_aff = seances_aff.filter(statut='terminee').count()  # 🔥 'terminee'
                 progression_aff = int((terminees_aff / total_aff * 100)) if total_aff > 0 else 0
-                
+
                 matieres.append({
                     'nom': aff.matiere,
                     'progression': progression_aff,
                 })
             progression_data['matieres'] = matieres
-            
-            avis_enseignants = Avis.objects.filter(
-                etudiant=etudiant
-            ).select_related('enseignant', 'affectation').order_by('-date_creation')[:5]
-            
+
+            # ⚠️ Avis.etudiant attend un objet Etudiant : si le modèle Etudiant
+            # n'existe pas pour ce client, cette requête ne renverra rien
+            # (elle ne plantera pas, mais evaluations restera vide).
+            etudiant = Etudiant.objects.filter(client=client).first()
             evaluations = []
-            for avis in avis_enseignants:
-                evaluations.append({
-                    'enseignant_nom': f"{avis.enseignant.first_name} {avis.enseignant.last_name}",
-                    'matiere': avis.affectation.matiere if avis.affectation else '',
-                    'commentaire': avis.commentaire,
-                    'note': avis.note,
-                    'date': avis.date_creation,
-                })
+            if etudiant:
+                avis_enseignants = Avis.objects.filter(
+                    etudiant=etudiant
+                ).select_related('enseignant', 'affectation').order_by('-date_creation')[:5]
+
+                for avis in avis_enseignants:
+                    evaluations.append({
+                        'enseignant_nom': f"{avis.enseignant.first_name} {avis.enseignant.last_name}",
+                        'matiere': avis.affectation.matiere if avis.affectation else '',
+                        'commentaire': avis.commentaire,
+                        'note': avis.note,
+                        'date': avis.date_creation,
+                    })
             progression_data['evaluations'] = evaluations
-            
+
             timeline = []
-            
+
             seances_terminees = Seance.objects.filter(
-                affectation__etudiant=etudiant,
-                statut='termine'
-            ).select_related('affectation').order_by('-date')[:10]
-            
+                affectation__utilisateur=user,
+                statut='terminee'  # 🔥 'terminee'
+            ).select_related('affectation', 'affectation__enseignant', 'affectation__enseignant__utilisateur').order_by('-date')[:10]
+
             for seance in seances_terminees:
                 enseignant_nom = "Enseignant"
-                if seance.affectation and seance.affectation.rh and seance.affectation.rh.utilisateur:
-                    enseignant_nom = f"{seance.affectation.rh.utilisateur.first_name} {seance.affectation.rh.utilisateur.last_name}"
-                
+                if seance.affectation and seance.affectation.enseignant and seance.affectation.enseignant.utilisateur:  # 🔥
+                    enseignant_nom = f"{seance.affectation.enseignant.utilisateur.first_name} {seance.affectation.enseignant.utilisateur.last_name}"
+
                 niveau = "Débutant"
                 niveau_couleur = "blue"
                 if seance.qualite:
@@ -587,12 +627,12 @@ def progression(request):
                         else:
                             niveau = "À améliorer"
                             niveau_couleur = "red"
-                    except:
+                    except Exception:
                         pass
-                
+
                 matiere = seance.affectation.matiere if seance.affectation else "Cours"
                 date_formatee = seance.date.strftime('%d %b %Y') if seance.date else ""
-                
+
                 timeline.append({
                     'date': seance.date,
                     'date_formatee': date_formatee,
@@ -603,7 +643,7 @@ def progression(request):
                     'niveau_couleur': niveau_couleur,
                     'qualite': seance.qualite,
                 })
-            
+
             if len(timeline) < 3 and len(matieres) > 0:
                 for matiere in matieres:
                     if matiere['progression'] >= 80 and len(timeline) < 6:
@@ -617,13 +657,13 @@ def progression(request):
                             'niveau_couleur': "green",
                             'qualite': "5.0",
                         })
-            
+
             timeline = sorted(timeline, key=lambda x: x['date'], reverse=True)[:6]
             progression_data['timeline'] = timeline
-            
+
     except Exception as e:
         print(f"Erreur progression: {e}")
-    
+
     context = {
         'user': user,
         'first_name': user.first_name,
@@ -632,34 +672,37 @@ def progression(request):
     }
     return render(request, 'etudiants/progression.html', context)
 
+
 @login_required
 def avis(request):
     user = request.user
-    avis_list = []
     enseignants_a_noter = []
     avis_existants = []
-    
+
     total_avis = 0
     note_moyenne = 0
-    
+
     try:
-        client = Client.objects.filter(utilisateur=user).first()
-        etudiant = Etudiant.objects.filter(client=client).first()
-        
-        if etudiant:
-            affectations = Affectation.objects.filter(etudiant=etudiant)
-            
+        # ✅ Ne dépend plus du modèle Etudiant pour l'accès à la page
+        client = Client.objects.filter(utilisateur=user, type_client='ETUDIANT').first()
+        etudiant = Etudiant.objects.filter(client=client).first() if client else None
+
+        if client and etudiant:
+            affectations = Affectation.objects.filter(
+                utilisateur=user
+            ).select_related('enseignant', 'enseignant__utilisateur')
+
             for aff in affectations:
-                if aff.rh and aff.rh.utilisateur:
-                    enseignant_user = aff.rh.utilisateur
-                    
+                if aff.enseignant and aff.enseignant.utilisateur:  # 🔥 remplace aff.rh
+                    enseignant_user = aff.enseignant.utilisateur
+
                     try:
                         avis_existant = Avis.objects.get(
                             etudiant=etudiant,
                             enseignant=enseignant_user,
                             affectation=aff
                         )
-                        
+
                         avis_existants.append({
                             'id': avis_existant.id_avis,
                             'enseignant_nom': f"{enseignant_user.first_name} {enseignant_user.last_name}",
@@ -668,43 +711,33 @@ def avis(request):
                             'commentaire': avis_existant.commentaire,
                             'date_creation': avis_existant.date_creation,
                             'enseignant_id': enseignant_user.id,
-                            'affectation_id': aff.id_affectation,
+                            'affectation_id': aff.id,
                         })
-                        
+
                         total_avis += 1
                         note_moyenne += avis_existant.note
-                        
+
                     except Avis.DoesNotExist:
                         derniere_seance = Seance.objects.filter(
                             affectation=aff,
-                            statut='termine'
+                            statut='terminee'  # 🔥 'terminee'
                         ).order_by('-date', '-heure').first()
-                        
+
                         enseignants_a_noter.append({
                             'id': enseignant_user.id,
                             'nom': f"{enseignant_user.first_name} {enseignant_user.last_name}",
                             'matiere': aff.matiere,
                             'specialite': enseignant_user.specialite if hasattr(enseignant_user, 'specialite') else '',
                             'derniere_seance': derniere_seance.date if derniere_seance else None,
-                            'affectation_id': aff.id_affectation,
+                            'affectation_id': aff.id,
                         })
-            
+
             if total_avis > 0:
                 note_moyenne = round(note_moyenne / total_avis, 1)
-            
-            context_avis = {
-                'total_avis': total_avis,
-                'note_moyenne': note_moyenne,
-                'avis_existants': avis_existants,
-                'enseignants_a_noter': enseignants_a_noter,
-                'a_ete_ameliore': True if total_avis > 0 else False,
-            }
-            
-    except Client.DoesNotExist:
-        pass
+
     except Exception as e:
         print(f"Erreur avis: {e}")
-    
+
     if request.method == 'POST':
         form = AvisForm(request.POST)
         if form.is_valid():
@@ -712,19 +745,19 @@ def avis(request):
             affectation_id = form.cleaned_data['affectation_id']
             note = form.cleaned_data['note']
             commentaire = form.cleaned_data['commentaire']
-            
+
             try:
-                client = Client.objects.filter(utilisateur=user).first()
+                client = Client.objects.filter(utilisateur=user, type_client='ETUDIANT').first()
                 etudiant = Etudiant.objects.filter(client=client).first()
                 enseignant = Utilisateur.objects.get(id=enseignant_id)
-                affectation = Affectation.objects.get(id_affectation=affectation_id)
-                
+                affectation = Affectation.objects.get(id=affectation_id)
+
                 avis_existant = Avis.objects.filter(
                     etudiant=etudiant,
                     enseignant=enseignant,
                     affectation=affectation
                 ).first()
-                
+
                 if avis_existant:
                     avis_existant.note = note
                     avis_existant.commentaire = commentaire
@@ -739,16 +772,16 @@ def avis(request):
                         commentaire=commentaire
                     )
                     messages.success(request, "Votre avis a été ajouté avec succès !")
-                
+
                 return redirect('etudiants:avis')
-                
+
             except Exception as e:
                 messages.error(request, f"Erreur lors de l'enregistrement de l'avis: {e}")
         else:
             messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
     else:
         form = AvisForm()
-    
+
     context = {
         'user': user,
         'first_name': user.first_name,
@@ -762,35 +795,35 @@ def avis(request):
     }
     return render(request, 'etudiants/avis.html', context)
 
+
 @login_required
 def notifications(request):
     user = request.user
-    
+
     notifications_list = []
     notifications_non_lues = 0
     total_notifications = 0
     seances_notifications = []
     paiements_notifications = []
     messages_notifications = []
-    
+
     try:
         all_notifications = Notification.objects.filter(
             Q(utilisateur=user) | Q(destinataire=user)
         ).order_by('-date_envoi')
-        
+
         total_notifications = all_notifications.count()
         notifications_non_lues = all_notifications.filter(lue=False).count()
-        
+
         notifications_list = all_notifications[:10]
-        
+
         seances_notifications = all_notifications.filter(type__in=['seance', 'cours', 'rappel'])[:5]
         paiements_notifications = all_notifications.filter(type='paiement')[:5]
         messages_notifications = all_notifications.filter(type__in=['message', 'commentaire'])[:5]
-        
+
     except Exception as e:
         print(f"Erreur notifications: {e}")
-        pass
-    
+
     context = {
         'user': user,
         'first_name': user.first_name,
@@ -806,19 +839,20 @@ def notifications(request):
     }
     return render(request, 'etudiants/notifications.html', context)
 
+
 @login_required
 def parametres(request):
     user = request.user
     client = None
     etudiant = None
-    
+
     try:
         client = Client.objects.filter(utilisateur=user).first()
         if client:
             etudiant = Etudiant.objects.filter(client=client).first()
-    except Client.DoesNotExist:
+    except Exception:
         pass
-    
+
     if request.method == 'POST':
         if 'form_type' in request.POST:
             if request.POST['form_type'] == 'informations':
@@ -857,24 +891,24 @@ def parametres(request):
         form = ParametresForm(instance=user, client_instance=client)
         securite_form = SecuriteForm()
         notifications_form = NotificationPreferencesForm()
-    
+
     try:
         forfait = Forfait.objects.filter(utilisateur=user).first()
         forfait_nom = forfait.type if forfait and forfait.type else "Standard"
-    except:
+    except Exception:
         forfait_nom = "Standard"
-    
+
     prochaine_seance = None
     try:
-        if etudiant:
-            prochaine_seance = Seance.objects.filter(
-                affectation__etudiant=etudiant,
-                statut='prevue',
-                date__gte=timezone.now().date()
-            ).order_by('date', 'heure').first()
-    except:
+        # 🔥 CORRIGÉ : affectation__utilisateur au lieu de affectation__etudiant
+        prochaine_seance = Seance.objects.filter(
+            affectation__utilisateur=user,
+            statut='prevue',
+            date__gte=timezone.now().date()
+        ).order_by('date', 'heure').first()
+    except Exception:
         pass
-    
+
     context = {
         'user': user,
         'first_name': user.first_name,
@@ -897,3 +931,117 @@ def parametres(request):
         'id_etudiant': f"#OP-2024-{user.id:04d}" if user.id else "#OP-2024-0000",
     }
     return render(request, 'etudiants/parametres.html', context)
+
+
+@login_required
+def reservations_parent(request):
+    """
+    Page pour que l'étudiant puisse voir les réservations effectuées par son parent.
+    """
+    user = request.user
+
+    client = Client.objects.filter(utilisateur=user, type_client='ETUDIANT').first()
+
+    if not client:
+        messages.warning(request, "Vous devez être un étudiant pour accéder à cette page.")
+        return redirect('authentication:dashboard')
+
+    parent = client.parent if client.parent else None
+
+    reservations = []
+    total_reservations = 0
+    reservations_en_attente = 0
+    reservations_confirmees = 0
+
+    if parent:
+        affectations = Affectation.objects.filter(
+            utilisateur=parent.utilisateur,
+            statut_affectation__in=['active', 'en_attente']
+        ).select_related(
+            'enseignant',
+            'enseignant__utilisateur',
+            'forfait'
+        ).prefetch_related(
+            Prefetch('seances', queryset=Seance.objects.all().order_by('-date', '-heure'))
+        ).order_by('-date_creation')
+
+        total_reservations = affectations.count()
+
+        for aff in affectations:
+            enseignant_nom = "Non assigné"
+            enseignant_matiere = aff.matiere
+
+            # 🔥 CORRIGÉ : aff.enseignant EST déjà l'objet Enseignant,
+            # plus besoin de le re-chercher via rh.utilisateur
+            if aff.enseignant and aff.enseignant.utilisateur:
+                enseignant_nom = aff.enseignant.utilisateur.get_full_name() or aff.enseignant.utilisateur.username
+
+            seances = aff.seances.all()
+
+            total_seances = seances.count()
+            seances_prevues = seances.filter(statut='prevue').count()
+            seances_terminees = seances.filter(statut='terminee').count()
+            seances_reportees = seances.filter(statut='reportee').count()
+
+            prochaine_seance = seances.filter(
+                statut='prevue',
+                date__gte=timezone.now().date()
+            ).order_by('date', 'heure').first()
+
+            if aff.statut_affectation == 'en_attente':
+                statut_reservation = 'en_attente'
+                statut_label = 'En attente'
+                statut_couleur = 'orange'
+                reservations_en_attente += 1
+            elif aff.statut_affectation == 'active':
+                statut_reservation = 'active'
+                statut_label = 'Confirmée'
+                statut_couleur = 'green'
+                reservations_confirmees += 1
+            else:
+                statut_reservation = 'inconnu'
+                statut_label = 'Inconnu'
+                statut_couleur = 'gray'
+
+            reservations.append({
+                'id': aff.id,
+                'matiere': aff.matiere,
+                'matiere_personnalise': aff.matiere_personnalise,
+                'enseignant_nom': enseignant_nom,
+                'prix_renumeration': aff.prix_renumeration,
+                'statut_paiement': aff.statut_paiement,
+                'statut_affectation': aff.statut_affectation,
+                'statut_reservation': statut_reservation,
+                'statut_label': statut_label,
+                'statut_couleur': statut_couleur,
+                'heures_restantes': aff.heures_restantes,
+                'date_creation': aff.date_creation,
+                'a_ete_renouvelee': aff.a_ete_renouvelee,
+                'recu': aff.recu,
+                'forfait_nom': aff.forfait.type if aff.forfait and aff.forfait.type else 'Standard',
+                'forfait_heures': aff.forfait.nombre_heure if aff.forfait and aff.forfait.nombre_heure else 0,
+                'total_seances': total_seances,
+                'seances_prevues': seances_prevues,
+                'seances_terminees': seances_terminees,
+                'seances_reportees': seances_reportees,
+                'prochaine_seance': prochaine_seance,
+                'seances': seances[:5],
+            })
+
+        reservations.sort(key=lambda x: x['date_creation'], reverse=True)
+
+    context = {
+        'user': user,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'client': client,
+        'parent': parent,
+        'reservations': reservations,
+        'total_reservations': total_reservations,
+        'reservations_en_attente': reservations_en_attente,
+        'reservations_confirmees': reservations_confirmees,
+        'has_parent': parent is not None,
+        'has_reservations': len(reservations) > 0,
+    }
+
+    return render(request, 'etudiants/reservations_parent.html', context)

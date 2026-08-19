@@ -179,6 +179,17 @@
             background: rgba(186, 26, 26, 0.1);
             color: #ba1a1a;
         }
+        .animate-fade-in {
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .py-4\.5 {
+            padding-top: 1.125rem;
+            padding-bottom: 1.125rem;
+        }
     </style>
 </head>
 <body class="bg-background font-body-lg text-on-surface min-h-screen selection:bg-primary/20">
@@ -221,231 +232,235 @@
     {% endif %}
 
     <!-- ===== STEP 1: ROLE SELECTION ===== -->
-    <div class="space-y-8 animate-fade-in" id="step-1">
-        <div class="text-center mb-10">
-            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Quel est votre profil ?</h2>
-            <p class="font-body-lg text-body-lg text-on-surface-variant">Personnalisez votre expérience selon vos besoins</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Parent -->
-            <div class="role-card group p-8 rounded-xl border-2 border-outline-variant/30 bg-surface-container-lowest flex flex-col items-center text-center space-y-5" id="role-parent" onclick="selectRole('parent')">
-                <div class="icon-box w-16 h-16 rounded-2xl bg-surface-container-high flex items-center justify-center transition-all duration-300">
-                    <span class="material-symbols-outlined text-[36px]">family_restroom</span>
-                </div>
-                <div>
-                    <h3 class="font-title-md text-title-md mb-2 group-hover:text-primary transition-colors">Je suis un Parent</h3>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Suivez l'évolution académique et gérez le planning de vos enfants.</p>
-                </div>
-            </div>
-            <!-- Student -->
-            <div class="role-card group p-8 rounded-xl border-2 border-outline-variant/30 bg-surface-container-lowest flex flex-col items-center text-center space-y-5" id="role-etudiant" onclick="selectRole('etudiant')">
-                <div class="icon-box w-16 h-16 rounded-2xl bg-surface-container-high flex items-center justify-center transition-all duration-300">
-                    <span class="material-symbols-outlined text-[36px]">school</span>
-                </div>
-                <div>
-                    <h3 class="font-title-md text-title-md mb-2 group-hover:text-primary transition-colors">Je suis un Étudiant</h3>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Accédez à vos cours, exercices et interagissez avec vos tuteurs.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex justify-center pt-6">
-            <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 opacity-40 cursor-not-allowed transition-all duration-300" disabled id="next-btn" onclick="nextStep()">
-                Continuer
-                <span class="material-symbols-outlined">arrow_forward</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- ===== STEP 2: FORM DETAILS ===== -->
-    <form class="hidden space-y-8 animate-fade-in" id="step-2" method="POST" action="{% url 'authentication:inscription' %}">
+    <form method="POST" action="{% url 'authentication:inscription' %}">
         {% csrf_token %}
         
-        <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
-            <span class="material-symbols-outlined">arrow_back</span>
-            <span>Retour au profil</span>
-        </button>
-
-        <div>
-            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Finalisez votre inscription</h2>
-            <p class="font-body-sm text-body-sm text-on-surface-variant">Veuillez renseigner vos informations pour accéder à votre espace.</p>
-        </div>
-
-        <!-- AFFICHAGE DES ERREURS DU FORMULAIRE -->
-        {% if form.errors %}
-            <div class="bg-error-container p-4 rounded-xl border border-error text-on-error-container">
-                <ul class="list-disc pl-4 space-y-1 text-sm">
-                    {% for field, errors in form.errors.items %}
-                        {% for error in errors %}
-                            <li><strong>{{ field|capfirst }}:</strong> {{ error }}</li>
-                        {% endfor %}
-                    {% endfor %}
-                </ul>
+        <div class="space-y-8 animate-fade-in" id="step-1">
+            <div class="text-center mb-10">
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Quel est votre profil ?</h2>
+                <p class="font-body-lg text-body-lg text-on-surface-variant">Personnalisez votre expérience selon vos besoins</p>
             </div>
-        {% endif %}
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-            
-            <!-- 🔥 Type de compte en MINUSCULES -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Parent -->
+                <div class="role-card group p-8 rounded-xl border-2 border-outline-variant/30 bg-surface-container-lowest flex flex-col items-center text-center space-y-5" id="role-parent" onclick="selectRole('parent')">
+                    <div class="icon-box w-16 h-16 rounded-2xl bg-surface-container-high flex items-center justify-center transition-all duration-300">
+                        <span class="material-symbols-outlined text-[36px]">family_restroom</span>
+                    </div>
+                    <div>
+                        <h3 class="font-title-md text-title-md mb-2 group-hover:text-primary transition-colors">Je suis un Parent</h3>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Suivez l'évolution académique et gérez le planning de vos enfants.</p>
+                    </div>
+                </div>
+                <!-- Student -->
+                <div class="role-card group p-8 rounded-xl border-2 border-outline-variant/30 bg-surface-container-lowest flex flex-col items-center text-center space-y-5" id="role-etudiant" onclick="selectRole('etudiant')">
+                    <div class="icon-box w-16 h-16 rounded-2xl bg-surface-container-high flex items-center justify-center transition-all duration-300">
+                        <span class="material-symbols-outlined text-[36px]">school</span>
+                    </div>
+                    <div>
+                        <h3 class="font-title-md text-title-md mb-2 group-hover:text-primary transition-colors">Je suis un Étudiant</h3>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Accédez à vos cours, exercices et interagissez avec vos tuteurs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Champ caché pour le type de compte -->
             <input type="hidden" name="type_client" id="id_type_client" value="parent">
 
-            <!-- Prénom -->
-            <div class="input-group space-y-2">
-                <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_prenom">Prénom</label>
-                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
-                       id="id_prenom" name="prenom" placeholder="Ex: Thomas" required type="text"
-                       value="{{ form.prenom.value|default:'' }}"/>
-            </div>
-            
-            <!-- Nom -->
-            <div class="input-group space-y-2">
-                <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_nom">Nom</label>
-                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
-                       id="id_nom" name="nom" placeholder="Ex: Martin" required type="text"
-                       value="{{ form.nom.value|default:'' }}"/>
-            </div>
-            
-            <!-- Email -->
-            <div class="input-group space-y-2 md:col-span-2">
-                <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_email">Email</label>
-                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
-                       id="id_email" name="email" placeholder="t.martin@exemple.com" required type="email"
-                       value="{{ form.email.value|default:'' }}"/>
-            </div>
-            
-            <!-- Téléphone -->
-            <div class="input-group space-y-2">
-                <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_telephone">Téléphone</label>
-                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
-                       id="id_telephone" name="telephone" placeholder="+33 6 00 00 00 00" required type="tel"
-                       value="{{ form.telephone.value|default:'' }}"/>
-            </div>
-            
-            <!-- Adresse -->
-            <div class="input-group space-y-2">
-                <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_adresse">Adresse</label>
-                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
-                       id="id_adresse" name="adresse" placeholder="15 rue de Paris, Lyon" required type="text"
-                       value="{{ form.adresse.value|default:'' }}"/>
-            </div>
-        </div>
-
-        <!-- ===== SECTION ENFANTS (visible si type = parent) ===== -->
-        <div id="parent-fields" class="hidden space-y-4 border-t border-outline-variant/30 pt-4">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">family_restroom</span>
-                        Informations des enfants
-                    </h3>
-                    <p class="text-body-sm text-on-surface-variant">Renseignez les informations de vos enfants pour personnaliser leur accompagnement.</p>
-                </div>
-                <button type="button" onclick="ajouterEnfant()" class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all text-sm font-semibold">
-                    <span class="material-symbols-outlined text-[18px]">add</span>
-                    Ajouter un enfant
+            <div class="flex justify-center pt-6">
+                <button type="button" class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 opacity-40 cursor-not-allowed transition-all duration-300" disabled id="next-btn" onclick="nextStep()">
+                    Continuer
+                    <span class="material-symbols-outlined">arrow_forward</span>
                 </button>
             </div>
+        </div>
+
+        <!-- ===== STEP 2: FORM DETAILS ===== -->
+        <div class="hidden space-y-8 animate-fade-in" id="step-2">
             
-            <!-- Conteneur des enfants -->
-            <div id="enfants-container" class="space-y-4">
-                <!-- Enfant 1 (par défaut) -->
-                <div class="enfant-item p-4 bg-surface-container-low rounded-xl border border-outline-variant/30">
-                    <div class="flex justify-end mb-2">
-                        <button type="button" onclick="supprimerEnfant(this)" class="btn-supprimer text-on-surface-variant hover:text-error rounded-full p-1 transition-all">
-                            <span class="material-symbols-outlined text-[18px]">close</span>
-                        </button>
+            <button type="button" class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span>Retour au profil</span>
+            </button>
+
+            <div>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Finalisez votre inscription</h2>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Veuillez renseigner vos informations pour accéder à votre espace.</p>
+            </div>
+
+            <!-- AFFICHAGE DES ERREURS DU FORMULAIRE -->
+            {% if form.errors %}
+                <div class="bg-error-container p-4 rounded-xl border border-error text-on-error-container">
+                    <ul class="list-disc pl-4 space-y-1 text-sm">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li><strong>{{ field|capfirst }}:</strong> {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                <!-- Prénom -->
+                <div class="input-group space-y-2">
+                    <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_prenom">Prénom</label>
+                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
+                           id="id_prenom" name="prenom" placeholder="Ex: Thomas" required type="text"
+                           value="{{ form.prenom.value|default:'' }}"/>
+                </div>
+                
+                <!-- Nom -->
+                <div class="input-group space-y-2">
+                    <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_nom">Nom</label>
+                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
+                           id="id_nom" name="nom" placeholder="Ex: Martin" required type="text"
+                           value="{{ form.nom.value|default:'' }}"/>
+                </div>
+                
+                <!-- Email -->
+                <div class="input-group space-y-2 md:col-span-2">
+                    <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_email">Email</label>
+                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
+                           id="id_email" name="email" placeholder="t.martin@exemple.com" required type="email"
+                           value="{{ form.email.value|default:'' }}"/>
+                </div>
+                
+                <!-- Téléphone -->
+                <div class="input-group space-y-2">
+                    <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_telephone">Téléphone</label>
+                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
+                           id="id_telephone" name="telephone" placeholder="+33 6 00 00 00 00" required type="tel"
+                           value="{{ form.telephone.value|default:'' }}"/>
+                </div>
+                
+                <!-- Adresse -->
+                <div class="input-group space-y-2">
+                    <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_adresse">Adresse</label>
+                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
+                           id="id_adresse" name="adresse" placeholder="15 rue de Paris, Lyon" required type="text"
+                           value="{{ form.adresse.value|default:'' }}"/>
+                </div>
+            </div>
+
+            <!-- ===== SECTION ENFANTS (visible si type = parent) ===== -->
+            <div id="parent-fields" class="hidden space-y-4 border-t border-outline-variant/30 pt-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">family_restroom</span>
+                            Informations des enfants
+                        </h3>
+                        <p class="text-body-sm text-on-surface-variant">Renseignez les informations de vos enfants pour personnaliser leur accompagnement.</p>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                        <div class="input-group space-y-2">
-                            <label class="block text-label-md text-on-surface-variant font-medium ml-1">Nom de l'enfant</label>
-                            <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
-                                   name="nom_enfant[]" placeholder="Nom" type="text"/>
+                    <button type="button" onclick="ajouterEnfant()" class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all text-sm font-semibold">
+                        <span class="material-symbols-outlined text-[18px]">add</span>
+                        Ajouter un enfant
+                    </button>
+                </div>
+                
+                <!-- Conteneur des enfants -->
+                <div id="enfants-container" class="space-y-4">
+                    <!-- Enfant 1 (par défaut) -->
+                    <div class="enfant-item p-4 bg-surface-container-low rounded-xl border border-outline-variant/30">
+                        <div class="flex justify-end mb-2">
+                            <button type="button" onclick="supprimerEnfant(this)" class="btn-supprimer text-on-surface-variant hover:text-error rounded-full p-1 transition-all">
+                                <span class="material-symbols-outlined text-[18px]">close</span>
+                            </button>
                         </div>
-                        <div class="input-group space-y-2">
-                            <label class="block text-label-md text-on-surface-variant font-medium ml-1">Prénom de l'enfant</label>
-                            <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
-                                   name="prenom_enfant[]" placeholder="Prénom" type="text"/>
-                        </div>
-                        <div class="input-group space-y-2">
-                            <label class="block text-label-md text-on-surface-variant font-medium ml-1">Âge</label>
-                            <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
-                                   name="age_enfant[]" placeholder="Ex: 10" type="number" min="3" max="18"/>
-                        </div>
-                        <div class="input-group space-y-2">
-                            <label class="block text-label-md text-on-surface-variant font-medium ml-1">Niveau scolaire</label>
-                            <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
-                                   name="niveau_enfant[]" placeholder="Ex: CM2, 6eme..." type="text"/>
-                        </div>
-                        <div class="input-group space-y-2 md:col-span-2">
-                            <label class="block text-label-md text-on-surface-variant font-medium ml-1">Établissement</label>
-                            <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
-                                   name="etablissement_enfant[]" placeholder="Nom de l'école" type="text"/>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                            <div class="input-group space-y-2">
+                                <label class="block text-label-md text-on-surface-variant font-medium ml-1">Nom de l'enfant</label>
+                                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
+                                       name="nom_enfant[]" placeholder="Nom" type="text"/>
+                            </div>
+                            <div class="input-group space-y-2">
+                                <label class="block text-label-md text-on-surface-variant font-medium ml-1">Prénom de l'enfant</label>
+                                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
+                                       name="prenom_enfant[]" placeholder="Prénom" type="text"/>
+                            </div>
+                            <div class="input-group space-y-2">
+                                <label class="block text-label-md text-on-surface-variant font-medium ml-1">Âge</label>
+                                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
+                                       name="age_enfant[]" placeholder="Ex: 10" type="number" min="3" max="18"/>
+                            </div>
+                            <div class="input-group space-y-2">
+                                <label class="block text-label-md text-on-surface-variant font-medium ml-1">Niveau scolaire</label>
+                                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
+                                       name="niveau_enfant[]" placeholder="Ex: CM2, 6eme..." type="text"/>
+                            </div>
+                            <div class="input-group space-y-2 md:col-span-2">
+                                <label class="block text-label-md text-on-surface-variant font-medium ml-1">Établissement</label>
+                                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
+                                       name="etablissement_enfant[]" placeholder="Nom de l'école" type="text"/>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ===== SECTION ÉTUDIANT (visible si type = etudiant) ===== -->
-        <div id="student-fields" class="hidden space-y-4 border-t border-outline-variant/30 pt-4">
-            <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
-                <span class="material-symbols-outlined text-primary">school</span>
-                Informations d'étudiant
-            </h3>
-            <p class="text-body-sm text-on-surface-variant">Renseignez vos informations académiques pour un suivi personnalisé.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                <div class="input-group space-y-2">
-                    <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_niveau_etude">Niveau d'étude</label>
-                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
-                           id="id_niveau_etude" name="niveau_etude" placeholder="Ex: Terminale, Licence..." type="text"/>
-                </div>
-                <div class="input-group space-y-2">
-                    <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_specialite">Spécialité</label>
-                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
-                           id="id_specialite" name="specialite" placeholder="Ex: Mathematiques..." type="text"/>
-                </div>
-                <div class="input-group space-y-2">
-                    <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_etablissement">Établissement</label>
-                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
-                           id="id_etablissement" name="etablissement" placeholder="Nom de l'établissement" type="text"/>
-                </div>
-                <div class="input-group space-y-2">
-                    <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_matricule">Matricule</label>
-                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
-                           id="id_matricule" name="matricule" placeholder="Numéro d'étudiant" type="text"/>
+            <!-- ===== SECTION ÉTUDIANT (visible si type = etudiant) ===== -->
+            <div id="student-fields" class="hidden space-y-4 border-t border-outline-variant/30 pt-4">
+                <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">school</span>
+                    Informations d'étudiant
+                </h3>
+                <p class="text-body-sm text-on-surface-variant">Renseignez vos informations académiques pour un suivi personnalisé.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div class="input-group space-y-2">
+                        <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_niveau_etude">Niveau d'étude</label>
+                        <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
+                               id="id_niveau_etude" name="niveau_etude" placeholder="Ex: Terminale, Licence..." type="text"/>
+                    </div>
+                    <div class="input-group space-y-2">
+                        <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_specialite">Spécialité</label>
+                        <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
+                               id="id_specialite" name="specialite" placeholder="Ex: Mathematiques..." type="text"/>
+                    </div>
+                    <div class="input-group space-y-2">
+                        <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_etablissement">Établissement</label>
+                        <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
+                               id="id_etablissement" name="etablissement" placeholder="Nom de l'établissement" type="text"/>
+                    </div>
+                    <div class="input-group space-y-2">
+                        <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_matricule">Matricule</label>
+                        <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" 
+                               id="id_matricule" name="matricule" placeholder="Numéro d'étudiant" type="text"/>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Mot de passe -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-            <div class="input-group space-y-2">
-                <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_password1">Mot de passe</label>
-                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
-                       id="id_password1" name="password1" placeholder="••••••••" required type="password"/>
+            <!-- Mot de passe -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                <div class="input-group space-y-2">
+                    <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_password1">Mot de passe</label>
+                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
+                           id="id_password1" name="password1" placeholder="••••••••" required type="password"/>
+                </div>
+                
+                <div class="input-group space-y-2">
+                    <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_password2">Confirmer</label>
+                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
+                           id="id_password2" name="password2" placeholder="••••••••" required type="password"/>
+                </div>
             </div>
-            
-            <div class="input-group space-y-2">
-                <label class="block text-label-md text-on-surface-variant font-medium ml-1" for="id_password2">Confirmer</label>
-                <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-surface-dim" 
-                       id="id_password2" name="password2" placeholder="••••••••" required type="password"/>
+
+            <!-- Terms -->
+            <div class="flex items-start gap-3 bg-surface-container-low/50 p-4 rounded-xl">
+                <input class="mt-1 w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer" id="terms" required type="checkbox"/>
+                <label class="text-body-sm text-on-surface-variant leading-snug cursor-pointer" for="terms">
+                    J'accepte les <a class="text-primary font-semibold hover:underline" href="#">conditions d'utilisation</a> et je reconnais avoir pris connaissance de la <a class="text-primary font-semibold hover:underline" href="#">politique de confidentialité</a>.
+                </label>
             </div>
+
+            <!-- Submit -->
+            <button type="submit" class="w-full gradient-button text-on-primary py-4.5 rounded-xl font-title-md text-title-md shadow-xl flex items-center justify-center gap-2 group" onclick="return validerFormulaire()">
+                Créer mon compte
+                <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">rocket_launch</span>
+            </button>
         </div>
 
-        <!-- Terms -->
-        <div class="flex items-start gap-3 bg-surface-container-low/50 p-4 rounded-xl">
-            <input class="mt-1 w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer" id="terms" required type="checkbox"/>
-            <label class="text-body-sm text-on-surface-variant leading-snug cursor-pointer" for="terms">
-                J'accepte les <a class="text-primary font-semibold hover:underline" href="#">conditions d'utilisation</a> et je reconnais avoir pris connaissance de la <a class="text-primary font-semibold hover:underline" href="#">politique de confidentialité</a>.
-            </label>
-        </div>
-
-        <!-- Submit -->
-        <button class="w-full gradient-button text-on-primary py-4.5 rounded-xl font-title-md text-title-md shadow-xl flex items-center justify-center gap-2 group" type="submit">
-            Créer mon compte
-            <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">rocket_launch</span>
-        </button>
     </form>
 
     <!-- Login link -->
@@ -495,7 +510,6 @@
         document.querySelectorAll('.role-card').forEach(card => card.classList.remove('active'));
         document.getElementById(`role-${role}`).classList.add('active');
         
-        // 🔥 Envoyer en MINUSCULES
         document.getElementById('id_type_client').value = role.toLowerCase();
         
         const nextBtn = document.getElementById('next-btn');
@@ -545,18 +559,36 @@
         dot2.classList.remove('active');
     }
 
-    // === FONCTIONS POUR GÉRER LES ENFANTS ===
+    // Validation du formulaire avant soumission
+    function validerFormulaire() {
+        // Vérifier les mots de passe
+        const password1 = document.getElementById('id_password1');
+        const password2 = document.getElementById('id_password2');
+        if (password1.value !== password2.value) {
+            alert('Les mots de passe ne correspondent pas.');
+            password1.focus();
+            return false;
+        }
+        
+        // Vérifier que le mot de passe a au moins 8 caractères
+        if (password1.value.length < 8) {
+            alert('Le mot de passe doit contenir au moins 8 caractères.');
+            password1.focus();
+            return false;
+        }
+        
+        return true;
+    }
+
     function ajouterEnfant() {
         enfantCount++;
         const container = document.getElementById('enfants-container');
         const template = document.querySelector('.enfant-item').cloneNode(true);
         
-        // Vider les champs du nouvel enfant
         template.querySelectorAll('input').forEach(input => {
             input.value = '';
         });
         
-        // Afficher le bouton de suppression
         const btnSuppr = template.querySelector('.btn-supprimer');
         btnSuppr.style.display = 'block';
         
@@ -567,7 +599,6 @@
         const enfantItem = btn.closest('.enfant-item');
         const container = document.getElementById('enfants-container');
         
-        // Ne pas supprimer s'il n'y a qu'un seul enfant
         if (container.children.length <= 1) {
             alert('Vous devez avoir au moins un enfant.');
             return;
@@ -577,34 +608,18 @@
         enfantCount--;
     }
 
-    // Animation au chargement
     document.addEventListener('DOMContentLoaded', function() {
         const fadeElements = document.querySelectorAll('.animate-fade-in');
         fadeElements.forEach(el => {
             el.style.animation = 'fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards';
         });
         
-        // Cacher le bouton supprimer du premier enfant par défaut
         const firstChild = document.querySelector('.enfant-item .btn-supprimer');
         if (firstChild) {
             firstChild.style.display = 'none';
         }
     });
 </script>
-
-<style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        .py-4\.5 {
-            padding-top: 1.125rem;
-            padding-bottom: 1.125rem;
-        }
-</style>
 
 </body>
 </html>

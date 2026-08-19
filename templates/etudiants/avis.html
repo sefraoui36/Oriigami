@@ -238,6 +238,13 @@ tailwind.config = {
                 <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">star</span>
                 <span>Avis Enseignants</span>
             </a>
+            <a href="{% url 'etudiants:reservations_parent' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]">family_history</span>
+                <span>Réservations Parent</span>
+                {% if total_reservations > 0 %}
+                <span class="ml-auto bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full">{{ total_reservations }}</span>
+                {% endif %}
+            </a>
             <a href="{% url 'etudiants:notifications' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">notifications</span>
                 <span>Notifications</span>

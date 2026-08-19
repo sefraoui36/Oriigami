@@ -161,6 +161,13 @@ tailwind.config = {
                 <span class="material-symbols-outlined text-[22px]">star</span>
                 <span>Avis Enseignants</span>
             </a>
+            <a href="{% url 'etudiants:reservations_parent' %}" class="sidebar-link active">
+                <span class="material-symbols-outlined text-[22px]">family_history</span>
+                <span>Réservations Parent</span>
+                {% if total_reservations > 0 %}
+                <span class="ml-auto bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full">{{ total_reservations }}</span>
+                {% endif %}
+            </a>
             <a href="{% url 'etudiants:notifications' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">notifications</span>
                 <span>Notifications</span>
@@ -171,7 +178,12 @@ tailwind.config = {
                 <span>Paramètres</span>
             </a>
         </nav>
-
+<div class="mt-4 pt-4 border-t border-outline-variant/30">
+    <a href="{% url 'seances:reserver_seance' %}" class="w-full py-3.5 px-4 rounded-xl bg-primary-gradient text-white font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 hover:scale-[1.02] transition-all duration-300 shadow-lg shadow-primary/25 group">
+        <span class="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform duration-300">add_circle</span>
+        Réserver une séance
+    </a>
+</div>
         <!-- Déconnexion -->
         <div class="mt-auto pt-4 border-t border-outline-variant/30">
             <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">

@@ -1,0 +1,2298 @@
+<!-- templates/seances/reservation.html -->
+<!DOCTYPE html>
+<html class="light" lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Réserver une séance - Origami Privé</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% csrf_token %}
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "on-surface-variant": "#4b4456",
+                "error": "#ba1a1a",
+                "tertiary-fixed-dim": "#ffb782",
+                "surface-dim": "#d9dadb",
+                "inverse-surface": "#2e3132",
+                "primary-container": "#8b3dff",
+                "background": "#f8f9fa",
+                "on-primary": "#ffffff",
+                "on-primary-fixed": "#270058",
+                "surface-container": "#edeeef",
+                "tertiary-container": "#ad5900",
+                "on-surface": "#191c1d",
+                "inverse-on-surface": "#f0f1f2",
+                "on-error-container": "#93000a",
+                "outline-variant": "#cdc2d8",
+                "surface-tint": "#7921ed",
+                "on-tertiary-fixed": "#301400",
+                "on-primary-fixed-variant": "#5d00c2",
+                "secondary": "#ae128a",
+                "secondary-fixed-dim": "#ffaede",
+                "on-secondary-fixed-variant": "#87006b",
+                "tertiary": "#894500",
+                "surface-container-high": "#e7e8e9",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#3b002d",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#ebdcff",
+                "on-primary-container": "#faf1ff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#fe60cf",
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#d4bbff",
+                "surface-container-low": "#f3f4f5",
+                "outline": "#7c7387",
+                "surface": "#f8f9fa",
+                "on-secondary-container": "#680052",
+                "tertiary-fixed": "#ffdcc5",
+                "inverse-primary": "#d4bbff",
+                "on-tertiary-fixed-variant": "#703800",
+                "primary": "#710fe5",
+                "on-error": "#ffffff",
+                "surface-variant": "#e1e3e4",
+                "surface-container-highest": "#e1e3e4",
+                "secondary-fixed": "#ffd8ec",
+                "on-tertiary-container": "#fff2eb",
+                "on-background": "#191c1d"
+            },
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            spacing: {
+                "container-padding": "32px",
+                "card-gap": "24px",
+                "gutter": "24px",
+                "base": "8px",
+                "section-margin": "48px"
+            },
+            fontFamily: {
+                "headline-lg": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"],
+                "body-sm": ["Plus Jakarta Sans"],
+                "label-md": ["Inter"],
+                "title-md": ["Plus Jakarta Sans"],
+                "headline-lg-mobile": ["Plus Jakarta Sans"]
+            },
+            fontSize: {
+                "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+        },
+    },
+}
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .gradient-button {
+        background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .gradient-button:hover:not(:disabled) {
+        box-shadow: 0px 10px 30px rgba(113, 15, 229, 0.25);
+        transform: translateY(-2px);
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    }
+    .step-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 9999px;
+        background: #e1e3e4;
+        transition: all 0.3s ease;
+    }
+    .step-indicator.active {
+        width: 24px;
+        background: #710fe5;
+    }
+    .step-indicator.done {
+        background: #710fe5;
+    }
+    .animate-fade-in {
+        animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #710fe5 0%, #ae128a 100%);
+    }
+    .prof-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+    .prof-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+    }
+    .prof-card.selected {
+        border-color: #710fe5;
+        background: rgba(113, 15, 229, 0.05);
+        transform: scale(1.02);
+    }
+    .seance-item {
+        transition: all 0.3s ease;
+    }
+    .seance-item:hover {
+        border-color: #710fe5;
+    }
+    .choice-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+    .choice-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
+    }
+    .choice-card.selected {
+        border-color: #710fe5;
+        background: rgba(113, 15, 229, 0.05);
+        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.12);
+    }
+    .choice-card.selected .icon-box {
+        background: #710fe5;
+        color: white;
+    }
+    .icon-box {
+        transition: all 0.3s ease;
+    }
+    .btn-supprimer {
+        transition: all 0.2s ease;
+    }
+    .btn-supprimer:hover {
+        background: rgba(186, 26, 26, 0.1);
+        color: #ba1a1a;
+    }
+    .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #710fe5;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* ===== MODAL DÉTAILS PROFESSEUR ===== */
+    .modal-enter {
+        animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes modalFadeIn {
+        from { opacity: 0; transform: scale(0.95) translateY(10px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    #modal-prof-details .relative {
+        animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+</style>
+</head>
+<body class="bg-background font-body-lg text-on-surface min-h-screen selection:bg-primary/20">
+
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+    <div class="absolute -top-1/4 -right-1/4 w-[1000px] h-[1000px] rounded-full bg-primary/5 blur-[120px] animate-pulse"></div>
+    <div class="absolute -bottom-1/4 -left-1/4 w-[800px] h-[800px] rounded-full bg-secondary/5 blur-[100px] animate-pulse" style="animation-delay: 2s;"></div>
+</div>
+
+<main class="flex flex-col items-center justify-center min-h-screen px-container-padding py-12">
+
+<div class="text-center mb-8 animate-fade-in">
+    <div class="flex items-center justify-center gap-3 mb-2">
+        <span class="material-symbols-outlined text-primary text-[48px]" style="font-variation-settings: 'FILL' 1;">change_history</span>
+        <h1 class="font-display-lg text-display-lg text-primary">Origami Privé</h1>
+    </div>
+    <p class="font-body-sm text-body-sm text-on-surface-variant max-w-md mx-auto">Réservez votre séance de soutien en quelques clics.</p>
+</div>
+
+<div class="w-full max-w-5xl glass-card rounded-2xl p-8 lg:p-12 transition-all duration-500 overflow-hidden">
+
+    <div class="flex justify-center gap-2 mb-10">
+        <div class="step-indicator active" id="dot-1"></div>
+        <div class="step-indicator" id="dot-2"></div>
+        <div class="step-indicator" id="dot-3"></div>
+        <div class="step-indicator" id="dot-4"></div>
+        <div class="step-indicator" id="dot-5"></div>
+        <div class="step-indicator" id="dot-6"></div>
+    </div>
+
+    <!-- ===== STEP 1: Informations de base ===== -->
+    <div class="space-y-8 animate-fade-in" id="step-1">
+        <div class="text-center mb-8">
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Informations de la séance</h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">Définissez les paramètres de votre séance</p>
+        </div>
+
+        <div class="bg-primary/5 p-4 rounded-xl border border-primary/20">
+            <label class="block text-sm font-medium text-on-surface-variant mb-1">Votre niveau</label>
+            <p class="text-lg font-semibold text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">school</span>
+                {{ etudiant.niveau_scolaire|default:"Non spécifié" }}
+            </p>
+            <p class="text-xs text-on-surface-variant mt-1">Ce niveau est basé sur votre profil étudiant.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-2">Nombre de séances *</label>
+                <select id="nb_seances" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" onchange="toggleModeSeances()">
+                    <option value="1">1 séance</option>
+                    <option value="multiple">Plusieurs séances</option>
+                </select>
+            </div>
+            <div id="matiere_simple_container">
+                <label class="block text-sm font-medium text-on-surface-variant mb-2">Matière souhaitée *</label>
+                <select id="matiere" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" required>
+                    <option value="">Sélectionnez une matière</option>
+                    {% for matiere in matieres_disponibles %}
+                        <option value="{{ matiere }}">{{ matiere }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- ===== SECTION SÉANCES MULTIPLES ===== -->
+        <div id="seances-multiples" class="hidden space-y-6 border-t border-outline-variant/30 pt-6">
+            <div class="text-center mb-4">
+                <h3 class="font-title-md text-title-md text-on-surface">Comment souhaitez-vous organiser vos séances ?</h3>
+                <p class="text-sm text-on-surface-variant mt-1">Choisissez le mode qui correspond le mieux à vos besoins</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Option Identique -->
+                <div id="mode-identique" class="choice-card selected p-6 rounded-xl border-2 border-primary bg-primary/5" onclick="setMode('identique')">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-box w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-2xl">content_copy</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-on-surface text-lg">Séances identiques</h4>
+                            <p class="text-sm text-on-surface-variant mt-1">Toutes les séances auront la <strong>même matière</strong> mais des <strong>dates et créneaux différents</strong>.</p>
+                            <div class="mt-3 flex items-center gap-2 text-xs text-primary bg-primary/5 px-3 py-1.5 rounded-full inline-flex">
+                                <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                                Recommandé pour un stage intensif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option Personnalisée -->
+                <div id="mode-personnalise" class="choice-card p-6 rounded-xl border-2 border-outline-variant hover:border-primary/30" onclick="setMode('personnalise')">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-box w-12 h-12 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-2xl">edit_note</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-on-surface text-lg">Séances personnalisées</h4>
+                            <p class="text-sm text-on-surface-variant mt-1">Chaque séance aura sa <strong>propre matière</strong>, son <strong>propre créneau</strong> et sa <strong>propre date</strong>.</p>
+                            <div class="mt-3 flex items-center gap-2 text-xs text-secondary bg-secondary/5 px-3 py-1.5 rounded-full inline-flex">
+                                <span class="material-symbols-outlined text-[16px]">star</span>
+                                Idéal pour des cours variés
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Détails des séances -->
+            <div id="seances-details" class="pt-4">
+                <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
+                    <span class="material-symbols-outlined text-primary">list_alt</span>
+                    Détails des séances
+                </h3>
+                
+                <!-- Mode Identique : Même matière, dates et créneaux différents -->
+                <div id="details-identique" class="p-4 bg-surface-container-low rounded-xl border border-outline-variant/30 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-semibold text-on-surface text-sm">Séances identiques (même matière, dates et créneaux différents)</h4>
+                        <button type="button" onclick="ajouterSeanceIdentique()" class="flex items-center gap-1 px-3 py-1.5 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-all text-xs font-semibold">
+                            <span class="material-symbols-outlined text-[16px]">add</span>
+                            Ajouter une séance
+                        </button>
+                    </div>
+                    
+                    <!-- Matière commune -->
+                    <div>
+                        <label class="block text-xs font-medium text-on-surface-variant mb-1">Matière *</label>
+                        <select id="matiere_identique" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all">
+                            <option value="">Choisir</option>
+                            {% for matiere in matieres_disponibles %}
+                                <option value="{{ matiere }}">{{ matiere }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Liste des séances identiques -->
+                    <div id="seances-identiques-container" class="space-y-3">
+                        <!-- Séance 1 -->
+                        <div class="seance-item p-3 bg-surface-container-lowest rounded-xl border border-outline-variant/30">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold text-on-surface text-sm">Séance #1</span>
+                                <button type="button" onclick="supprimerSeanceIdentique(this)" class="btn-supprimer text-on-surface-variant hover:text-error rounded-full p-1 transition-all">
+                                    <span class="material-symbols-outlined text-[18px]">close</span>
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-on-surface-variant mb-1">Date *</label>
+                                    <input type="date" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all date-identique-input">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-on-surface-variant mb-1">Créneau *</label>
+                                    <select class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all creneau-identique-select">
+                                        <option value="">Choisir</option>
+                                        <option value="9-10">9h - 10h</option>
+                                        <option value="10-11">10h - 11h</option>
+                                        <option value="11-12">11h - 12h</option>
+                                        <option value="14-15">14h - 15h</option>
+                                        <option value="15-16">15h - 16h</option>
+                                        <option value="16-17">16h - 17h</option>
+                                        <option value="17-18">17h - 18h</option>
+                                        <option value="18-19">18h - 19h</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-on-surface-variant mt-2 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">info</span>
+                        Toutes les séances auront la <strong>même matière</strong> mais des dates et créneaux différents.
+                    </p>
+                </div>
+
+                <!-- Mode Personnalisé : Un formulaire par séance -->
+                <div id="details-personnalise" class="hidden space-y-4">
+                    <div id="seances-container" class="space-y-4">
+                        <!-- Séance 1 -->
+                        <div class="seance-item p-4 bg-surface-container-low rounded-xl border border-outline-variant/30">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-semibold text-on-surface">Séance #1</span>
+                                <button type="button" onclick="supprimerSeance(this)" class="btn-supprimer text-on-surface-variant hover:text-error rounded-full p-1 transition-all">
+                                    <span class="material-symbols-outlined text-[18px]">close</span>
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-on-surface-variant mb-1">Matière</label>
+                                    <select class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all matiere-select">
+                                        <option value="">Choisir</option>
+                                        {% for matiere in matieres_disponibles %}
+                                            <option value="{{ matiere }}">{{ matiere }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-on-surface-variant mb-1">Date</label>
+                                    <input type="date" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all date-input">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-on-surface-variant mb-1">Créneau</label>
+                                    <select class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all creneau-select">
+                                        <option value="">Choisir</option>
+                                        <option value="9-10">9h - 10h</option>
+                                        <option value="10-11">10h - 11h</option>
+                                        <option value="11-12">11h - 12h</option>
+                                        <option value="14-15">14h - 15h</option>
+                                        <option value="15-16">15h - 16h</option>
+                                        <option value="16-17">16h - 17h</option>
+                                        <option value="17-18">17h - 18h</option>
+                                        <option value="18-19">18h - 19h</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="ajouterSeance()" class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all text-sm font-semibold">
+                        <span class="material-symbols-outlined text-[18px]">add</span>
+                        Ajouter une séance
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end pt-6">
+            <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300" onclick="nextStep()">
+                Continuer
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== STEP 2: Créneaux & Localisation ===== -->
+    <div class="hidden space-y-8 animate-fade-in" id="step-2">
+        <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <span>Retour</span>
+        </button>
+
+        <div>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Créneaux & Localisation</h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Choisissez vos créneaux horaires et votre localisation</p>
+        </div>
+
+        <!-- Si 1 séance, on affiche les champs -->
+        <div id="creneaux-simple">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-2">Date</label>
+                    <input type="date" id="date_seance" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-2">Créneau horaire préféré</label>
+                    <select id="creneau" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all">
+                        <option value="">Choisir un créneau</option>
+                        <option value="9-10">9h - 10h</option>
+                        <option value="10-11">10h - 11h</option>
+                        <option value="11-12">11h - 12h</option>
+                        <option value="14-15">14h - 15h</option>
+                        <option value="15-16">15h - 16h</option>
+                        <option value="16-17">16h - 17h</option>
+                        <option value="17-18">17h - 18h</option>
+                        <option value="18-19">18h - 19h</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Si plusieurs séances en mode personnalisé, on affiche un message -->
+        <div id="creneaux-personnalise" class="hidden">
+            <div class="bg-primary/5 p-4 rounded-xl border border-primary/20 text-center">
+                <span class="material-symbols-outlined text-primary text-2xl block mb-2">event_note</span>
+                <p class="text-sm text-on-surface-variant">Les dates et créneaux sont déjà définis pour chaque séance.</p>
+                <p class="text-xs text-on-surface-variant mt-1">Passez à l'étape suivante pour choisir les professeurs.</p>
+            </div>
+        </div>
+
+        <!-- Si plusieurs séances en mode identique, on affiche un message -->
+        <div id="creneaux-identique" class="hidden">
+            <div class="bg-primary/5 p-4 rounded-xl border border-primary/20 text-center">
+                <span class="material-symbols-outlined text-primary text-2xl block mb-2">event_note</span>
+                <p class="text-sm text-on-surface-variant">Les dates et créneaux sont déjà définis pour chaque séance identique.</p>
+                <p class="text-xs text-on-surface-variant mt-1">Passez à l'étape suivante pour choisir les professeurs.</p>
+            </div>
+        </div>
+
+        <!-- Localisation -->
+        <div>
+            <label class="block text-sm font-medium text-on-surface-variant mb-2">Localisation (adresse)</label>
+            <div class="flex gap-3">
+                <input type="text" id="localisation" class="flex-1 bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" placeholder="15 rue de Paris, Lyon">
+                <button class="px-4 py-3.5 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all" onclick="utiliserMaPosition()">
+                    <span class="material-symbols-outlined">my_location</span>
+                </button>
+            </div>
+            <p class="text-xs text-on-surface-variant mt-2">Utilisez votre position actuelle pour trouver les professeurs les plus proches.</p>
+        </div>
+
+        <div class="flex justify-between pt-6">
+            <button class="px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container transition-all" onclick="prevStep()">
+                Retour
+            </button>
+            <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300" onclick="nextStep()">
+                Trouver des professeurs
+                <span class="material-symbols-outlined">search</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== STEP 3: Suggestions IA ===== -->
+    <div class="hidden space-y-8 animate-fade-in" id="step-3">
+        <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <span>Retour</span>
+        </button>
+
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Professeurs suggérés</h2>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Notre IA a sélectionné les meilleurs professeurs pour vous</p>
+            </div>
+            <!-- 👇 BOUTON RAFRAÎCHIR -->
+            <button onclick="rafraichirProfesseurs()" 
+                    class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all text-sm font-semibold">
+                <span class="material-symbols-outlined text-[18px]">refresh</span>
+                Rafraîchir les suggestions
+            </button>
+        </div>
+
+        <!-- Container pour 1 séance ou mode identique -->
+        <div id="professeurs-simple" class="space-y-4">
+            <div id="professeurs-container" class="space-y-4">
+                <div class="text-center py-8 text-on-surface-variant">
+                    <div class="spinner"></div>
+                    <p class="mt-4">Recherche des professeurs...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Container pour plusieurs séances personnalisées -->
+        <div id="professeurs-multiples" class="hidden space-y-6">
+            <div id="professeurs-multiples-container" class="space-y-6">
+                <!-- Les professeurs pour chaque séance seront chargés dynamiquement -->
+            </div>
+        </div>
+
+        <div class="flex justify-between pt-6">
+            <button class="px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container transition-all" onclick="prevStep()">
+                Retour
+            </button>
+            <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300 opacity-50 cursor-not-allowed" id="next-step-3" disabled onclick="nextStep()">
+                Continuer
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== STEP 4: Diagnostic pédagogique ===== -->
+    <div class="hidden space-y-8 animate-fade-in" id="step-4">
+        <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <span>Retour</span>
+        </button>
+
+        <div>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Petit diagnostic avant de commencer</h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Ces quelques questions aident votre professeur à préparer une séance qui vous correspond réellement.</p>
+        </div>
+
+        <!-- Style d'apprentissage -->
+        <div>
+            <h3 class="font-title-md text-title-md text-on-surface mb-1">Comment apprenez-vous le mieux ? *</h3>
+            <p class="text-xs text-on-surface-variant mb-4">Sélectionnez le style qui vous ressemble le plus.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="group-style-apprentissage">
+                <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_apprentissage" data-value="visuel" onclick="setDiagnosticChoice(this)">
+                    <div class="flex items-start gap-3">
+                        <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined">visibility</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-on-surface text-sm">Visuel</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">Schémas, couleurs, supports écrits et exemples visuels.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_apprentissage" data-value="auditif" onclick="setDiagnosticChoice(this)">
+                    <div class="flex items-start gap-3">
+                        <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined">hearing</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-on-surface text-sm">Auditif</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">Explications orales, discussions et reformulations.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_apprentissage" data-value="pratique" onclick="setDiagnosticChoice(this)">
+                    <div class="flex items-start gap-3">
+                        <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined">handyman</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-on-surface text-sm">Pratique</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">Beaucoup d'exercices, d'essais et de mises en situation.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_apprentissage" data-value="lecture_ecriture" onclick="setDiagnosticChoice(this)">
+                    <div class="flex items-start gap-3">
+                        <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined">menu_book</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-on-surface text-sm">Lecture / Écriture</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">Prise de notes, résumés, fiches et lectures.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rythme préféré -->
+        <div>
+            <h3 class="font-title-md text-title-md text-on-surface mb-1">Quel rythme préférez-vous ?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="group-rythme">
+                <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="rythme" data-value="intensif" onclick="setDiagnosticChoice(this)">
+                    <div class="flex items-start gap-3">
+                        <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined">bolt</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-on-surface text-sm">Rapide et intensif</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">Aller droit au but, couvrir un maximum en peu de temps.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="rythme" data-value="progressif" onclick="setDiagnosticChoice(this)">
+                    <div class="flex items-start gap-3">
+                        <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined">timeline</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-on-surface text-sm">Progressif et détaillé</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">Prendre le temps, revoir les bases, avancer étape par étape.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Style de professeur préféré -->
+        <div>
+            <h3 class="font-title-md text-title-md text-on-surface mb-1">Quel style d'accompagnement préférez-vous ?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="group-style-prof">
+                <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_prof" data-value="structure" onclick="setDiagnosticChoice(this)">
+                    <div class="flex items-start gap-3">
+                        <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined">checklist</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-on-surface text-sm">Structuré et rigoureux</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">Un plan clair, des objectifs précis à chaque séance.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_prof" data-value="decontracte" onclick="setDiagnosticChoice(this)">
+                    <div class="flex items-start gap-3">
+                        <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined">sentiment_satisfied</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-on-surface text-sm">Décontracté et encourageant</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">Une ambiance détendue, avancer à son propre rythme.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support pédagogique + rappel -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-2">Support pédagogique souhaité</label>
+                <select id="diag_support" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" onchange="diagnosticData.support = this.value">
+                    <option value="mixte">Un peu des deux (théorie + exercices)</option>
+                    <option value="pratique">Surtout des exercices pratiques</option>
+                    <option value="theorique">Surtout des explications théoriques</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-2">Rappel avant la séance</label>
+                <select id="diag_rappel" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" onchange="diagnosticData.rappel = this.value">
+                    <option value="oui">Oui, envoyez-moi un rappel</option>
+                    <option value="non">Non, ce n'est pas nécessaire</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Objectif et difficultés -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-2">Objectif principal de ces séances (optionnel)</label>
+                <textarea id="diag_objectif" rows="3" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" placeholder="Ex : préparer un contrôle, combler des lacunes, préparer un examen..." oninput="diagnosticData.objectif = this.value"></textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-2">Difficultés rencontrées (optionnel)</label>
+                <textarea id="diag_difficultes" rows="3" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" placeholder="Ex : j'ai du mal avec les exercices d'application..." oninput="diagnosticData.difficultes = this.value"></textarea>
+            </div>
+        </div>
+
+        <div class="flex justify-between pt-6">
+            <button class="px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container transition-all" onclick="prevStep()">
+                Retour
+            </button>
+            <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300" onclick="nextStep()">
+                Continuer vers le paiement
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== STEP 5: Paiement ===== -->
+    <div class="hidden space-y-8 animate-fade-in" id="step-5">
+        <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <span>Retour</span>
+        </button>
+
+        <div>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Paiement</h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Choisissez votre mode de paiement</p>
+        </div>
+
+        <div class="bg-primary/5 p-6 rounded-xl border border-primary/20">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-on-surface-variant">Solde de votre portefeuille</p>
+                    <p class="text-2xl font-bold text-on-surface">{{ solde_portefeuille|floatformat:2 }} MAD</p>
+                </div>
+                <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">
+                    <span class="material-symbols-outlined text-[16px] align-middle">account_balance_wallet</span>
+                    Portefeuille
+                </span>
+            </div>
+        </div>
+
+        <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/30">
+            <div class="flex justify-between items-center">
+                <span class="text-on-surface-variant">Total à payer</span>
+                <span class="text-2xl font-bold text-on-surface" id="total-payer">0.00 MAD</span>
+            </div>
+            <div class="flex justify-between text-sm text-on-surface-variant mt-2">
+                <span>Nombre de séances: <span id="nb-seances-total">0</span></span>
+                <span>Tarif moyen: <span id="tarif-moyen">0</span> MAD/séance</span>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-on-surface-variant mb-2">Mode de paiement</label>
+            <div class="space-y-3">
+                <div class="flex items-center gap-3 p-4 rounded-xl border-2 border-primary bg-primary/5">
+                    <input type="radio" name="mode_paiement" value="portefeuille" checked id="pay-portefeuille" class="w-4 h-4 text-primary focus:ring-primary">
+                    <label for="pay-portefeuille" class="flex-1 font-semibold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+                        Payer avec mon portefeuille
+                    </label>
+                    <span class="text-sm text-on-surface-variant">({{ solde_portefeuille|floatformat:2 }} MAD disponible)</span>
+                </div>
+                <div class="flex items-center gap-3 p-4 rounded-xl border border-outline-variant hover:border-primary/30 transition-all">
+                    <input type="radio" name="mode_paiement" value="carte" id="pay-carte" class="w-4 h-4 text-primary focus:ring-primary">
+                    <label for="pay-carte" class="flex-1 font-semibold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined">credit_card</span>
+                        Payer par carte bancaire
+                        <span class="text-xs font-normal text-on-surface-variant">(via CMI)</span>
+                    </label>
+                </div>
+
+                <!-- ===== Virement bancaire : désactivé (Prochainement) ===== -->
+                <div class="flex items-center gap-3 p-4 rounded-xl border border-outline-variant opacity-50 cursor-not-allowed select-none" title="Bientôt disponible">
+                    <input type="radio" name="mode_paiement" value="virement" id="pay-virement" class="w-4 h-4 text-primary" disabled>
+                    <label for="pay-virement" class="flex-1 font-semibold text-on-surface-variant flex items-center gap-2">
+                        <span class="material-symbols-outlined">account_balance</span>
+                        Virement bancaire
+                    </label>
+                    <span class="text-xs font-bold px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full">
+                        Prochainement
+                    </span>
+                </div>
+            </div>
+
+            <!-- Champs carte bancaire -->
+            <div id="champs-carte" class="hidden mt-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/30 space-y-3">
+                <p class="text-xs text-on-surface-variant flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">lock</span>
+                    Paiement sécurisé — vous serez redirigé vers notre prestataire de paiement.
+                </p>
+                <div class="text-center py-4">
+                    <span class="material-symbols-outlined text-3xl text-primary block mb-2">credit_card</span>
+                    <p class="text-sm text-on-surface-variant">Vous allez être redirigé(e) vers la page de paiement sécurisée après confirmation.</p>
+                </div>
+            </div>
+
+            <div id="champs-virement" class="hidden mt-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/30">
+                <p class="text-sm text-on-surface-variant mb-2 font-semibold">Effectuez le virement vers :</p>
+                <p class="font-mono text-sm text-on-surface">RIB : XXX XXX XXXXXXXXXXXXX XX</p>
+                <p class="font-mono text-sm text-on-surface">Bénéficiaire : Origami Privé SARL</p>
+                <p class="text-xs text-on-surface-variant mt-3 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">info</span>
+                    Votre réservation sera confirmée après réception du virement (24-48h).
+                </p>
+            </div>
+        </div>
+
+        <div class="flex justify-between pt-6">
+            <button class="px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container transition-all" onclick="prevStep()">
+                Retour
+            </button>
+            <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300" id="btn-confirmer-paiement" onclick="nextStep()">
+                Confirmer la réservation
+                <span class="material-symbols-outlined">check_circle</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== STEP 6: Confirmation ===== -->
+    <div class="hidden space-y-8 animate-fade-in" id="step-6">
+        <div class="text-center py-8">
+            <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="material-symbols-outlined text-green-600 text-5xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            </div>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Réservation confirmée !</h2>
+            <p class="text-on-surface-variant">Votre séance a été réservée avec succès.</p>
+        </div>
+
+        <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/30 space-y-3">
+            <div id="recap-seances">
+                <!-- Rempli dynamiquement -->
+            </div>
+            <div class="border-t border-outline-variant/30 pt-3 flex justify-between">
+                <span class="font-bold text-on-surface">Total payé</span>
+                <span class="font-bold text-on-surface" id="recap-total">-</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center pt-6">
+            <a href="{% url 'authentication:dashboard' %}" class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center justify-center gap-3 transition-all duration-300">
+                <span class="material-symbols-outlined">dashboard</span>
+                Retour au dashboard
+            </a>
+            <a href="{% url 'seances:reserver_seance' %}" class="px-8 py-3 rounded-full border border-primary text-primary font-semibold hover:bg-primary/5 transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined">add_circle</span>
+                Nouvelle réservation
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<div class="mt-8 text-center">
+    <p class="text-xs text-on-surface-variant">
+        Besoin d'aide ? <a href="#" class="text-primary font-semibold hover:underline">Contactez le support</a>
+    </p>
+</div>
+
+<!-- ===== MODAL : Détails du professeur ===== -->
+<div id="modal-prof-details" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="fermerDetailProf()"></div>
+    <div class="relative bg-surface-container-lowest rounded-2xl max-w-md w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+        <div class="p-6 border-b border-outline-variant/30 flex items-start justify-between gap-4">
+            <div>
+                <h3 class="font-title-md text-title-md font-bold text-on-surface" id="modal-prof-nom">-</h3>
+                <p class="text-sm text-on-surface-variant" id="modal-prof-matiere">-</p>
+            </div>
+            <button onclick="fermerDetailProf()" class="p-2 rounded-full hover:bg-surface-container-high transition-colors flex-shrink-0">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6 overflow-y-auto space-y-4" id="modal-prof-container">
+            <!-- Rempli dynamiquement -->
+        </div>
+    </div>
+</div>
+
+</main>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 6;
+    let professeurSelectionne = null;
+    let professeursParSeance = {};
+    let groupesMatieres = {};
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+    const soldePortefeuille = parseFloat("{{ solde_portefeuille|default:0 }}") || 0;
+    let modeActuel = 'identique';
+    let seanceCount = 1;
+    let nbSeancesTotal = 1;
+
+    // ===== 👇 DIAGNOSTIC PÉDAGOGIQUE (step 4) =====
+    let diagnosticData = {
+        style_apprentissage: null,
+        rythme: null,
+        style_prof: null,
+        support: 'mixte',
+        rappel: 'oui',
+        objectif: '',
+        difficultes: '',
+    };
+
+    function setDiagnosticChoice(el) {
+        const field = el.dataset.field;
+        const value = el.dataset.value;
+        diagnosticData[field] = value;
+
+        // Ne désélectionner que les cartes du même groupe de question
+        const group = el.parentElement;
+        group.querySelectorAll('.diag-card').forEach(card => {
+            card.classList.remove('selected', 'border-primary', 'bg-primary/5');
+            card.classList.add('border-outline-variant');
+        });
+        el.classList.add('selected', 'border-primary', 'bg-primary/5');
+        el.classList.remove('border-outline-variant');
+    }
+
+    function validerDiagnostic() {
+        if (!diagnosticData.style_apprentissage) {
+            return { valide: false, message: "Merci d'indiquer comment vous apprenez le mieux (visuel, auditif, pratique...)." };
+        }
+        if (!diagnosticData.rythme) {
+            return { valide: false, message: 'Merci de choisir le rythme qui vous convient le mieux.' };
+        }
+        if (!diagnosticData.style_prof) {
+            return { valide: false, message: "Merci d'indiquer le style d'accompagnement que vous préférez." };
+        }
+        return { valide: true, message: '' };
+    }
+
+    // ===== 👇 SUIVI DES PROFESSEURS DÉJÀ AFFICHÉS (anti-doublon au rafraîchissement) =====
+    // Mode simple (1 séance ou séances identiques) : un seul Set global.
+    let profsAffichesSimple = new Set();
+    // Mode personnalisé : un Set par matière, car chaque carte a ses propres suggestions.
+    let profsAffichesMultiples = {}; // { matiere: Set(ids) }
+
+    function updateSteps() {
+        for (let i = 1; i <= totalSteps; i++) {
+            const dot = document.getElementById(`dot-${i}`);
+            const step = document.getElementById(`step-${i}`);
+            if (i === currentStep) {
+                step.classList.remove('hidden');
+                dot.classList.add('active');
+                dot.classList.remove('done');
+            } else if (i < currentStep) {
+                step.classList.add('hidden');
+                dot.classList.remove('active');
+                dot.classList.add('done');
+            } else {
+                step.classList.add('hidden');
+                dot.classList.remove('active', 'done');
+            }
+        }
+    }
+
+    // ===== GESTION DES SÉANCES IDENTIQUES =====
+
+    function ajouterSeanceIdentique() {
+        const container = document.getElementById('seances-identiques-container');
+        const seanceCount = container.children.length + 1;
+        
+        const template = document.querySelector('#seances-identiques-container .seance-item').cloneNode(true);
+        const label = template.querySelector('.font-semibold');
+        label.textContent = `Séance #${seanceCount}`;
+        
+        // Réinitialiser les valeurs
+        template.querySelector('.date-identique-input').value = '';
+        template.querySelector('.creneau-identique-select').value = '';
+        
+        // Afficher le bouton supprimer
+        const btnSuppr = template.querySelector('.btn-supprimer');
+        btnSuppr.style.display = 'block';
+        
+        container.appendChild(template);
+        
+        // Réinitialiser la sélection du professeur
+        professeurSelectionne = null;
+        document.getElementById('next-step-3').disabled = true;
+        document.getElementById('next-step-3').classList.add('opacity-50', 'cursor-not-allowed');
+    }
+
+    function supprimerSeanceIdentique(btn) {
+        const seanceItem = btn.closest('.seance-item');
+        const container = document.getElementById('seances-identiques-container');
+        if (container.children.length <= 1) {
+            alert('Vous devez avoir au moins une séance.');
+            return;
+        }
+        seanceItem.remove();
+        // Renuméroter
+        container.querySelectorAll('.seance-item').forEach((item, index) => {
+            item.querySelector('.font-semibold').textContent = `Séance #${index + 1}`;
+        });
+        // Réinitialiser la sélection du professeur
+        professeurSelectionne = null;
+        document.getElementById('next-step-3').disabled = true;
+        document.getElementById('next-step-3').classList.add('opacity-50', 'cursor-not-allowed');
+    }
+
+    function verifierSeancesIdentiques() {
+        const seances = document.querySelectorAll('#seances-identiques-container .seance-item');
+        let valide = true;
+        let message = '';
+        
+        // Vérifier la matière
+        const matiere = document.getElementById('matiere_identique').value;
+        if (!matiere) {
+            message = 'Veuillez sélectionner une matière.';
+            valide = false;
+        }
+        
+        // Vérifier chaque séance
+        seances.forEach((seance, index) => {
+            const date = seance.querySelector('.date-identique-input').value;
+            const creneau = seance.querySelector('.creneau-identique-select').value;
+            if (!date) {
+                message = `Veuillez sélectionner une date pour la séance #${index + 1}.`;
+                valide = false;
+            }
+            if (!creneau) {
+                message = `Veuillez sélectionner un créneau pour la séance #${index + 1}.`;
+                valide = false;
+            }
+        });
+        
+        // Vérifier les doublons de date+créneau
+        const combos = [];
+        seances.forEach((seance, index) => {
+            const date = seance.querySelector('.date-identique-input').value;
+            const creneau = seance.querySelector('.creneau-identique-select').value;
+            if (date && creneau) {
+                const combo = `${date}-${creneau}`;
+                if (combos.includes(combo)) {
+                    message = `La combinaison date/créneau est en double pour la séance #${index + 1}.`;
+                    valide = false;
+                }
+                combos.push(combo);
+            }
+        });
+        
+        return { valide, message };
+    }
+
+    function getSeancesIdentiquesData() {
+        const matiere = document.getElementById('matiere_identique').value;
+        const seances = document.querySelectorAll('#seances-identiques-container .seance-item');
+        const data = [];
+        
+        seances.forEach((seance, index) => {
+            const date = seance.querySelector('.date-identique-input').value;
+            const creneau = seance.querySelector('.creneau-identique-select').value;
+            if (matiere && date && creneau) {
+                data.push({
+                    matiere: matiere,
+                    date: date,
+                    creneau: creneau,
+                    index: index
+                });
+            }
+        });
+        
+        return data;
+    }
+
+    function nextStep() {
+        if (currentStep < totalSteps) {
+            if (currentStep === 1) {
+                const nbSeances = document.getElementById('nb_seances').value;
+                
+                if (nbSeances === 'multiple') {
+                    if (modeActuel === 'personnalise') {
+                        const seances = document.querySelectorAll('#seances-container .seance-item');
+                        const matieresVues = new Set();
+                        for (let s of seances) {
+                            const mat = s.querySelector('.matiere-select');
+                            if (!mat.value) {
+                                alert('Veuillez remplir toutes les séances.');
+                                return;
+                            }
+                            if (matieresVues.has(mat.value)) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Matière en double',
+                                    text: `Vous avez sélectionné "${mat.value}" pour plusieurs séances. En mode "Séances personnalisées", chaque séance doit avoir une matière différente. Pour plusieurs séances de la même matière (avec des dates/créneaux différents), utilisez le mode "Séances identiques".`,
+                                });
+                                return;
+                            }
+                            matieresVues.add(mat.value);
+                        }
+                        nbSeancesTotal = seances.length;
+                    } else {
+                        // Mode identique : vérifier avec la nouvelle fonction
+                        const verif = verifierSeancesIdentiques();
+                        if (!verif.valide) {
+                            alert(verif.message);
+                            return;
+                        }
+                        // Récupérer la matière commune
+                        const matiere = document.getElementById('matiere_identique').value;
+                        document.getElementById('matiere').value = matiere;
+                        nbSeancesTotal = document.querySelectorAll('#seances-identiques-container .seance-item').length;
+                    }
+                } else {
+                    const matiere = document.getElementById('matiere').value;
+                    if (!matiere) {
+                        alert('Veuillez sélectionner une matière.');
+                        return;
+                    }
+                    nbSeancesTotal = 1;
+                }
+            }
+            if (currentStep === 2) {
+                const localisation = document.getElementById('localisation').value;
+                if (!localisation) {
+                    alert('Veuillez entrer une localisation.');
+                    return;
+                }
+                
+                const nbSeances = document.getElementById('nb_seances').value;
+                if (nbSeances === '1') {
+                    const date = document.getElementById('date_seance').value;
+                    if (!date) {
+                        alert('Veuillez sélectionner une date.');
+                        return;
+                    }
+                }
+                
+                // Gérer l'affichage des créneaux
+                const creneauxSimple = document.getElementById('creneaux-simple');
+                const creneauxPersonnalise = document.getElementById('creneaux-personnalise');
+                const creneauxIdentique = document.getElementById('creneaux-identique');
+                
+                if (nbSeances === 'multiple' && modeActuel === 'personnalise') {
+                    creneauxSimple.style.display = 'none';
+                    creneauxPersonnalise.classList.remove('hidden');
+                    creneauxIdentique.classList.add('hidden');
+                } else if (nbSeances === 'multiple' && modeActuel === 'identique') {
+                    creneauxSimple.style.display = 'none';
+                    creneauxPersonnalise.classList.add('hidden');
+                    creneauxIdentique.classList.remove('hidden');
+                } else {
+                    creneauxSimple.style.display = 'block';
+                    creneauxPersonnalise.classList.add('hidden');
+                    creneauxIdentique.classList.add('hidden');
+                }
+                
+                chargerProfesseurs();
+                document.getElementById('next-step-3').disabled = true;
+                document.getElementById('next-step-3').classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            if (currentStep === 3) {
+                const nbSeances = document.getElementById('nb_seances').value;
+                if (nbSeances === 'multiple' && modeActuel === 'personnalise') {
+                    const seances = document.querySelectorAll('#seances-container .seance-item');
+                    for (let i = 0; i < seances.length; i++) {
+                        if (!professeursParSeance[i]) {
+                            alert(`Veuillez sélectionner un professeur pour la séance #${i+1}.`);
+                            return;
+                        }
+                    }
+                } else {
+                    if (!professeurSelectionne) {
+                        alert('Veuillez sélectionner un professeur.');
+                        return;
+                    }
+                }
+                calculerTotal();
+            }
+            if (currentStep === 4) {
+                const verifDiag = validerDiagnostic();
+                if (!verifDiag.valide) {
+                    alert(verifDiag.message);
+                    return;
+                }
+            }
+            if (currentStep === 5) {
+                confirmerReservation();
+                return;
+            }
+            currentStep++;
+            updateSteps();
+            if (currentStep === 5) {
+                togglePaiementFields();
+            }
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 1) {
+            currentStep--;
+            updateSteps();
+        }
+    }
+
+    function toggleModeSeances() {
+        const val = document.getElementById('nb_seances').value;
+        const container = document.getElementById('seances-multiples');
+        const matiereSimple = document.getElementById('matiere_simple_container');
+        
+        if (val === 'multiple') {
+            container.classList.remove('hidden');
+            matiereSimple.style.display = 'none';
+            setMode('identique');
+        } else {
+            container.classList.add('hidden');
+            matiereSimple.style.display = 'block';
+            setMode('identique');
+        }
+        
+        professeurSelectionne = null;
+        professeursParSeance = {};
+        
+        const creneauxSimple = document.getElementById('creneaux-simple');
+        const creneauxPersonnalise = document.getElementById('creneaux-personnalise');
+        const creneauxIdentique = document.getElementById('creneaux-identique');
+        
+        if (val === 'multiple' && modeActuel === 'personnalise') {
+            creneauxSimple.style.display = 'none';
+            creneauxPersonnalise.classList.remove('hidden');
+            creneauxIdentique.classList.add('hidden');
+        } else if (val === 'multiple' && modeActuel === 'identique') {
+            creneauxSimple.style.display = 'none';
+            creneauxPersonnalise.classList.add('hidden');
+            creneauxIdentique.classList.remove('hidden');
+        } else {
+            creneauxSimple.style.display = 'block';
+            creneauxPersonnalise.classList.add('hidden');
+            creneauxIdentique.classList.add('hidden');
+        }
+    }
+
+    function setMode(mode) {
+        modeActuel = mode;
+        
+        document.querySelectorAll('.choice-card').forEach(el => {
+            el.classList.remove('selected', 'border-primary', 'bg-primary/5');
+            el.classList.add('border-outline-variant');
+        });
+        document.getElementById(`mode-${mode}`).classList.add('selected', 'border-primary', 'bg-primary/5');
+        document.getElementById(`mode-${mode}`).classList.remove('border-outline-variant');
+        
+        if (mode === 'identique') {
+            document.getElementById('details-identique').classList.remove('hidden');
+            document.getElementById('details-personnalise').classList.add('hidden');
+            
+            const creneauxSimple = document.getElementById('creneaux-simple');
+            const creneauxPersonnalise = document.getElementById('creneaux-personnalise');
+            const creneauxIdentique = document.getElementById('creneaux-identique');
+            
+            if (document.getElementById('nb_seances').value === 'multiple') {
+                creneauxSimple.style.display = 'none';
+                creneauxPersonnalise.classList.add('hidden');
+                creneauxIdentique.classList.remove('hidden');
+            }
+        } else {
+            document.getElementById('details-identique').classList.add('hidden');
+            document.getElementById('details-personnalise').classList.remove('hidden');
+            
+            const creneauxSimple = document.getElementById('creneaux-simple');
+            const creneauxPersonnalise = document.getElementById('creneaux-personnalise');
+            const creneauxIdentique = document.getElementById('creneaux-identique');
+            
+            if (document.getElementById('nb_seances').value === 'multiple') {
+                creneauxSimple.style.display = 'none';
+                creneauxPersonnalise.classList.remove('hidden');
+                creneauxIdentique.classList.add('hidden');
+            }
+        }
+        
+        professeurSelectionne = null;
+        professeursParSeance = {};
+        document.getElementById('next-step-3').disabled = true;
+        document.getElementById('next-step-3').classList.add('opacity-50', 'cursor-not-allowed');
+    }
+
+    function ajouterSeance() {
+        seanceCount++;
+        const container = document.getElementById('seances-container');
+        const template = container.querySelector('.seance-item').cloneNode(true);
+        const label = template.querySelector('.font-semibold');
+        label.textContent = `Séance #${seanceCount}`;
+        template.querySelectorAll('select, input').forEach(el => {
+            el.value = '';
+        });
+        const btnSuppr = template.querySelector('.btn-supprimer');
+        btnSuppr.style.display = 'block';
+        container.appendChild(template);
+    }
+
+    function supprimerSeance(btn) {
+        const seanceItem = btn.closest('.seance-item');
+        const container = document.getElementById('seances-container');
+        if (container.children.length <= 1) {
+            alert('Vous devez avoir au moins une séance.');
+            return;
+        }
+        seanceItem.remove();
+        seanceCount--;
+        container.querySelectorAll('.seance-item').forEach((item, index) => {
+            item.querySelector('.font-semibold').textContent = `Séance #${index + 1}`;
+        });
+        professeursParSeance = {};
+    }
+
+    function utiliserMaPosition() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    document.getElementById('localisation').value = `Position: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                    alert('Position utilisée avec succès !');
+                },
+                function(error) {
+                    alert('Impossible de récupérer votre position. Veuillez entrer une adresse manuellement.');
+                }
+            );
+        } else {
+            alert('La géolocalisation n\'est pas supportée par votre navigateur.');
+        }
+    }
+
+    function chargerProfesseurs() {
+        const nbSeances = document.getElementById('nb_seances').value;
+        const simpleDiv = document.getElementById('professeurs-simple');
+        const multiplesDiv = document.getElementById('professeurs-multiples');
+
+        if (nbSeances === 'multiple' && modeActuel === 'personnalise') {
+            simpleDiv.classList.add('hidden');
+            multiplesDiv.classList.remove('hidden');
+            chargerProfesseursMultiples(false);
+        } else {
+            multiplesDiv.classList.add('hidden');
+            simpleDiv.classList.remove('hidden');
+            chargerProfesseursSimple(false);
+        }
+    }
+
+    // ===== CHARGEMENT DES PROFESSEURS POUR 1 SÉANCE OU MODE IDENTIQUE =====
+    function chargerProfesseursSimple(rafraichir = false) {
+        const container = document.getElementById('professeurs-container');
+        container.innerHTML = `
+            <div class="text-center py-8 text-on-surface-variant">
+                <div class="spinner"></div>
+                <p class="mt-4">${rafraichir ? 'Rafraîchissement des suggestions...' : 'Recherche des professeurs...'}</p>
+            </div>
+        `;
+
+        // 👇 Au premier chargement (pas un rafraîchissement), on repart de zéro.
+        if (!rafraichir) {
+            profsAffichesSimple = new Set();
+        }
+
+        const nbSeances = document.getElementById('nb_seances').value;
+        let matiere;
+        if (nbSeances === 'multiple' && modeActuel === 'identique') {
+            matiere = document.getElementById('matiere_identique').value;
+        } else {
+            matiere = document.getElementById('matiere').value;
+        }
+        
+        const localisation = document.getElementById('localisation').value;
+        const niveau = "{{ etudiant.niveau_scolaire }}";
+
+        // Ajouter un paramètre anti-cache
+        const cacheBuster = new Date().getTime();
+
+        // 👇 Liste des professeurs déjà affichés, à exclure lors d'un rafraîchissement
+        const excludeIds = rafraichir ? Array.from(profsAffichesSimple).join(',') : '';
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+        fetch('/seances/suggerer-professeurs/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'matiere': matiere,
+                'localisation': localisation,
+                'niveau': niveau,
+                '_cache': cacheBuster,
+                'exclude_ids': excludeIds,
+            }),
+            signal: controller.signal
+        })
+        .then(response => {
+            clearTimeout(timeoutId);
+            return response.json();
+        })
+        .then(data => {
+            const profs = data.professeurs || [];
+
+            // 👇 Alertes selon le statut renvoyé par le backend
+            if (rafraichir && data.meme_resultat) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Aucun autre professeur disponible',
+                    text: "Nous n'avons pas trouvé d'autre professeur pour cette matière. Voici les suggestions actuelles.",
+                    confirmButtonText: 'OK'
+                });
+            } else if (rafraichir && data.partiel) {
+                const n = data.nb_nouveaux || profs.length;
+                Swal.fire({
+                    icon: 'info',
+                    title: n > 1 ? `${n} nouveaux professeurs seulement` : `${n} nouveau professeur seulement`,
+                    text: "C'est tout ce qu'il reste de disponible pour cette matière pour le moment.",
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            let html = '';
+
+            if (profs.length === 0) {
+                html = `
+                    <div class="text-center py-8">
+                        <span class="material-symbols-outlined text-4xl block mb-2 text-on-surface-variant">search_off</span>
+                        <p class="text-on-surface-variant">Aucun professeur trouvé pour cette matière.</p>
+                        <p class="text-sm text-on-surface-variant mt-2">Essayez avec une autre matière ou contactez le support.</p>
+                        <button class="mt-4 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all" onclick="rafraichirProfesseurs()">
+                            <span class="material-symbols-outlined text-[16px] align-middle">refresh</span>
+                            Réessayer
+                        </button>
+                    </div>
+                `;
+            } else {
+                profs.forEach((prof, index) => {
+                    const estExemple = !!prof.est_exemple;
+                    const badges = [];
+                    if (index === 0 && !estExemple) badges.push('<span class="px-2 py-0.5 bg-yellow-400 text-black rounded-full text-[10px] font-bold">⭐ Meilleur</span>');
+                    if (estExemple) {
+                        badges.push('<span class="px-2 py-0.5 bg-gray-200 text-gray-600 rounded-full text-[10px] font-bold">Exemple — non réservable</span>');
+                    } else if (prof.disponible) {
+                        badges.push('<span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">Disponible</span>');
+                    } else {
+                        badges.push('<span class="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[10px] font-bold">Indisponible</span>');
+                    }
+                    if (prof.deja_affecte) badges.push('<span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-[10px] font-bold">Votre professeur</span>');
+
+                    const onclickAttr = estExemple ? '' : `onclick='selectionnerProfesseur(${prof.id}, ${JSON.stringify(escApos(prof.nom))}, ${prof.tarif_heure})'`;
+                    const cardClasses = estExemple
+                        ? 'prof-card p-4 rounded-xl border border-outline-variant/30 bg-surface-container-lowest opacity-60 cursor-not-allowed'
+                        : 'prof-card p-4 rounded-xl border border-outline-variant/30 hover:border-primary/50 bg-surface-container-lowest';
+
+                    html += `
+                        <div class="${cardClasses}" data-est-exemple="${estExemple}" data-prof-id="${prof.id}" ${onclickAttr}>
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg flex-shrink-0">
+                                    ${prof.nom.split(' ').map(n => n[0]).join('')}
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h4 class="font-bold text-on-surface">${prof.nom}</h4>
+                                        ${badges.join(' ')}
+                                    </div>
+                                    <p class="text-sm text-on-surface-variant">${prof.matiere} • ${prof.experience} d'expérience</p>
+                                    <p class="text-xs text-on-surface-variant">${prof.diplome}</p>
+                                    ${prof.rating ? `<p class="text-xs text-on-surface-variant">⭐ Rating: ${prof.rating}/5 (${prof.nb_seances || 0} séances)</p>` : ''}
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-bold text-primary">${prof.tarif_heure} MAD/h</p>
+                                    <p class="text-xs text-on-surface-variant">Score: ${prof.score}%</p>
+                                    <!-- 👇 BOUTON DÉTAILS -->
+                                    <button onclick="event.stopPropagation(); ouvrirDetailProf(${prof.id})" 
+                                            class="mt-2 text-xs text-primary hover:underline flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[14px]">info</span>
+                                        Détails
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                if (profs.every(p => p.est_exemple)) {
+                    html += `
+                        <div class="text-center text-xs text-on-surface-variant p-3 bg-primary/5 rounded-lg border border-primary/20">
+                            <span class="material-symbols-outlined text-[16px] align-middle text-primary">info</span>
+                            Aucun professeur réel n'est encore disponible pour cette matière. Les profils ci-dessus sont des exemples et ne peuvent pas être réservés — essayez une autre matière/localisation ou contactez le support.
+                        </div>
+                    `;
+                }
+                
+                if (rafraichir && !data.meme_resultat && !data.partiel) {
+                    html += `
+                        <div class="text-center text-xs text-on-surface-variant p-2 bg-primary/5 rounded-lg border border-primary/20">
+                            <span class="material-symbols-outlined text-[16px] align-middle text-primary">refresh</span>
+                            Suggestions rafraîchies
+                        </div>
+                    `;
+                }
+            }
+
+            container.innerHTML = html;
+
+            // 👇 Mémoriser les professeurs affichés pour le prochain rafraîchissement.
+            // On ne "ré-oublie" jamais un prof déjà vu : ainsi, même après
+            // plusieurs clics successifs, on ne revoit pas les mêmes têtes
+            // tant qu'il en reste de nouvelles.
+            profs.forEach(p => profsAffichesSimple.add(p.id));
+
+            if (professeurSelectionne) {
+                document.getElementById('next-step-3').disabled = false;
+                document.getElementById('next-step-3').classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        })
+        .catch(error => {
+            clearTimeout(timeoutId);
+            console.error('Erreur:', error);
+            container.innerHTML = `
+                <div class="text-center py-8">
+                    <span class="material-symbols-outlined text-4xl block mb-2 text-error">error</span>
+                    <p class="text-on-surface-variant">Erreur lors du chargement des professeurs.</p>
+                    <p class="text-sm text-on-surface-variant mt-2">Veuillez réessayer.</p>
+                    <button class="mt-4 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all" onclick="rafraichirProfesseurs()">
+                        <span class="material-symbols-outlined text-[16px] align-middle">refresh</span>
+                        Réessayer
+                    </button>
+                </div>
+            `;
+        });
+    }
+
+    function escApos(str) {
+        return String(str).replace(/'/g, '&#39;');
+    }
+
+    function cssId(matiere) {
+        return btoa(unescape(encodeURIComponent(matiere))).replace(/=/g, '');
+    }
+
+    // ===== CHARGEMENT DES PROFESSEURS POUR MODE PERSONNALISÉ =====
+    function chargerProfesseursMultiples(rafraichir = false) {
+        const container = document.getElementById('professeurs-multiples-container');
+        const seances = document.querySelectorAll('#seances-container .seance-item');
+
+        groupesMatieres = {};
+        seances.forEach((seance, idx) => {
+            const matiere = seance.querySelector('.matiere-select').value;
+            if (!matiere) return;
+            if (!groupesMatieres[matiere]) groupesMatieres[matiere] = [];
+            groupesMatieres[matiere].push(idx);
+        });
+
+        const matieresUniques = Object.keys(groupesMatieres);
+
+        if (matieresUniques.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-8">
+                    <span class="material-symbols-outlined text-4xl block mb-2 text-error">error</span>
+                    <p class="text-on-surface-variant">Veuillez sélectionner des matières pour chaque séance.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // 👇 Au premier chargement (pas un rafraîchissement), on repart de zéro.
+        if (!rafraichir) {
+            profsAffichesMultiples = {};
+        }
+
+        let html = '';
+        matieresUniques.forEach((matiere) => {
+            const indices = groupesMatieres[matiere];
+            const labelSeances = indices.map(i => `#${i + 1}`).join(', ');
+            html += `
+                <div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/30">
+                    <h4 class="font-semibold text-on-surface mb-3 flex items-center gap-2">
+                        <span class="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">${indices.length}</span>
+                        ${matiere}
+                        <span class="text-xs font-normal text-on-surface-variant">(Séance${indices.length > 1 ? 's' : ''} ${labelSeances})</span>
+                    </h4>
+                    <div class="space-y-3" id="profs-matiere-${cssId(matiere)}">
+                        <div class="text-center py-4 text-on-surface-variant text-sm">
+                            <div class="spinner"></div>
+                            <p class="mt-2">Recherche des professeurs...</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+
+        const localisation = document.getElementById('localisation').value;
+        const niveau = "{{ etudiant.niveau_scolaire }}";
+        const cacheBuster = new Date().getTime();
+
+        // 👇 Construction de la map { matiere: [ids déjà affichés] } pour le backend
+        const excludeIdsJson = {};
+        matieresUniques.forEach(m => {
+            excludeIdsJson[m] = Array.from(profsAffichesMultiples[m] || []);
+        });
+
+        const formData = new URLSearchParams();
+        matieresUniques.forEach(m => formData.append('matieres[]', m));
+        formData.append('localisation', localisation);
+        formData.append('niveau', niveau);
+        formData.append('_cache', cacheBuster);
+        formData.append('exclude_ids_json', JSON.stringify(excludeIdsJson));
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+        fetch('/seances/suggerer-professeurs-multiples/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formData,
+            signal: controller.signal
+        })
+        .then(response => {
+            clearTimeout(timeoutId);
+            return response.json();
+        })
+        .then(data => {
+            const resultats = data.resultats || [];
+
+            // 👇 On regroupe les matières par statut pour n'afficher
+            // qu'une seule alerte de synthèse (au lieu d'une par matière)
+            const matieresSansNouveau = [];
+            const matieresPartielles = []; // [{matiere, n}]
+
+            resultats.forEach((resultat) => {
+                const matiere = resultat.matiere;
+                const profs = resultat.professeurs || [];
+                const containerMatiere = document.getElementById(`profs-matiere-${cssId(matiere)}`);
+                if (!containerMatiere) return;
+
+                if (rafraichir && resultat.meme_resultat) {
+                    matieresSansNouveau.push(matiere);
+                } else if (rafraichir && resultat.partiel) {
+                    matieresPartielles.push({ matiere, n: resultat.nb_nouveaux || profs.length });
+                }
+
+                let htmlProf = '';
+
+                if (profs.length === 0) {
+                    htmlProf = `
+                        <div class="text-center py-4 text-on-surface-variant text-sm">
+                            <span class="material-symbols-outlined text-2xl block mb-1">search_off</span>
+                            Aucun professeur trouvé pour cette matière.
+                        </div>
+                    `;
+                } else {
+                    profs.forEach((prof, index) => {
+                        const estExemple = !!prof.est_exemple;
+                        const badges = [];
+                        if (index === 0 && !estExemple) badges.push('<span class="px-2 py-0.5 bg-yellow-400 text-black rounded-full text-[10px] font-bold">⭐ Meilleur</span>');
+                        if (estExemple) {
+                            badges.push('<span class="px-2 py-0.5 bg-gray-200 text-gray-600 rounded-full text-[10px] font-bold">Exemple — non réservable</span>');
+                        } else if (prof.disponible) {
+                            badges.push('<span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">Disponible</span>');
+                        } else {
+                            badges.push('<span class="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[10px] font-bold">Indisponible</span>');
+                        }
+                        if (prof.deja_affecte) badges.push('<span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-[10px] font-bold">Votre professeur</span>');
+
+                        const onclickAttr = estExemple ? '' : `onclick='selectionnerProfesseurGroupe(${JSON.stringify(escApos(matiere))}, ${prof.id}, ${JSON.stringify(escApos(prof.nom))}, ${prof.tarif_heure})'`;
+                        const cardClasses = estExemple
+                            ? 'prof-card p-3 rounded-xl border border-outline-variant/30 bg-surface-container-lowest opacity-60 cursor-not-allowed'
+                            : 'prof-card p-3 rounded-xl border border-outline-variant/30 hover:border-primary/50 bg-surface-container-lowest';
+
+                        htmlProf += `
+                            <div class="${cardClasses}" data-est-exemple="${estExemple}" data-prof-id="${prof.id}" ${onclickAttr}>
+                                <div class="flex items-start gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">
+                                        ${prof.nom.split(' ').map(n => n[0]).join('')}
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <h4 class="font-bold text-on-surface text-sm">${prof.nom}</h4>
+                                            ${badges.join(' ')}
+                                        </div>
+                                        <p class="text-xs text-on-surface-variant">${prof.experience} • ${prof.diplome}</p>
+                                        ${prof.rating ? `<p class="text-xs text-on-surface-variant">⭐ ${prof.rating}/5</p>` : ''}
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm font-bold text-primary">${prof.tarif_heure} MAD/h</p>
+                                        <p class="text-xs text-on-surface-variant">Score: ${prof.score}%</p>
+                                        <!-- 👇 BOUTON DÉTAILS -->
+                                        <button onclick="event.stopPropagation(); ouvrirDetailProf(${prof.id})" 
+                                                class="mt-2 text-xs text-primary hover:underline flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[14px]">info</span>
+                                            Détails
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    if (rafraichir && !resultat.meme_resultat && !resultat.partiel) {
+                        htmlProf += `
+                            <div class="text-center text-xs text-on-surface-variant p-2 bg-primary/5 rounded-lg border border-primary/20 mt-2">
+                                <span class="material-symbols-outlined text-[16px] align-middle text-primary">refresh</span>
+                                Suggestions rafraîchies
+                            </div>
+                        `;
+                    }
+                }
+
+                containerMatiere.innerHTML = htmlProf;
+
+                // 👇 Mémoriser les profs affichés pour cette matière
+                if (!profsAffichesMultiples[matiere]) profsAffichesMultiples[matiere] = new Set();
+                profs.forEach(p => profsAffichesMultiples[matiere].add(p.id));
+            });
+
+            // 👇 Une seule alerte de synthèse, listant les matières concernées
+            if (matieresSansNouveau.length > 0) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Aucun autre professeur disponible',
+                    text: `Aucun nouveau professeur trouvé pour : ${matieresSansNouveau.join(', ')}. Les suggestions actuelles sont affichées.`,
+                    confirmButtonText: 'OK'
+                });
+            } else if (matieresPartielles.length > 0) {
+                const detail = matieresPartielles
+                    .map(m => `${m.matiere} (${m.n} nouveau${m.n > 1 ? 'x' : ''})`)
+                    .join(', ');
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Suggestions limitées',
+                    text: `Pour certaines matières, il ne reste que quelques nouveaux professeurs disponibles : ${detail}.`,
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            verifierProfesseursMultiples();
+        })
+        .catch(error => {
+            clearTimeout(timeoutId);
+            console.error('Erreur:', error);
+            container.innerHTML = `
+                <div class="text-center py-8">
+                    <span class="material-symbols-outlined text-4xl block mb-2 text-error">error</span>
+                    <p class="text-on-surface-variant">Erreur lors du chargement des professeurs.</p>
+                    <button class="mt-4 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all" onclick="rafraichirProfesseurs()">
+                        <span class="material-symbols-outlined text-[16px] align-middle">refresh</span>
+                        Réessayer
+                    </button>
+                </div>
+            `;
+        });
+    }
+
+    // ===== RAFRAÎCHIR LES SUGGESTIONS =====
+    function rafraichirProfesseurs() {
+        const nbSeances = document.getElementById('nb_seances').value;
+        const simpleDiv = document.getElementById('professeurs-simple');
+        const multiplesDiv = document.getElementById('professeurs-multiples');
+
+        // Réinitialiser la sélection
+        professeurSelectionne = null;
+        professeursParSeance = {};
+        document.getElementById('next-step-3').disabled = true;
+        document.getElementById('next-step-3').classList.add('opacity-50', 'cursor-not-allowed');
+
+        if (nbSeances === 'multiple' && modeActuel === 'personnalise') {
+            simpleDiv.classList.add('hidden');
+            multiplesDiv.classList.remove('hidden');
+            chargerProfesseursMultiples(true);
+        } else {
+            multiplesDiv.classList.add('hidden');
+            simpleDiv.classList.remove('hidden');
+            chargerProfesseursSimple(true);
+        }
+    }
+
+    // ===== MODAL DÉTAILS DU PROFESSEUR =====
+    function ouvrirDetailProf(id) {
+        let profData = null;
+        
+        // Chercher dans les cartes simples
+        document.querySelectorAll('#professeurs-container .prof-card').forEach(card => {
+            if (String(card.dataset.profId) === String(id)) {
+                const nom = card.querySelector('h4')?.textContent || '';
+                const matiereEl = card.querySelector('.text-sm.text-on-surface-variant');
+                const matiere = matiereEl?.textContent?.split('•')[0]?.trim() || '';
+                const experience = matiereEl?.textContent?.split('•')[1]?.trim() || '';
+                const diplome = card.querySelector('.text-xs.text-on-surface-variant:not(.truncate)')?.textContent || '';
+                const ratingText = card.querySelector('.text-xs.text-on-surface-variant:last-child')?.textContent || '';
+                const tarif = card.querySelector('.text-right .text-sm.font-bold.text-primary')?.textContent || '0 MAD/h';
+                const scoreText = card.querySelector('.text-right .text-xs.text-on-surface-variant')?.textContent || '';
+                const score = scoreText.replace('Score: ', '').replace('%', '') || '0';
+                
+                const ratingMatch = ratingText.match(/Rating:\s*([\d.]+)\/5/);
+                const rating = ratingMatch ? ratingMatch[1] : '0';
+                const nbSeancesMatch = ratingText.match(/\((\d+)\s*séances\)/);
+                const nbSeances = nbSeancesMatch ? nbSeancesMatch[1] : '0';
+                
+                profData = {
+                    id: id,
+                    nom: nom,
+                    matiere: matiere,
+                    experience: experience || 'Non spécifié',
+                    diplome: diplome || 'Non spécifié',
+                    rating: parseFloat(rating) || 0,
+                    nb_seances: parseInt(nbSeances) || 0,
+                    tarif_heure: tarif,
+                    score: score,
+                    disponible: !!card.querySelector('.bg-green-100'),
+                    deja_affecte: !!card.querySelector('.bg-blue-100'),
+                    estExemple: card.dataset.estExemple === 'true',
+                };
+            }
+        });
+        
+        if (!profData) {
+            document.querySelectorAll('#professeurs-multiples-container .prof-card').forEach(card => {
+                if (String(card.dataset.profId) === String(id)) {
+                    const nom = card.querySelector('h4')?.textContent || '';
+                    const diplomeText = card.querySelector('.text-xs.text-on-surface-variant')?.textContent || '';
+                    const tarif = card.querySelector('.text-right .text-sm.font-bold.text-primary')?.textContent || '0 MAD/h';
+                    const scoreText = card.querySelector('.text-right .text-xs.text-on-surface-variant')?.textContent || '';
+                    const score = scoreText.replace('Score: ', '').replace('%', '') || '0';
+                    const ratingText = card.querySelector('.text-xs.text-on-surface-variant:last-child')?.textContent || '';
+                    
+                    const ratingMatch = ratingText.match(/⭐\s*([\d.]+)\/5/);
+                    const rating = ratingMatch ? ratingMatch[1] : '0';
+                    
+                    profData = {
+                        id: id,
+                        nom: nom,
+                        matiere: 'Voir détails',
+                        experience: diplomeText.split('•')[0]?.trim() || 'Non spécifié',
+                        diplome: diplomeText.split('•')[1]?.trim() || 'Non spécifié',
+                        rating: parseFloat(rating) || 0,
+                        nb_seances: 0,
+                        tarif_heure: tarif,
+                        score: score,
+                        disponible: !!card.querySelector('.bg-green-100'),
+                        deja_affecte: !!card.querySelector('.bg-blue-100'),
+                        estExemple: card.dataset.estExemple === 'true',
+                    };
+                }
+            });
+        }
+        
+        if (!profData) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Information non disponible',
+                text: 'Impossible de charger les détails du professeur.',
+            });
+            return;
+        }
+        
+        document.getElementById('modal-prof-nom').textContent = profData.nom;
+        document.getElementById('modal-prof-matiere').textContent = profData.matiere;
+        
+        const container = document.getElementById('modal-prof-container');
+        
+        let badgesHtml = '';
+        if (profData.disponible) {
+            badgesHtml += `<span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">✅ Disponible</span>`;
+        } else {
+            badgesHtml += `<span class="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[10px] font-bold">❌ Indisponible</span>`;
+        }
+        if (profData.deja_affecte) {
+            badgesHtml += `<span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-[10px] font-bold">⭐ Votre professeur</span>`;
+        }
+        
+        container.innerHTML = `
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-2xl flex-shrink-0">
+                    ${profData.nom.split(' ').map(n => n[0]).join('')}
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        ${badgesHtml}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/30">
+                    <p class="text-xs text-on-surface-variant">Expérience</p>
+                    <p class="font-semibold text-on-surface">${profData.experience}</p>
+                </div>
+                <div class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/30">
+                    <p class="text-xs text-on-surface-variant">Tarif</p>
+                    <p class="font-semibold text-primary">${profData.tarif_heure}</p>
+                </div>
+            </div>
+            
+            <div class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/30">
+                <p class="text-xs text-on-surface-variant">Diplôme</p>
+                <p class="font-semibold text-on-surface">${profData.diplome}</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/30">
+                    <p class="text-xs text-on-surface-variant">Rating</p>
+                    <p class="font-semibold text-on-surface flex items-center gap-1">
+                        ${profData.rating > 0 ? '⭐ ' + profData.rating + '/5' : 'N/A'}
+                    </p>
+                </div>
+                <div class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/30">
+                    <p class="text-xs text-on-surface-variant">Séances</p>
+                    <p class="font-semibold text-on-surface">${profData.nb_seances} séances</p>
+                </div>
+            </div>
+            
+            <div class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/30">
+                <p class="text-xs text-on-surface-variant">Score IA</p>
+                <div class="flex items-center gap-3">
+                    <div class="flex-1 h-2 bg-surface-container-highest rounded-full overflow-hidden">
+                        <div class="h-full bg-primary-gradient rounded-full" style="width: ${profData.score}%"></div>
+                    </div>
+                    <span class="text-sm font-bold text-primary">${profData.score}%</span>
+                </div>
+            </div>
+            
+            ${profData.estExemple ? `
+            <p class="text-xs text-center text-on-surface-variant p-3 bg-surface-container-low rounded-xl border border-outline-variant/30">
+                Ce profil est un exemple utilisé uniquement pour illustrer le classement. Aucune réservation réelle n'est possible avec ce profil pour le moment — essayez une autre matière/localisation ou contactez le support.
+            </p>` : `
+            <button onclick="fermerDetailProf(); selectionnerProfesseur(${profData.id}, '${profData.nom}', ${parseFloat(profData.tarif_heure) || 0})" 
+                    class="w-full py-3 rounded-xl bg-primary-gradient text-white font-semibold hover:opacity-90 transition-all">
+                Sélectionner ce professeur
+            </button>`}
+        `;
+        
+        document.getElementById('modal-prof-details').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function fermerDetailProf() {
+        document.getElementById('modal-prof-details').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    // Ajouter l'écoute de la touche Échap
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            fermerDetailProf();
+        }
+    });
+
+    function verifierProfesseursMultiples() {
+        const seances = document.querySelectorAll('#seances-container .seance-item');
+        let tousSelectionnes = true;
+
+        for (let i = 0; i < seances.length; i++) {
+            if (!professeursParSeance[i]) {
+                tousSelectionnes = false;
+                break;
+            }
+        }
+
+        if (tousSelectionnes && seances.length > 0) {
+            document.getElementById('next-step-3').disabled = false;
+            document.getElementById('next-step-3').classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+            document.getElementById('next-step-3').disabled = true;
+            document.getElementById('next-step-3').classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    }
+
+    function selectionnerProfesseurGroupe(matiere, id, nom, tarif) {
+        const indices = groupesMatieres[matiere] || [];
+        indices.forEach(idx => {
+            professeursParSeance[idx] = { id, nom, tarif, matiere };
+        });
+
+        const containerMatiere = document.getElementById(`profs-matiere-${cssId(matiere)}`);
+        if (containerMatiere) {
+            containerMatiere.querySelectorAll('.prof-card').forEach(card => {
+                card.classList.remove('selected', 'border-primary', 'bg-primary/5');
+                if (card.textContent.includes(nom)) {
+                    card.classList.add('selected', 'border-primary', 'bg-primary/5');
+                }
+            });
+        }
+
+        verifierProfesseursMultiples();
+        calculerTotal();
+    }
+
+    function selectionnerProfesseur(id, nom, tarif) {
+        professeurSelectionne = { id, nom, tarif };
+        
+        document.querySelectorAll('.prof-card').forEach(card => {
+            card.classList.remove('selected', 'border-primary', 'bg-primary/5');
+        });
+        const cards = document.querySelectorAll('.prof-card');
+        for (let card of cards) {
+            if (card.textContent.includes(nom)) {
+                card.classList.add('selected', 'border-primary', 'bg-primary/5');
+                break;
+            }
+        }
+        
+        document.getElementById('next-step-3').disabled = false;
+        document.getElementById('next-step-3').classList.remove('opacity-50', 'cursor-not-allowed');
+        
+        calculerTotal();
+    }
+
+    function calculerTotal() {
+        const nbSeances = document.getElementById('nb_seances').value;
+        let total = 0;
+        let nbTotal = 0;
+        let tarifs = [];
+        
+        if (nbSeances === 'multiple' && modeActuel === 'personnalise') {
+            const seances = document.querySelectorAll('#seances-container .seance-item');
+            for (let i = 0; i < seances.length; i++) {
+                if (professeursParSeance[i]) {
+                    total += professeursParSeance[i].tarif;
+                    tarifs.push(professeursParSeance[i].tarif);
+                    nbTotal++;
+                }
+            }
+        } else {
+            if (professeurSelectionne) {
+                if (nbSeances === 'multiple') {
+                    nbTotal = document.querySelectorAll('#seances-identiques-container .seance-item').length;
+                    total = professeurSelectionne.tarif * nbTotal;
+                    tarifs = Array(nbTotal).fill(professeurSelectionne.tarif);
+                } else {
+                    nbTotal = 1;
+                    total = professeurSelectionne.tarif;
+                    tarifs = [professeurSelectionne.tarif];
+                }
+            }
+        }
+        
+        const tarifMoyen = tarifs.length > 0 ? (tarifs.reduce((a, b) => a + b, 0) / tarifs.length) : 0;
+        
+        document.getElementById('nb-seances-total').textContent = nbTotal;
+        document.getElementById('tarif-moyen').textContent = tarifMoyen.toFixed(2);
+        document.getElementById('total-payer').textContent = `${total.toFixed(2)} MAD`;
+    }
+
+    function togglePaiementFields() {
+        const modeInput = document.querySelector('input[name="mode_paiement"]:checked');
+        const mode = modeInput ? modeInput.value : 'portefeuille';
+
+        document.getElementById('champs-carte').classList.toggle('hidden', mode !== 'carte');
+        document.getElementById('champs-virement').classList.toggle('hidden', mode !== 'virement');
+
+        if (mode === 'portefeuille') {
+            verifierSoldePortefeuille();
+        }
+    }
+
+    function verifierSoldePortefeuille() {
+        const total = parseFloat(document.getElementById('total-payer').textContent) || 0;
+
+        if (soldePortefeuille <= 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Portefeuille vide',
+                text: "Votre portefeuille est vide. Choisissez un autre mode de paiement.",
+                confirmButtonText: 'OK'
+            });
+            document.getElementById('pay-carte').checked = true;
+            togglePaiementFields();
+            return false;
+        }
+
+        if (total > soldePortefeuille) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Solde insuffisant',
+                text: `Votre solde (${soldePortefeuille.toFixed(2)} MAD) ne couvre pas le total (${total.toFixed(2)} MAD).`,
+            });
+            document.getElementById('pay-carte').checked = true;
+            togglePaiementFields();
+            return false;
+        }
+
+        return true;
+    }
+
+    function construireSeancesData() {
+        const nbSeances = document.getElementById('nb_seances').value;
+        const localisation = document.getElementById('localisation').value;
+        const seancesData = [];
+
+        if (nbSeances === 'multiple' && modeActuel === 'personnalise') {
+            const seances = document.querySelectorAll('#seances-container .seance-item');
+            seances.forEach((seance, i) => {
+                const matiere = seance.querySelector('.matiere-select').value;
+                const date = seance.querySelector('.date-input').value;
+                const creneau = seance.querySelector('.creneau-select').value;
+                const prof = professeursParSeance[i];
+                if (!prof) return;
+                seancesData.push({
+                    matiere: matiere,
+                    date: date,
+                    heure: (creneau.split('-')[0] || '9') + ':00',
+                    duree: '1h',
+                    professeur_id: prof.id,
+                    tarif: prof.tarif,
+                    localisation: localisation,
+                });
+            });
+        } else if (nbSeances === 'multiple' && modeActuel === 'identique') {
+            const matiere = document.getElementById('matiere_identique').value;
+            const seances = document.querySelectorAll('#seances-identiques-container .seance-item');
+            
+            if (!professeurSelectionne) {
+                alert('Veuillez sélectionner un professeur.');
+                return [];
+            }
+            
+            seances.forEach((seance) => {
+                const date = seance.querySelector('.date-identique-input').value;
+                const creneau = seance.querySelector('.creneau-identique-select').value;
+                if (date && creneau) {
+                    seancesData.push({
+                        matiere: matiere,
+                        date: date,
+                        heure: (creneau.split('-')[0] || '9') + ':00',
+                        duree: '1h',
+                        professeur_id: professeurSelectionne.id,
+                        tarif: professeurSelectionne.tarif,
+                        localisation: localisation,
+                    });
+                }
+            });
+        } else {
+            const matiere = document.getElementById('matiere').value;
+            const date = document.getElementById('date_seance').value;
+            const creneau = document.getElementById('creneau').value;
+            if (professeurSelectionne) {
+                seancesData.push({
+                    matiere: matiere,
+                    date: date,
+                    heure: (creneau.split('-')[0] || '9') + ':00',
+                    duree: '1h',
+                    professeur_id: professeurSelectionne.id,
+                    tarif: professeurSelectionne.tarif,
+                    localisation: localisation,
+                });
+            }
+        }
+
+        return seancesData;
+    }
+
+    function afficherRecap(seancesData, total) {
+        let recapHtml = '';
+        seancesData.forEach((s, i) => {
+            recapHtml += `
+                <div class="flex justify-between py-2 border-b border-outline-variant/20">
+                    <div>
+                        <span class="font-semibold">Séance #${i + 1}</span>
+                        <span class="text-sm text-on-surface-variant ml-2">${s.matiere}</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-sm">${s.date || 'N/A'} ${s.heure ? '- ' + s.heure : ''}</span>
+                        <span class="font-semibold ml-3">${s.tarif.toFixed ? s.tarif.toFixed(2) : s.tarif} MAD</span>
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('recap-seances').innerHTML = recapHtml;
+        document.getElementById('recap-total').textContent = `${total.toFixed(2)} MAD`;
+    }
+
+    async function confirmerReservation() {
+        const modeInput = document.querySelector('input[name="mode_paiement"]:checked');
+        const modePaiement = modeInput ? modeInput.value : 'portefeuille';
+
+        const seancesData = construireSeancesData();
+        if (seancesData.length === 0) {
+            Swal.fire({ icon: 'error', title: 'Erreur', text: "Aucune séance valide à réserver." });
+            return;
+        }
+
+        const total = seancesData.reduce((sum, s) => sum + parseFloat(s.tarif), 0);
+
+        if (modePaiement === 'portefeuille' && !verifierSoldePortefeuille()) {
+            return;
+        }
+
+        const btn = document.getElementById('btn-confirmer-paiement');
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        const btnTexteOriginal = btn.innerHTML;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Confirmation en cours...';
+
+        try {
+            const response = await fetch('/seances/confirmer-reservation/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    mode_paiement: modePaiement,
+                    localisation: document.getElementById('localisation').value,
+                    seances: seancesData,
+                    preferences: diagnosticData,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (data.error && data.error.toLowerCase().includes('solde')) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Solde insuffisant',
+                        text: data.error,
+                    });
+                    document.getElementById('pay-carte').checked = true;
+                    togglePaiementFields();
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Erreur', text: data.error || "Une erreur est survenue." });
+                }
+                return;
+            }
+
+            afficherRecap(seancesData, total);
+
+            if (modePaiement === 'carte') {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Redirection vers le paiement',
+                    text: "Vous allez être redirigé(e) vers la page de paiement sécurisée.",
+                    timer: 2500,
+                    showConfirmButton: false,
+                });
+            }
+
+            currentStep = 6;
+            updateSteps();
+
+        } catch (error) {
+            console.error('Erreur:', error);
+            Swal.fire({ icon: 'error', title: 'Erreur réseau', text: "Impossible de contacter le serveur. Réessayez." });
+        } finally {
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btn.innerHTML = btnTexteOriginal;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        updateSteps();
+        toggleModeSeances();
+        setMode('identique');
+
+        document.querySelectorAll('input[name="mode_paiement"]').forEach(radio => {
+            radio.addEventListener('change', togglePaiementFields);
+        });
+
+        // Empêche deux séances personnalisées d'avoir la même matière
+        document.getElementById('seances-container').addEventListener('change', function(e) {
+            if (e.target.classList.contains('matiere-select')) {
+                const matiere = e.target.value;
+                if (!matiere) return;
+                const autresSelects = Array.from(document.querySelectorAll('#seances-container .matiere-select'))
+                    .filter(sel => sel !== e.target && sel.value === matiere);
+                if (autresSelects.length > 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Matière déjà utilisée',
+                        text: `"${matiere}" est déjà choisie pour une autre séance. Chaque séance personnalisée doit avoir une matière différente. Pour plusieurs séances de la même matière (dates/créneaux différents), utilisez le mode "Séances identiques".`,
+                    });
+                    e.target.value = '';
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,11 +1,11 @@
-<!-- templates/etudiants/dashboard.html -->
+<!-- templates/etudiants/reservations_parent.html -->
 <!-- stylelint-disable -->
 <!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Origami Privé - Dashboard Étudiant</title>
+<title>Réservations Parent - Origami Privé</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
@@ -157,6 +157,8 @@ tailwind.config = {
     .badge-dot.orange { background: #f59e0b; }
     .badge-dot.red { background: #ef4444; }
     .badge-dot.blue { background: #3b82f6; }
+    .badge-dot.purple { background: #8b5cf6; }
+    .badge-dot.gray { background: #6b7280; }
 
     .bg-primary-light { background-color: rgba(113, 15, 229, 0.1); }
     .bg-secondary-light { background-color: rgba(174, 18, 138, 0.1); }
@@ -217,6 +219,17 @@ tailwind.config = {
     .text-pink { color: #ec4899; }
     .text-teal { color: #14b8a6; }
     .text-emerald { color: #10b981; }
+    .text-gray { color: #6b7280; }
+
+    .bg-gray-light { background-color: rgba(107, 114, 128, 0.1); }
+    .bg-orange-light { background-color: rgba(245, 158, 11, 0.1); }
+    .bg-green-light { background-color: rgba(16, 185, 129, 0.1); }
+    .bg-red-light { background-color: rgba(239, 68, 68, 0.1); }
+
+    .text-gray { color: #6b7280; }
+    .text-orange { color: #f59e0b; }
+    .text-green { color: #10b981; }
+    .text-red { color: #ef4444; }
 </style>
 </head>
 <body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
@@ -228,6 +241,7 @@ tailwind.config = {
 
 <div class="flex h-screen overflow-hidden">
 
+    <!-- Sidebar -->
     <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
         <div class="flex items-center gap-3 px-3 py-4 mb-6">
             <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
@@ -237,7 +251,7 @@ tailwind.config = {
         </div>
 
         <nav class="flex-1 space-y-1">
-            <a href="{% url 'authentication:dashboard' %}" class="sidebar-link active">
+            <a href="{% url 'authentication:dashboard' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">dashboard</span>
                 <span>Dashboard</span>
             </a>
@@ -269,6 +283,7 @@ tailwind.config = {
                 <span class="material-symbols-outlined text-[22px]">star</span>
                 <span>Avis Enseignants</span>
             </a>
+            <!-- 👇 NOUVEAU LIEN : Réservations Parent (ACTIF) -->
             <a href="{% url 'etudiants:reservations_parent' %}" class="sidebar-link active">
                 <span class="material-symbols-outlined text-[22px]">family_history</span>
                 <span>Réservations Parent</span>
@@ -287,11 +302,11 @@ tailwind.config = {
             </a>
         </nav>
         <div class="mt-4 pt-4 border-t border-outline-variant/30">
-    <a href="{% url 'seances:reserver_seance' %}" class="w-full py-3.5 px-4 rounded-xl bg-primary-gradient text-white font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 hover:scale-[1.02] transition-all duration-300 shadow-lg shadow-primary/25 group">
-        <span class="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform duration-300">add_circle</span>
-        Réserver une séance
-    </a>
-</div>
+            <a href="{% url 'seances:reserver_seance' %}" class="w-full py-3.5 px-4 rounded-xl bg-primary-gradient text-white font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 hover:scale-[1.02] transition-all duration-300 shadow-lg shadow-primary/25 group">
+                <span class="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform duration-300">add_circle</span>
+                Réserver une séance
+            </a>
+        </div>
         <div class="mt-auto pt-4 border-t border-outline-variant/30">
             <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
                 <span class="material-symbols-outlined text-[22px]">logout</span>
@@ -300,12 +315,13 @@ tailwind.config = {
         </div>
     </aside>
 
+    <!-- Main Content -->
     <main class="flex-1 overflow-y-auto p-8">
 
         <div class="flex items-center justify-between mb-8">
             <div>
-                <h1 class="font-headline-lg text-headline-lg text-on-surface">Bonjour, {{ first_name|default:user.username }}</h1>
-                <p class="text-on-surface-variant body-sm">Bienvenue sur votre espace étudiant</p>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface">Réservations de mes parents</h1>
+                <p class="text-on-surface-variant body-sm">Consultez les réservations effectuées par votre parent pour vos cours</p>
             </div>
             <div class="flex items-center gap-3">
                 <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
@@ -318,178 +334,185 @@ tailwind.config = {
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Statistiques -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
                 <div class="flex items-center justify-between mb-3">
-                    <span class="material-symbols-outlined text-[28px] text-primary">book</span>
-                    <span class="text-xs font-bold text-primary-container bg-primary/10 px-3 py-1 rounded-full">En cours</span>
+                    <span class="material-symbols-outlined text-[28px] text-primary">receipt_long</span>
+                    <span class="text-xs font-bold text-primary-container bg-primary/10 px-3 py-1 rounded-full">Total</span>
                 </div>
-                <p class="text-3xl font-bold text-on-surface">{{ cours_actifs|default:0 }}</p>
-                <p class="text-sm text-on-surface-variant">Cours actifs</p>
+                <p class="text-3xl font-bold text-on-surface">{{ total_reservations|default:0 }}</p>
+                <p class="text-sm text-on-surface-variant">Réservations totales</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="material-symbols-outlined text-[28px] text-orange-500">hourglass_top</span>
+                    <span class="text-xs font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">En attente</span>
+                </div>
+                <p class="text-3xl font-bold text-on-surface">{{ reservations_en_attente|default:0 }}</p>
+                <p class="text-sm text-on-surface-variant">Réservations en attente</p>
             </div>
             <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
                 <div class="flex items-center justify-between mb-3">
                     <span class="material-symbols-outlined text-[28px] text-green-500">check_circle</span>
-                    <span class="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">Terminés</span>
+                    <span class="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">Confirmées</span>
                 </div>
-                <p class="text-3xl font-bold text-on-surface">{{ cours_termines|default:0 }}</p>
-                <p class="text-sm text-on-surface-variant">Cours complétés</p>
-            </div>
-            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="material-symbols-outlined text-[28px] text-orange-500">schedule</span>
-                    <span class="text-xs font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Restant</span>
-                </div>
-                <p class="text-3xl font-bold text-on-surface">{{ heures_restantes|default:0 }}h</p>
-                <p class="text-sm text-on-surface-variant">Heures restantes</p>
-            </div>
-            <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="material-symbols-outlined text-[28px] text-purple-500">stars</span>
-                    <span class="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Moyenne</span>
-                </div>
-                <p class="text-3xl font-bold text-on-surface">{{ moyenne_generale|default:0 }}</p>
-                <p class="text-sm text-on-surface-variant">Moyenne générale /20</p>
+                <p class="text-3xl font-bold text-on-surface">{{ reservations_confirmees|default:0 }}</p>
+                <p class="text-sm text-on-surface-variant">Réservations confirmées</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Message si pas de parent -->
+        {% if not has_parent %}
+        <div class="bg-orange-50 border border-orange-200 rounded-xl p-8 text-center mb-8">
+            <span class="material-symbols-outlined text-5xl text-orange-400 block mb-4">family_restroom</span>
+            <h3 class="text-lg font-semibold text-on-surface mb-2">Aucun parent associé</h3>
+            <p class="text-on-surface-variant text-sm max-w-md mx-auto">
+                Vous n'avez pas encore de parent associé à votre compte. 
+                Les réservations faites par vos parents apparaîtront ici une fois qu'ils seront liés à votre compte.
+            </p>
+        </div>
+        {% elif not has_reservations %}
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-8 text-center mb-8">
+            <span class="material-symbols-outlined text-5xl text-blue-400 block mb-4">inbox</span>
+            <h3 class="text-lg font-semibold text-on-surface mb-2">Aucune réservation trouvée</h3>
+            <p class="text-on-surface-variant text-sm max-w-md mx-auto">
+                Votre parent n'a pas encore effectué de réservation pour vous. 
+                Les réservations apparaîtront ici une fois qu'elles seront créées.
+            </p>
+        </div>
+        {% endif %}
 
-            <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">menu_book</span>
-                        Mes cours en cours
-                    </h2>
-                    <a href="#" class="text-sm text-primary font-semibold hover:underline">Voir tout <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
-                </div>
-                <div class="space-y-4">
-                    {% for cours in cours %}
-                    <div class="flex items-center gap-4 p-4 bg-background rounded-xl border border-outline-variant/20">
-                        <div class="w-12 h-12 rounded-xl bg-{{ cours.couleur }}-light flex items-center justify-center text-{{ cours.couleur }}">
-                            <span class="material-symbols-outlined">{{ cours.icone }}</span>
+        <!-- Liste des réservations -->
+        {% if has_reservations %}
+        <div class="space-y-6">
+            {% for reservation in reservations %}
+            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <!-- En-tête de la réservation -->
+                <div class="flex items-center justify-between p-6 border-b border-outline-variant/20 {% if reservation.statut_reservation == 'en_attente' %}bg-orange-lighter{% elif reservation.statut_reservation == 'active' %}bg-green-lighter{% else %}bg-gray-light{% endif %}">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined text-2xl">menu_book</span>
                         </div>
-                        <div class="flex-1">
-                            <h3 class="font-semibold text-on-surface">{{ cours.nom }}</h3>
-                            <p class="text-sm text-on-surface-variant">{{ cours.professeur }} • {{ cours.seances_restantes }} séances restantes</p>
-                            <div class="mt-2 flex items-center gap-3">
-                                <div class="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
-                                    <div class="h-full bg-{{ cours.couleur }}-solid rounded-full" style="width: {{ cours.progression }}%"></div>
-                                </div>
-                                <span class="text-xs font-medium text-{{ cours.couleur }}">{{ cours.progression }}%</span>
+                        <div>
+                            <h3 class="font-semibold text-on-surface text-lg">{{ reservation.matiere }}</h3>
+                            {% if reservation.matiere_personnalise %}
+                            <p class="text-sm text-on-surface-variant">{{ reservation.matiere_personnalise }}</p>
+                            {% endif %}
+                            <p class="text-sm text-on-surface-variant flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[16px]">person</span>
+                                {{ reservation.enseignant_nom }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold
+                            {% if reservation.statut_reservation == 'en_attente' %}bg-orange-100 text-orange-600{% endif %}
+                            {% if reservation.statut_reservation == 'active' %}bg-green-100 text-green-600{% endif %}
+                            {% if reservation.statut_reservation == 'inconnu' %}bg-gray-100 text-gray-600{% endif %}">
+                            {{ reservation.statut_label }}
+                        </span>
+                        <span class="text-sm text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[16px] align-middle">calendar_today</span>
+                            {{ reservation.date_creation|date:"d/m/Y" }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Corps de la réservation -->
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <div>
+                            <p class="text-xs text-on-surface-variant">Forfait</p>
+                            <p class="font-semibold text-on-surface">{{ reservation.forfait_nom }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-on-surface-variant">Prix</p>
+                            <p class="font-semibold text-on-surface">{{ reservation.prix_renumeration }} MAD</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-on-surface-variant">Heures restantes</p>
+                            <p class="font-semibold text-on-surface">{{ reservation.heures_restantes|floatformat:1 }}h</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-on-surface-variant">Statut paiement</p>
+                            <p class="font-semibold text-on-surface">
+                                {% if reservation.statut_paiement == 'paye' %}
+                                <span class="text-green-600">✔ Payé</span>
+                                {% elif reservation.statut_paiement == 'en_attente' %}
+                                <span class="text-orange-500">⏳ En attente</span>
+                                {% else %}
+                                {{ reservation.statut_paiement }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Statistiques des séances -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 p-3 bg-background rounded-xl border border-outline-variant/20">
+                        <div class="text-center">
+                            <p class="text-xs text-on-surface-variant">Total séances</p>
+                            <p class="font-bold text-on-surface text-lg">{{ reservation.total_seances }}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-on-surface-variant">Prévues</p>
+                            <p class="font-bold text-blue-600 text-lg">{{ reservation.seances_prevues }}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-on-surface-variant">Terminées</p>
+                            <p class="font-bold text-green-600 text-lg">{{ reservation.seances_terminees }}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-on-surface-variant">Reportées</p>
+                            <p class="font-bold text-orange-500 text-lg">{{ reservation.seances_reportees }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Prochaine séance -->
+                    {% if reservation.prochaine_seance %}
+                    <div class="mt-3 p-3 bg-primary/5 rounded-xl border border-primary/20 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary">event</span>
+                            <div>
+                                <p class="text-xs text-on-surface-variant">Prochaine séance</p>
+                                <p class="font-semibold text-on-surface text-sm">
+                                    {{ reservation.prochaine_seance.date|date:"d/m/Y" }} - 
+                                    {{ reservation.prochaine_seance.heure|time:"H:i" }}
+                                </p>
                             </div>
                         </div>
-                        {% if cours.progression >= 70 %}
-                        <span class="badge-dot green"></span>
-                        {% elif cours.progression >= 40 %}
-                        <span class="badge-dot orange"></span>
-                        {% else %}
-                        <span class="badge-dot red"></span>
-                        {% endif %}
+                        <span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
+                            {{ reservation.prochaine_seance.type_seance }}
+                        </span>
                     </div>
-                    {% empty %}
-                    <p class="text-center text-on-surface-variant py-8">Aucun cours en cours</p>
-                    {% endfor %}
-                </div>
-            </div>
+                    {% endif %}
 
-            <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
-                <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
-                    <span class="material-symbols-outlined text-primary">calendar_today</span>
-                    Prochaines séances
-                </h2>
-                <div class="space-y-4">
-                    {% for seance in prochaines_seances %}
-                    <div class="flex items-start gap-3 p-3 bg-background rounded-xl border border-outline-variant/20">
-                        <div class="w-12 h-12 rounded-xl bg-{{ seance.couleur }}-lighter flex flex-col items-center justify-center text-{{ seance.couleur }} border border-{{ seance.couleur }}-light">
-                            <span class="text-[10px] font-bold uppercase">{{ seance.jour }}</span>
-                            <span class="text-lg font-bold">{{ seance.date }}</span>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-on-surface text-sm">{{ seance.matiere }}</p>
-                            <p class="text-xs text-on-surface-variant">{{ seance.heure }}</p>
-                            <p class="text-xs text-{{ seance.couleur }} mt-0.5">{{ seance.professeur }}</p>
+                    <!-- Dernières séances -->
+                    {% if reservation.seances %}
+                    <div class="mt-3">
+                        <p class="text-xs text-on-surface-variant mb-2">Dernières séances</p>
+                        <div class="space-y-1">
+                            {% for seance in reservation.seances %}
+                            <div class="flex items-center justify-between text-sm p-2 bg-background rounded-lg">
+                                <span class="text-on-surface">{{ seance.date|date:"d/m/Y" }}</span>
+                                <span class="text-on-surface-variant">{{ seance.heure|time:"H:i" }}</span>
+                                <span class="px-2 py-0.5 rounded-full text-xs
+                                    {% if seance.statut == 'prevue' %}bg-blue-100 text-blue-600{% endif %}
+                                    {% if seance.statut == 'terminee' %}bg-green-100 text-green-600{% endif %}
+                                    {% if seance.statut == 'annulee' %}bg-red-100 text-red-600{% endif %}
+                                    {% if seance.statut == 'reportee' %}bg-orange-100 text-orange-600{% endif %}">
+                                    {{ seance.get_statut_display }}
+                                </span>
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
-                    {% empty %}
-                    <p class="text-center text-on-surface-variant py-8">Aucune séance à venir</p>
-                    {% endfor %}
+                    {% endif %}
                 </div>
-                <a href="#" class="block text-center text-sm text-primary font-semibold mt-4 hover:underline">
-                    Voir tout le planning <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-                </a>
             </div>
-
+            {% endfor %}
         </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-
-            <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">notifications_active</span>
-                        Notifications récentes
-                    </h2>
-                    <a href="#" class="text-sm text-primary font-semibold hover:underline">Voir tout <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
-                </div>
-                <div class="space-y-3">
-                    {% for notif in notifications %}
-                    <div class="flex items-start gap-3 p-3 {% if forloop.first %}bg-primary-lighter{% else %}bg-background{% endif %} rounded-xl border-l-4 border-{{ notif.couleur }}">
-                        <span class="material-symbols-outlined text-{{ notif.couleur }}">{{ notif.icone }}</span>
-                        <div>
-                            <p class="text-sm text-on-surface">{{ notif.message }}</p>
-                            <p class="text-xs text-on-surface-variant mt-0.5">{{ notif.temps }}</p>
-                        </div>
-                    </div>
-                    {% empty %}
-                    <p class="text-center text-on-surface-variant py-8">Aucune notification</p>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
-                <h2 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
-                    <span class="material-symbols-outlined text-primary">trending_up</span>
-                    Progression globale
-                </h2>
-                <div class="flex items-center justify-center mb-4">
-                    <div class="relative w-36 h-36">
-                        <svg class="w-36 h-36 transform -rotate-90" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="42" fill="none" stroke="#e5e7eb" stroke-width="8"/>
-                            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#grad)" stroke-width="8" stroke-dasharray="263.89" stroke-dashoffset="52.78" stroke-linecap="round"/>
-                            <defs>
-                                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#710fe5;stop-opacity:1" />
-                                    <stop offset="100%" style="stop-color:#ae128a;stop-opacity:1" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="text-2xl font-bold text-on-surface">{{ progression.pourcentage|default:0 }}%</span>
-                            <span class="text-xs text-on-surface-variant">Progression</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                        <span class="text-on-surface-variant">Cours complétés</span>
-                        <span class="font-semibold text-on-surface">{{ progression.cours_completes|default:0 }}/{{ progression.total_cours|default:0 }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-on-surface-variant">Quiz réussis</span>
-                        <span class="font-semibold text-on-surface">{{ progression.quiz_reussis|default:0 }}/{{ progression.total_quiz|default:0 }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-on-surface-variant">Heures de cours</span>
-                        <span class="font-semibold text-on-surface">{{ progression.heures_effectuees|default:0 }}/{{ progression.heures_total|default:0 }}h</span>
-                    </div>
-                </div>
-                <a href="#" class="block text-center text-sm text-primary font-semibold mt-4 hover:underline">
-                    Voir les détails <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-                </a>
-            </div>
-
-        </div>
+        {% endif %}
 
     </main>
 

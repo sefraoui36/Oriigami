@@ -18,6 +18,7 @@ urlpatterns = [
     path('clients/', include('clients.urls')),
     path('etudiants/', include('etudiants.urls')),
     path('portefeuilles/', include('portefeuilles.urls')),
+    path('seances/', include('seances.urls')),
 ]
 
 # Servir les fichiers media en développement

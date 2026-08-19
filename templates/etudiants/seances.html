@@ -1,12 +1,14 @@
+<!-- templates/etudiants/seances.html -->
 <!-- stylelint-disable -->
 <!DOCTYPE html>
-
-<html class="light" lang="fr"><head>
+<html class="light" lang="fr">
+<head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Mes Séances | Origami Privé</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script id="tailwind-config">
 tailwind.config = {
     darkMode: "class",
@@ -216,35 +218,6 @@ tailwind.config = {
     .text-pink { color: #ec4899; }
     .text-teal { color: #14b8a6; }
     .text-emerald { color: #10b981; }
-
-    .bg-error\/10 { background-color: rgba(186, 26, 26, 0.1); }
-    .border-error\/20 { border-color: rgba(186, 26, 26, 0.2); }
-    .bg-white\/10 { background-color: rgba(255, 255, 255, 0.1); }
-    .border-white\/10 { border-color: rgba(255, 255, 255, 0.1); }
-    .bg-white\/20 { background-color: rgba(255, 255, 255, 0.2); }
-
-    .calendar-grid {
-        display: grid;
-        grid-template-columns: 80px repeat(7, 1fr);
-    }
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #cdc2d8;
-        border-radius: 10px;
-    }
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0px); }
-    }
-    .animate-float {
-        animation: float 4s ease-in-out infinite;
-    }
 </style>
 </head>
 <body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
@@ -256,6 +229,7 @@ tailwind.config = {
 
 <div class="flex h-screen overflow-hidden">
 
+    <!-- ===== SIDEBAR ===== -->
     <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
         <div class="flex items-center gap-3 px-3 py-4 mb-6">
             <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
@@ -278,7 +252,7 @@ tailwind.config = {
                 <span>Mes Enseignants</span>
             </a>
             <a href="{% url 'etudiants:seances' %}" class="sidebar-link active">
-                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">event</span>
+                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
                 <span>Mes Séances</span>
             </a>
             <a href="{% url 'etudiants:forfait' %}" class="sidebar-link">
@@ -297,17 +271,29 @@ tailwind.config = {
                 <span class="material-symbols-outlined text-[22px]">star</span>
                 <span>Avis Enseignants</span>
             </a>
+            <a href="{% url 'etudiants:reservations_parent' %}" class="sidebar-link">
+                <span class="material-symbols-outlined text-[22px]">family_history</span>
+                <span>Réservations Parent</span>
+                {% if total_reservations > 0 %}
+                <span class="ml-auto bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full">{{ total_reservations }}</span>
+                {% endif %}
+            </a>
             <a href="{% url 'etudiants:notifications' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">notifications</span>
                 <span>Notifications</span>
-                <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
+                <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ notifications|length }}</span>
             </a>
             <a href="{% url 'etudiants:parametres' %}" class="sidebar-link">
                 <span class="material-symbols-outlined text-[22px]">settings</span>
                 <span>Paramètres</span>
             </a>
         </nav>
-
+        <div class="mt-4 pt-4 border-t border-outline-variant/30">
+            <a href="{% url 'seances:reserver_seance' %}" class="w-full py-3.5 px-4 rounded-xl bg-primary-gradient text-white font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 hover:scale-[1.02] transition-all duration-300 shadow-lg shadow-primary/25 group">
+                <span class="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform duration-300">add_circle</span>
+                Réserver une séance
+            </a>
+        </div>
         <div class="mt-auto pt-4 border-t border-outline-variant/30">
             <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
                 <span class="material-symbols-outlined text-[22px]">logout</span>
@@ -316,18 +302,16 @@ tailwind.config = {
         </div>
     </aside>
 
+    <!-- ===== MAIN CONTENT ===== -->
     <main class="flex-1 overflow-y-auto p-8">
 
         <div class="flex items-center justify-between mb-8">
             <div>
-                <h1 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary">event</span>
-                    Mes Séances
-                </h1>
-                <p class="text-on-surface-variant body-sm">Gérez votre emploi du temps et optimisez vos révisions</p>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface">Mes Séances</h1>
+                <p class="text-on-surface-variant body-sm">Gérez vos séances et réservations</p>
             </div>
             <div class="flex items-center gap-3">
-                <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative" onclick="window.location.href='{% url 'etudiants:notifications' %}'">
+                <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
                     <span class="material-symbols-outlined text-[24px]">notifications</span>
                     <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
@@ -337,8 +321,8 @@ tailwind.config = {
             </div>
         </div>
 
-        <!-- KPI Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
                 <div class="flex items-center justify-between mb-3">
                     <span class="material-symbols-outlined text-[28px] text-primary">upcoming</span>
@@ -350,7 +334,7 @@ tailwind.config = {
             <div class="stat-card bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30">
                 <div class="flex items-center justify-between mb-3">
                     <span class="material-symbols-outlined text-[28px] text-green-500">check_circle</span>
-                    <span class="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">Terminés</span>
+                    <span class="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">Terminées</span>
                 </div>
                 <p class="text-3xl font-bold text-on-surface">{{ seances_terminees|length }}</p>
                 <p class="text-sm text-on-surface-variant">Séances terminées</p>
@@ -368,8 +352,8 @@ tailwind.config = {
                     <span class="material-symbols-outlined text-[28px] text-purple-500">timer</span>
                     <span class="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Total</span>
                 </div>
-                <p class="text-3xl font-bold text-on-surface">{{ total_seances|default:"0" }}h</p>
-                <p class="text-sm text-on-surface-variant">Temps d'étude total</p>
+                <p class="text-3xl font-bold text-on-surface">{{ total_seances|default:"0" }}</p>
+                <p class="text-sm text-on-surface-variant">Séances totales</p>
             </div>
         </div>
 
@@ -391,12 +375,16 @@ tailwind.config = {
                             <span class="material-symbols-outlined">event</span>
                         </div>
                         <div>
-                            <p class="font-semibold text-on-surface">{{ seance.affectation.matiere }}</p>
-                            <p class="text-sm text-on-surface-variant">{{ seance.date|date:"d M Y" }} à {{ seance.heure|time:"H:i" }}</p>
-                            <p class="text-xs text-primary">{{ seance.affectation.rh.utilisateur.first_name }} {{ seance.affectation.rh.utilisateur.last_name }}</p>
+                            <p class="font-semibold text-on-surface">{{ seance.affectation.matiere_personnalise|default:seance.affectation.matiere }}</p>
+                            <p class="text-sm text-on-surface-variant">{{ seance.date }} à {{ seance.heure }}</p>
+                            {% if seance.affectation.rh.utilisateur %}
+                            <p class="text-xs text-primary">{{ seance.affectation.rh.utilisateur.get_full_name }}</p>
+                            {% endif %}
                         </div>
                     </div>
-                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary">À venir</span>
+                    <div class="flex items-center gap-3">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary">À venir</span>
+                    </div>
                 </div>
                 {% empty %}
                 <p class="text-center text-on-surface-variant py-8">Aucune séance à venir</p>
@@ -405,8 +393,7 @@ tailwind.config = {
         </div>
 
         <!-- Séances terminées -->
-        {% if seances_terminees %}
-        <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 overflow-hidden">
+        <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 overflow-hidden mb-6">
             <div class="p-6 border-b border-outline-variant/30 bg-surface-container-lowest">
                 <h4 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
                     <span class="material-symbols-outlined text-green-500">check_circle</span>
@@ -419,197 +406,106 @@ tailwind.config = {
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-green-500 text-[20px]">check_circle</span>
                         <div>
-                            <p class="font-medium text-on-surface text-sm">{{ seance.affectation.matiere }}</p>
-                            <p class="text-xs text-on-surface-variant">{{ seance.date|date:"d M Y" }}</p>
+                            <p class="font-medium text-on-surface text-sm">{{ seance.affectation.matiere_personnalise|default:seance.affectation.matiere }}</p>
+                            <p class="text-xs text-on-surface-variant">{{ seance.date }}</p>
                         </div>
                     </div>
                     <span class="text-xs text-green-600 font-bold">Terminée</span>
                 </div>
+                {% empty %}
+                <p class="text-center text-on-surface-variant py-8">Aucune séance terminée</p>
                 {% endfor %}
             </div>
         </div>
-        {% endif %}
 
-        <!-- IA Assistant Panel -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-            <div class="lg:col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-6">
-                <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
-                    <span class="material-symbols-outlined text-primary">analytics</span>
-                    Assiduité
-                </h3>
-                <div class="h-48 relative flex items-end justify-between gap-2 px-2">
-                    {% for data in presence_data %}
-                    <div class="w-full relative group" style="height: 100%; display: flex; flex-direction: column; justify-content: flex-end;">
-                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">{{ data.presence }}%</div>
-                        <div class="rounded-t-lg transition-all duration-500 
-                            {% if data.presence >= 80 %}bg-primary
-                            {% elif data.presence >= 50 %}bg-primary/40
-                            {% else %}bg-primary/10{% endif %}" 
-                            style="height: {{ data.presence }}%; min-height: 8px; width: 100%;">
-                        </div>
+        <!-- ===== Mes réservations ===== -->
+        <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 overflow-hidden">
+            <div class="p-6 border-b border-outline-variant/30 bg-surface-container-lowest">
+                <div class="flex items-center justify-between flex-wrap gap-4">
+                    <h4 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-secondary">bookmark_added</span>
+                        Mes réservations
+                    </h4>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary">
+                            {{ total_reservations|default:"0" }} au total
+                        </span>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-orange-600">
+                            {{ reservations_en_attente|default:"0" }} en attente
+                        </span>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-green-50 text-green-600">
+                            {{ reservations_confirmees|default:"0" }} confirmées
+                        </span>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-600">
+                            {{ nb_matieres_reservees|default:"0" }} matière(s)
+                        </span>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-600">
+                            {{ nb_profs_reserves|default:"0" }} enseignant(s)
+                        </span>
                     </div>
-                    {% empty %}
-                    <p class="text-center text-on-surface-variant col-span-5">Aucune donnée d'assiduité</p>
-                    {% endfor %}
-                </div>
-                <div class="flex justify-between mt-4 text-[10px] font-bold text-on-surface-variant uppercase">
-                    {% for data in presence_data %}
-                    <span>{{ data.day }}</span>
-                    {% empty %}
-                    <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span>
-                    {% endfor %}
                 </div>
             </div>
 
-            <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-6">
-                <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
-                    <span class="material-symbols-outlined text-primary">psychology</span>
-                    Focus Score IA
-                </h3>
-                <div class="flex items-center justify-center h-48">
-                    <div class="relative w-32 h-32">
-                        <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="42" fill="none" stroke="#e5e7eb" stroke-width="8"/>
-                            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#grad)" stroke-width="8" 
-                                    stroke-dasharray="263.89" stroke-dashoffset="{{ focus_score|default:0|add:"-263.89"|cut:"-" }}" 
-                                    stroke-linecap="round"/>
-                            <defs>
-                                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#710fe5;stop-opacity:1" />
-                                    <stop offset="100%" style="stop-color:#ae128a;stop-opacity:1" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="text-2xl font-bold text-on-surface">{{ focus_score|default:0 }}%</span>
-                            <span class="text-xs text-on-surface-variant">{{ focus_status|default:"En attente" }}</span>
+            <div class="p-6 space-y-4">
+                {% for res in mes_reservations %}
+                <div class="p-4 bg-surface-container-low rounded-xl border border-outline-variant/30">
+                    <div class="flex items-start justify-between flex-wrap gap-3">
+                        <div class="flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity" onclick="ouvrirDetailReservation({{ res.id }})">
+                            <div class="w-12 h-12 rounded-xl bg-secondary-light flex items-center justify-center text-secondary">
+                                <span class="material-symbols-outlined">event_note</span>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-on-surface">
+                                    {{ res.matiere_personnalise|default:res.matiere }}
+                                </p>
+                                <p class="text-sm text-on-surface-variant">
+                                    Enseignant : {{ res.enseignant_nom }}
+                                </p>
+                                <p class="text-xs text-on-surface-variant">
+                                    Réservé le {{ res.date_creation|date:"d M Y" }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="ml-6 space-y-2">
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-primary"></span>
-                            <span class="text-xs">Concentration</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-secondary"></span>
-                            <span class="text-xs">Régularité</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- ===== RECOMMANDATIONS IA ===== -->
-        {% if ia_recommendations %}
-        <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-6 mt-6">
-            <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
-                <span class="material-symbols-outlined text-primary">auto_awesome</span>
-                Recommandations IA
-            </h3>
-            <div class="space-y-3">
-                {% for rec in ia_recommendations %}
-                <div class="flex items-center justify-between p-3 bg-primary/5 rounded-xl border border-primary/10">
-                    <div>
-                        <p class="font-medium text-on-surface">Score de progression: {{ rec.score }}%</p>
-                        <p class="text-xs text-on-surface-variant">Recommandé le {{ rec.date|date:"d M Y" }}</p>
+                        <div class="flex flex-col items-end gap-2">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold
+                                {% if res.statut_couleur == 'green' %}bg-green-50 text-green-600
+                                {% elif res.statut_couleur == 'orange' %}bg-orange-50 text-orange-600
+                                {% else %}bg-surface-container text-on-surface-variant{% endif %}">
+                                <span class="badge-dot {{ res.statut_couleur }}"></span>
+                                {{ res.statut_label }}
+                            </span>
+                            <span class="text-xs text-on-surface-variant">
+                                {{ res.seances_terminees }}/{{ res.total_seances }} séances terminées
+                            </span>
+                        </div>
                     </div>
-                    <span class="px-3 py-1 rounded-full text-xs font-bold 
-                        {% if rec.score > 80 %}bg-green-100 text-green-700
-                        {% elif rec.score > 60 %}bg-yellow-100 text-yellow-700
-                        {% else %}bg-red-100 text-red-700{% endif %}">
-                        {% if rec.score > 80 %}Excellent
-                        {% elif rec.score > 60 %}Bon
-                        {% else %}À améliorer{% endif %}
-                    </span>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
 
-        <!-- ===== AI SMART ASSISTANT (DYNAMIQUE) ===== -->
-        <div class="bg-primary text-white p-6 rounded-2xl relative overflow-hidden shadow-2xl shadow-primary/20 mt-6">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-            <div class="relative z-10">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center animate-float">
-                        <span class="material-symbols-outlined text-white">smart_toy</span>
-                    </div>
-                    <div>
-                        <h4 class="font-bold">IA Assistant</h4>
-                        <p class="text-xs text-white/70">
-                            {% if ia_recommendations %}
-                                {% with rec=ia_recommendations|first %}
-                                    {% if rec.score > 80 %}Score excellent
-                                    {% elif rec.score > 60 %}Bonne progression
-                                    {% else %}À améliorer
-                                    {% endif %}
-                                {% endwith %}
-                            {% else %}
-                                Analyse en cours
-                            {% endif %}
-                        </p>
-                    </div>
-                </div>
-                <div class="space-y-4">
-                    <div class="bg-white/10 p-4 rounded-2xl border border-white/10">
-                        <p class="text-xs font-bold uppercase tracking-wider text-white/60 mb-2">Recommandation du jour</p>
-                        <p class="text-sm leading-relaxed">
-                            {% if seances_a_venir %}
-                                {% with seance=seances_a_venir|first %}
-                                "Vous avez <span class="font-bold">{{ seance.affectation.matiere }}</span> à {{ seance.heure|time:"H:i" }}. 
-                                Nous recommandons une révision des <span class="font-bold underline decoration-secondary">concepts clés</span> 
-                                pour maximiser l'efficacité de la séance."
-                                {% endwith %}
-                            {% else %}
-                                "Aucune séance programmée aujourd'hui. Profitez-en pour réviser !"
-                            {% endif %}
-                        </p>
-                        <button onclick="ajouterAuCalendrier()" class="mt-4 w-full bg-white text-primary font-bold py-2 rounded-xl text-xs hover:bg-opacity-90 transition-all">
-                            Ajouter au calendrier
+                    <div class="mt-3 pt-3 border-t border-outline-variant/20 flex items-center justify-between flex-wrap gap-3">
+                        <div class="flex items-center gap-2 text-xs text-primary cursor-pointer hover:underline" onclick="ouvrirDetailReservation({{ res.id }})">
+                            <span class="material-symbols-outlined text-[16px]">visibility</span>
+                            Voir le détail des séances
+                            <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                        </div>
+
+                        <!-- Bouton Supprimer -->
+                        <button onclick="confirmerSuppression({{ res.id }}, '{{ res.matiere|escapejs }}')" 
+                                class="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-all duration-200">
+                            <span class="material-symbols-outlined text-[16px]">delete</span>
+                            Supprimer
                         </button>
                     </div>
-                    <div class="bg-white/10 p-4 rounded-2xl border border-white/10">
-                        <div class="flex items-center justify-between">
-                            <p class="text-xs font-bold uppercase tracking-wider text-white/60">Analyse de charge</p>
-                            <span class="material-symbols-outlined text-sm">trending_up</span>
-                        </div>
-                        <div class="flex items-center justify-between mt-2">
-                            <span class="text-xs">
-                                {% if ia_recommendations %}
-                                    {% with rec=ia_recommendations|first %}
-                                        {% if rec.score > 70 %}Semaine équilibrée
-                                        {% elif rec.score > 50 %}Semaine chargée
-                                        {% else %}Semaine légère
-                                        {% endif %}
-                                    {% endwith %}
-                                {% else %}
-                                    En attente de données
-                                {% endif %}
-                            </span>
-                            <span class="text-xs font-bold">
-                                {% if ia_recommendations %}
-                                    {% with rec=ia_recommendations|first %}
-                                        {{ rec.score }}%
-                                    {% endwith %}
-                                {% else %}
-                                    0%
-                                {% endif %}
-                            </span>
-                        </div>
-                        <div class="w-full bg-white/20 h-1 rounded-full mt-2">
-                            <div class="bg-white h-1 rounded-full" style="width: 
-                                {% if ia_recommendations %}
-                                    {% with rec=ia_recommendations|first %}
-                                        {{ rec.score }}
-                                    {% endwith %}
-                                {% else %}
-                                    0
-                                {% endif %}
-                            %"></div>
-                        </div>
+
+                    {% if res.prochaine_seance %}
+                    <div class="mt-3 pt-3 border-t border-outline-variant/20 flex items-center gap-2 text-xs text-primary">
+                        <span class="material-symbols-outlined text-[16px]">schedule</span>
+                        Prochaine séance : {{ res.prochaine_seance.date }} à {{ res.prochaine_seance.heure }}
                     </div>
+                    {% endif %}
                 </div>
+                {% empty %}
+                <p class="text-center text-on-surface-variant py-8">Aucune réservation pour le moment</p>
+                {% endfor %}
             </div>
         </div>
 
@@ -617,37 +513,204 @@ tailwind.config = {
 
 </div>
 
+<!-- ===== MODAL : Détail d'une réservation ===== -->
+<div id="modal-detail-reservation" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="fermerDetailReservation()"></div>
+    <div class="relative bg-surface-container-lowest rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
+        <div class="p-6 border-b border-outline-variant/30 flex items-start justify-between gap-4">
+            <div>
+                <h3 class="font-title-md text-title-md font-bold text-on-surface" id="modal-matiere">-</h3>
+                <p class="text-sm text-on-surface-variant mt-1" id="modal-enseignant">-</p>
+                <span class="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full text-xs font-bold" id="modal-statut">
+                </span>
+            </div>
+            <button onclick="fermerDetailReservation()" class="p-2 rounded-full hover:bg-surface-container-high transition-colors flex-shrink-0">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6 overflow-y-auto space-y-3" id="modal-seances-container">
+            <!-- Rempli dynamiquement -->
+        </div>
+    </div>
+</div>
+
 <script>
-    // Fonction pour "Ajouter au calendrier"
-    function ajouterAuCalendrier() {
-        // Afficher un message de confirmation
-        const toast = document.createElement('div');
-        toast.className = 'fixed bottom-8 right-8 z-50 glass-card rounded-xl p-4 max-w-sm flex items-center gap-3';
-        toast.innerHTML = `
-            <span class="material-symbols-outlined text-primary">check_circle</span>
-            <p class="text-sm font-medium">✅ Événement ajouté à votre calendrier</p>
-        `;
-        document.body.appendChild(toast);
-        
-        // Animation d'apparition
-        toast.style.transform = 'translateY(20px)';
-        toast.style.opacity = '0';
-        toast.style.transition = 'all 0.5s ease';
-        
-        setTimeout(() => {
-            toast.style.transform = 'translateY(0)';
-            toast.style.opacity = '1';
-        }, 100);
-        
-        // Disparaître après 3 secondes
-        setTimeout(() => {
-            toast.style.transform = 'translateY(20px)';
-            toast.style.opacity = '0';
-            setTimeout(() => {
-                toast.remove();
-            }, 500);
-        }, 3000);
+    // Données des réservations passées depuis le contexte Django
+    const reservationsData = {{ reservations_json|safe }};
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+
+    const statutSeanceIcone = {
+        'prevue': 'event_upcoming',
+        'terminee': 'check_circle',
+        'annulee': 'cancel',
+        'reportee': 'hourglass_empty',
+    };
+
+    function ouvrirDetailReservation(id) {
+        const reservation = reservationsData.find(r => r.id === id);
+        if (!reservation) return;
+
+        document.getElementById('modal-matiere').textContent = reservation.matiere;
+        document.getElementById('modal-enseignant').textContent = `Enseignant : ${reservation.enseignant_nom}`;
+
+        const statutEl = document.getElementById('modal-statut');
+        const couleurClasses = {
+            green: 'bg-green-50 text-green-600',
+            orange: 'bg-orange-50 text-orange-600',
+            gray: 'bg-surface-container text-on-surface-variant',
+        };
+        statutEl.className = `inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full text-xs font-bold ${couleurClasses[reservation.statut_couleur] || couleurClasses.gray}`;
+        statutEl.textContent = reservation.statut_label;
+
+        const container = document.getElementById('modal-seances-container');
+
+        if (!reservation.seances || reservation.seances.length === 0) {
+            container.innerHTML = `<p class="text-center text-on-surface-variant py-6">Aucune séance enregistrée.</p>`;
+        } else {
+            const couleurBadge = {
+                blue: 'bg-blue-50 text-blue-600',
+                green: 'bg-green-50 text-green-600',
+                red: 'bg-red-50 text-red-600',
+                orange: 'bg-orange-50 text-orange-600',
+                gray: 'bg-surface-container text-on-surface-variant',
+            };
+
+            container.innerHTML = reservation.seances.map((s, i) => `
+                <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/30">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                            <span class="material-symbols-outlined text-[20px]">${statutSeanceIcone[s.statut] || 'event'}</span>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-on-surface text-sm">Séance #${i + 1} — ${s.matiere}</p>
+                            <p class="text-xs text-on-surface-variant">
+                                ${s.date || 'Date non définie'} ${s.heure ? '• ' + s.heure : ''} ${s.duree ? '• ' + s.duree : ''}
+                            </p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold ${couleurBadge[s.statut_couleur] || couleurBadge.gray}">
+                        ${s.statut_label}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('modal-detail-reservation').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
     }
+
+    function fermerDetailReservation() {
+        document.getElementById('modal-detail-reservation').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') fermerDetailReservation();
+    });
+
+    // ===== FONCTION DE SUPPRESSION AVEC SWEETALERT =====
+    function confirmerSuppression(id, matiere) {
+        Swal.fire({
+            title: 'Supprimer la réservation ?',
+            html: `
+                <div class="text-left">
+                    <p class="text-sm text-on-surface-variant mb-2">
+                        Êtes-vous sûr de vouloir supprimer cette réservation ?
+                    </p>
+                    <div class="bg-surface-container-low rounded-lg p-3 border border-outline-variant/30">
+                        <p class="font-semibold text-on-surface">${matiere}</p>
+                        <p class="text-xs text-on-surface-variant">Cette action est irréversible.</p>
+                    </div>
+                    <p class="text-xs text-red-500 mt-2 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">warning</span>
+                        Si vous aviez payé avec votre portefeuille, le montant vous sera remboursé automatiquement.
+                    </p>
+                </div>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Oui, supprimer',
+            cancelButtonText: 'Annuler',
+            reverseButtons: true,
+            customClass: {
+                confirmButton: 'px-4 py-2 rounded-lg font-semibold text-white bg-red-500 hover:bg-red-600 transition-all',
+                cancelButton: 'px-4 py-2 rounded-lg font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-all',
+                popup: 'rounded-2xl',
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                supprimerReservation(id);
+            }
+        });
+    }
+
+    function supprimerReservation(id) {
+    // Récupérer le token CSRF depuis le cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
+
+    Swal.fire({
+        title: 'Suppression en cours...',
+        text: 'Veuillez patienter',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    fetch(`/seances/supprimer-reservation/${id}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Réservation supprimée !',
+                text: 'La réservation a été supprimée avec succès.',
+                timer: 2000,
+                showConfirmButton: false,
+            }).then(() => {
+                location.reload();
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: data.error || 'Une erreur est survenue lors de la suppression.',
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Erreur réseau',
+            text: 'Impossible de contacter le serveur. Réessayez plus tard.',
+        });
+    });
+}
 </script>
 
 </body>
