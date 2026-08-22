@@ -533,7 +533,6 @@ tailwind.config = {
                 <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Professeurs suggérés</h2>
                 <p class="font-body-sm text-body-sm text-on-surface-variant">Notre IA a sélectionné les meilleurs professeurs pour vous</p>
             </div>
-            <!-- 👇 BOUTON RAFRAÎCHIR -->
             <button onclick="rafraichirProfesseurs()" 
                     class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all text-sm font-semibold">
                 <span class="material-symbols-outlined text-[18px]">refresh</span>
@@ -703,10 +702,26 @@ tailwind.config = {
             </div>
             <div>
                 <label class="block text-sm font-medium text-on-surface-variant mb-2">Rappel avant la séance</label>
-                <select id="diag_rappel" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" onchange="diagnosticData.rappel = this.value">
+                <!-- 👇 MODIFICATION : onchange appelle toggleCanalRappel -->
+                <select id="diag_rappel" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" onchange="toggleCanalRappel(this.value)">
                     <option value="oui">Oui, envoyez-moi un rappel</option>
                     <option value="non">Non, ce n'est pas nécessaire</option>
                 </select>
+            </div>
+        </div>
+
+        <!-- 👇 NOUVEAU : Choix du canal de rappel (WhatsApp / SMS) -->
+        <div id="canal_rappel_container" class="hidden mt-3">
+            <label class="block text-sm font-medium text-on-surface-variant mb-2">Comment voulez-vous être rappelé(e) ?</label>
+            <div class="grid grid-cols-2 gap-3">
+                <label class="flex items-center gap-2 p-3 rounded-xl border-2 border-outline-variant cursor-pointer has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                    <input type="radio" name="canal_rappel" value="whatsapp" checked class="text-primary" onchange="diagnosticData.canal_rappel = this.value">
+                    <span class="text-sm font-semibold">WhatsApp</span>
+                </label>
+                <label class="flex items-center gap-2 p-3 rounded-xl border-2 border-outline-variant cursor-pointer has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                    <input type="radio" name="canal_rappel" value="sms" class="text-primary" onchange="diagnosticData.canal_rappel = this.value">
+                    <span class="text-sm font-semibold">SMS</span>
+                </label>
             </div>
         </div>
 
@@ -909,16 +924,31 @@ tailwind.config = {
     let seanceCount = 1;
     let nbSeancesTotal = 1;
 
-    // ===== 👇 DIAGNOSTIC PÉDAGOGIQUE (step 4) =====
+    // ===== 👇 DIAGNOSTIC PÉDAGOGIQUE (step 4) avec canal_rappel =====
     let diagnosticData = {
         style_apprentissage: null,
         rythme: null,
         style_prof: null,
         support: 'mixte',
         rappel: 'oui',
+        canal_rappel: 'whatsapp',   // 👈 AJOUT
         objectif: '',
         difficultes: '',
     };
+
+    // 👇 Fonction pour afficher/cacher le choix du canal de rappel
+    function toggleCanalRappel(valeur) {
+        diagnosticData.rappel = valeur;
+        const container = document.getElementById('canal_rappel_container');
+        if (valeur === 'oui') {
+            container.classList.remove('hidden');
+            const radioCoche = document.querySelector('input[name="canal_rappel"]:checked');
+            diagnosticData.canal_rappel = radioCoche ? radioCoche.value : 'whatsapp';
+        } else {
+            container.classList.add('hidden');
+            diagnosticData.canal_rappel = null;
+        }
+    }
 
     function setDiagnosticChoice(el) {
         const field = el.dataset.field;
@@ -949,10 +979,8 @@ tailwind.config = {
     }
 
     // ===== 👇 SUIVI DES PROFESSEURS DÉJÀ AFFICHÉS (anti-doublon au rafraîchissement) =====
-    // Mode simple (1 séance ou séances identiques) : un seul Set global.
     let profsAffichesSimple = new Set();
-    // Mode personnalisé : un Set par matière, car chaque carte a ses propres suggestions.
-    let profsAffichesMultiples = {}; // { matiere: Set(ids) }
+    let profsAffichesMultiples = {};
 
     function updateSteps() {
         for (let i = 1; i <= totalSteps; i++) {
@@ -983,17 +1011,14 @@ tailwind.config = {
         const label = template.querySelector('.font-semibold');
         label.textContent = `Séance #${seanceCount}`;
         
-        // Réinitialiser les valeurs
         template.querySelector('.date-identique-input').value = '';
         template.querySelector('.creneau-identique-select').value = '';
         
-        // Afficher le bouton supprimer
         const btnSuppr = template.querySelector('.btn-supprimer');
         btnSuppr.style.display = 'block';
         
         container.appendChild(template);
         
-        // Réinitialiser la sélection du professeur
         professeurSelectionne = null;
         document.getElementById('next-step-3').disabled = true;
         document.getElementById('next-step-3').classList.add('opacity-50', 'cursor-not-allowed');
@@ -1007,11 +1032,9 @@ tailwind.config = {
             return;
         }
         seanceItem.remove();
-        // Renuméroter
         container.querySelectorAll('.seance-item').forEach((item, index) => {
             item.querySelector('.font-semibold').textContent = `Séance #${index + 1}`;
         });
-        // Réinitialiser la sélection du professeur
         professeurSelectionne = null;
         document.getElementById('next-step-3').disabled = true;
         document.getElementById('next-step-3').classList.add('opacity-50', 'cursor-not-allowed');
@@ -1022,14 +1045,12 @@ tailwind.config = {
         let valide = true;
         let message = '';
         
-        // Vérifier la matière
         const matiere = document.getElementById('matiere_identique').value;
         if (!matiere) {
             message = 'Veuillez sélectionner une matière.';
             valide = false;
         }
         
-        // Vérifier chaque séance
         seances.forEach((seance, index) => {
             const date = seance.querySelector('.date-identique-input').value;
             const creneau = seance.querySelector('.creneau-identique-select').value;
@@ -1043,7 +1064,6 @@ tailwind.config = {
             }
         });
         
-        // Vérifier les doublons de date+créneau
         const combos = [];
         seances.forEach((seance, index) => {
             const date = seance.querySelector('.date-identique-input').value;
@@ -1109,13 +1129,11 @@ tailwind.config = {
                         }
                         nbSeancesTotal = seances.length;
                     } else {
-                        // Mode identique : vérifier avec la nouvelle fonction
                         const verif = verifierSeancesIdentiques();
                         if (!verif.valide) {
                             alert(verif.message);
                             return;
                         }
-                        // Récupérer la matière commune
                         const matiere = document.getElementById('matiere_identique').value;
                         document.getElementById('matiere').value = matiere;
                         nbSeancesTotal = document.querySelectorAll('#seances-identiques-container .seance-item').length;
@@ -1145,7 +1163,6 @@ tailwind.config = {
                     }
                 }
                 
-                // Gérer l'affichage des créneaux
                 const creneauxSimple = document.getElementById('creneaux-simple');
                 const creneauxPersonnalise = document.getElementById('creneaux-personnalise');
                 const creneauxIdentique = document.getElementById('creneaux-identique');
@@ -1366,7 +1383,6 @@ tailwind.config = {
             </div>
         `;
 
-        // 👇 Au premier chargement (pas un rafraîchissement), on repart de zéro.
         if (!rafraichir) {
             profsAffichesSimple = new Set();
         }
@@ -1382,10 +1398,7 @@ tailwind.config = {
         const localisation = document.getElementById('localisation').value;
         const niveau = "{{ etudiant.niveau_scolaire }}";
 
-        // Ajouter un paramètre anti-cache
         const cacheBuster = new Date().getTime();
-
-        // 👇 Liste des professeurs déjà affichés, à exclure lors d'un rafraîchissement
         const excludeIds = rafraichir ? Array.from(profsAffichesSimple).join(',') : '';
 
         const controller = new AbortController();
@@ -1413,7 +1426,6 @@ tailwind.config = {
         .then(data => {
             const profs = data.professeurs || [];
 
-            // 👇 Alertes selon le statut renvoyé par le backend
             if (rafraichir && data.meme_resultat) {
                 Swal.fire({
                     icon: 'info',
@@ -1482,7 +1494,6 @@ tailwind.config = {
                                 <div class="text-right">
                                     <p class="text-sm font-bold text-primary">${prof.tarif_heure} MAD/h</p>
                                     <p class="text-xs text-on-surface-variant">Score: ${prof.score}%</p>
-                                    <!-- 👇 BOUTON DÉTAILS -->
                                     <button onclick="event.stopPropagation(); ouvrirDetailProf(${prof.id})" 
                                             class="mt-2 text-xs text-primary hover:underline flex items-center gap-1">
                                         <span class="material-symbols-outlined text-[14px]">info</span>
@@ -1515,10 +1526,6 @@ tailwind.config = {
 
             container.innerHTML = html;
 
-            // 👇 Mémoriser les professeurs affichés pour le prochain rafraîchissement.
-            // On ne "ré-oublie" jamais un prof déjà vu : ainsi, même après
-            // plusieurs clics successifs, on ne revoit pas les mêmes têtes
-            // tant qu'il en reste de nouvelles.
             profs.forEach(p => profsAffichesSimple.add(p.id));
 
             if (professeurSelectionne) {
@@ -1576,7 +1583,6 @@ tailwind.config = {
             return;
         }
 
-        // 👇 Au premier chargement (pas un rafraîchissement), on repart de zéro.
         if (!rafraichir) {
             profsAffichesMultiples = {};
         }
@@ -1607,7 +1613,6 @@ tailwind.config = {
         const niveau = "{{ etudiant.niveau_scolaire }}";
         const cacheBuster = new Date().getTime();
 
-        // 👇 Construction de la map { matiere: [ids déjà affichés] } pour le backend
         const excludeIdsJson = {};
         matieresUniques.forEach(m => {
             excludeIdsJson[m] = Array.from(profsAffichesMultiples[m] || []);
@@ -1639,10 +1644,8 @@ tailwind.config = {
         .then(data => {
             const resultats = data.resultats || [];
 
-            // 👇 On regroupe les matières par statut pour n'afficher
-            // qu'une seule alerte de synthèse (au lieu d'une par matière)
             const matieresSansNouveau = [];
-            const matieresPartielles = []; // [{matiere, n}]
+            const matieresPartielles = [];
 
             resultats.forEach((resultat) => {
                 const matiere = resultat.matiere;
@@ -1701,7 +1704,6 @@ tailwind.config = {
                                     <div class="text-right">
                                         <p class="text-sm font-bold text-primary">${prof.tarif_heure} MAD/h</p>
                                         <p class="text-xs text-on-surface-variant">Score: ${prof.score}%</p>
-                                        <!-- 👇 BOUTON DÉTAILS -->
                                         <button onclick="event.stopPropagation(); ouvrirDetailProf(${prof.id})" 
                                                 class="mt-2 text-xs text-primary hover:underline flex items-center gap-1">
                                             <span class="material-symbols-outlined text-[14px]">info</span>
@@ -1725,12 +1727,10 @@ tailwind.config = {
 
                 containerMatiere.innerHTML = htmlProf;
 
-                // 👇 Mémoriser les profs affichés pour cette matière
                 if (!profsAffichesMultiples[matiere]) profsAffichesMultiples[matiere] = new Set();
                 profs.forEach(p => profsAffichesMultiples[matiere].add(p.id));
             });
 
-            // 👇 Une seule alerte de synthèse, listant les matières concernées
             if (matieresSansNouveau.length > 0) {
                 Swal.fire({
                     icon: 'info',
@@ -1774,7 +1774,6 @@ tailwind.config = {
         const simpleDiv = document.getElementById('professeurs-simple');
         const multiplesDiv = document.getElementById('professeurs-multiples');
 
-        // Réinitialiser la sélection
         professeurSelectionne = null;
         professeursParSeance = {};
         document.getElementById('next-step-3').disabled = true;
@@ -1795,7 +1794,6 @@ tailwind.config = {
     function ouvrirDetailProf(id) {
         let profData = null;
         
-        // Chercher dans les cartes simples
         document.querySelectorAll('#professeurs-container .prof-card').forEach(card => {
             if (String(card.dataset.profId) === String(id)) {
                 const nom = card.querySelector('h4')?.textContent || '';
@@ -1955,7 +1953,6 @@ tailwind.config = {
         document.body.style.overflow = '';
     }
 
-    // Ajouter l'écoute de la touche Échap
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             fermerDetailProf();
@@ -2269,6 +2266,9 @@ tailwind.config = {
         updateSteps();
         toggleModeSeances();
         setMode('identique');
+
+        // 👇 AJOUT : initialiser l'affichage du canal de rappel selon la valeur par défaut
+        toggleCanalRappel(document.getElementById('diag_rappel').value);
 
         document.querySelectorAll('input[name="mode_paiement"]').forEach(radio => {
             radio.addEventListener('change', togglePaiementFields);

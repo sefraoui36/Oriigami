@@ -1,4 +1,4 @@
-<!-- templates/parent/reservation.html -->
+<!-- templates/seances/reservation_parent.html -->
 <!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
@@ -200,8 +200,6 @@ tailwind.config = {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
-
-    /* Modal Détails Professeur */
     .modal-enter {
         animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
@@ -212,38 +210,6 @@ tailwind.config = {
     #modal-prof-details .relative {
         animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
-
-    /* Sidebar styles */
-    .sidebar-link {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        cursor: pointer;
-        border-radius: 12px;
-        padding: 12px 16px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: #4b4456;
-        text-decoration: none;
-    }
-    .sidebar-link:hover {
-        background: rgba(113, 15, 229, 0.08);
-        color: #710fe5;
-    }
-    .sidebar-link.active {
-        background: rgba(113, 15, 229, 0.12);
-        color: #710fe5;
-        font-weight: 600;
-    }
-    .sidebar-link.active .material-symbols-outlined {
-        color: #710fe5;
-    }
-    .stat-card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .stat-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0px 12px 24px rgba(113, 15, 229, 0.08);
-    }
     .animate-pulse-slow {
         animation: pulse-soft 4s ease-in-out infinite;
     }
@@ -251,14 +217,9 @@ tailwind.config = {
         0%, 100% { opacity: 0.5; transform: scale(1); }
         50% { opacity: 1; transform: scale(1.05); }
     }
-    .bg-primary-light { background-color: rgba(113, 15, 229, 0.1); }
-    .bg-secondary-light { background-color: rgba(174, 18, 138, 0.1); }
-    .bg-orange-light { background-color: rgba(249, 115, 22, 0.1); }
-    .bg-green-light { background-color: rgba(34, 197, 94, 0.1); }
-    .bg-purple-light { background-color: rgba(139, 92, 246, 0.1); }
 </style>
 </head>
-<body class="bg-background font-body-lg text-on-surface selection:bg-primary/20 overflow-hidden h-screen">
+<body class="bg-background font-body-lg text-on-surface selection:bg-primary/20">
 
 <!-- Background decoration -->
 <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
@@ -266,774 +227,663 @@ tailwind.config = {
     <div class="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
 </div>
 
-<div class="flex h-screen overflow-hidden">
+<!-- MAIN CONTENT (sans sidebar) -->
+<main class="max-w-5xl mx-auto p-8">
 
-    <!-- ===== SIDEBAR ===== -->
-    <aside class="w-[280px] flex-shrink-0 bg-surface-container-lowest/80 backdrop-blur-xl border-r border-outline-variant/30 p-4 flex flex-col overflow-y-auto glass-card rounded-none">
-        <div class="flex items-center gap-3 px-3 py-4 mb-6">
-            <div class="w-10 h-10 bg-primary-gradient rounded-xl flex items-center justify-center text-white shadow-lg">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">change_history</span>
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="font-headline-lg text-headline-lg text-on-surface">Réserver une séance</h1>
+            <p class="text-on-surface-variant body-sm">Réservez un cours pour l'un de vos enfants en quelques clics</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
+                <span class="material-symbols-outlined text-[24px]">notifications</span>
+                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
+            <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
+                {{ client.prenom|slice:":1"|upper }}{{ client.nom|slice:":1"|upper|default:"P" }}
             </div>
-            <span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Origami Privé</span>
+        </div>
+    </div>
+
+    <!-- Formulaire de réservation -->
+    <div class="w-full glass-card rounded-2xl p-8 lg:p-12 transition-all duration-500 overflow-hidden">
+
+        <div class="flex justify-center gap-2 mb-10">
+            <div class="step-indicator active" id="dot-1"></div>
+            <div class="step-indicator" id="dot-2"></div>
+            <div class="step-indicator" id="dot-3"></div>
+            <div class="step-indicator" id="dot-4"></div>
+            <div class="step-indicator" id="dot-5"></div>
+            <div class="step-indicator" id="dot-6"></div>
         </div>
 
-        <nav class="flex-1 space-y-1">
-            <a href="{% url 'clients:dashboard_parent' %}" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">dashboard</span>
-                <span>Dashboard</span>
-            </a>
-            <a href="{% url 'clients:liste_enfants' %}" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">family_restroom</span>
-                <span>Mes Enfants</span>
-            </a>
-            <a href="{% url 'clients:liste_enseignants' %}" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">school</span>
-                <span>Enseignants</span>
-            </a>
-            <a href="{% url 'clients:liste_seances' %}" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">calendar_month</span>
-                <span>Séances</span>
-            </a>
-            <a href="{% url 'clients:liste_forfaits' %}" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">sell</span>
-                <span>Forfaits</span>
-            </a>
-            <a href="{% url 'clients:liste_paiements' %}" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">payments</span>
-                <span>Paiements</span>
-            </a>
-            <!-- 👇 NOUVEAU LIEN : Réservation Parent (ACTIF) -->
-            <a href="{% url 'clients:reservation_parent' %}" class="sidebar-link active">
-                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">add_circle</span>
-                <span>Réserver une séance</span>
-            </a>
-            <a href="{% url 'clients:profil_parent' %}" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">person</span>
-                <span>Mon Profil</span>
-            </a>
-            <a href="{% url 'portefeuilles:mon_portefeuille' %}" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
-                <span>Portefeuille</span>
-            </a>
-            <a href="{% url 'clients:notifications' %}" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">notifications</span>
-                <span>Notifications</span>
-                <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ non_lues|default:3 }}</span>
-            </a>
-            <a href="{% url 'clients:parametres' %}" class="sidebar-link">
-                <span class="material-symbols-outlined text-[22px]">settings</span>
-                <span>Paramètres</span>
-            </a>
-        </nav>
-
-        <div class="mt-auto pt-4 border-t border-outline-variant/30">
-            <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
-                <span class="material-symbols-outlined text-[22px]">logout</span>
-                <span>Déconnexion</span>
-            </a>
-        </div>
-    </aside>
-
-    <!-- ===== MAIN CONTENT ===== -->
-    <main class="flex-1 overflow-y-auto p-8">
-
-        <div class="flex items-center justify-between mb-8">
-            <div>
-                <h1 class="font-headline-lg text-headline-lg text-on-surface">Réserver une séance</h1>
-                <p class="text-on-surface-variant body-sm">Réservez un cours pour l'un de vos enfants en quelques clics</p>
+        <!-- STEP 1: Informations de base -->
+        <div class="space-y-8 animate-fade-in" id="step-1">
+            <div class="text-center mb-8">
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Informations de la séance</h2>
+                <p class="font-body-lg text-body-lg text-on-surface-variant">Définissez les paramètres de la séance</p>
             </div>
-            <div class="flex items-center gap-3">
-                <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
-                    <span class="material-symbols-outlined text-[24px]">notifications</span>
-                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
-                <div class="w-10 h-10 rounded-full bg-primary-gradient flex items-center justify-center text-white font-semibold shadow-lg">
-                    {{ client.prenom|slice:":1"|upper }}{{ client.nom|slice:":1"|upper|default:"P" }}
+
+            <!-- Sélection de l'enfant -->
+            <div class="bg-primary/5 p-4 rounded-xl border border-primary/20">
+                <label class="block text-sm font-medium text-on-surface-variant mb-2">Pour quel enfant ? *</label>
+                <select id="enfant_select" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" required>
+                    <option value="">Sélectionnez un enfant</option>
+                    {% for enfant in enfants %}
+                        <option value="{{ enfant.id_client }}" data-niveau="{{ enfant.niveau_scolaire|default:'' }}">
+                            {{ enfant.prenom }} {{ enfant.nom }} ({{ enfant.niveau_scolaire|default:"Niveau non spécifié" }})
+                        </option>
+                    {% endfor %}
+                </select>
+                <p class="text-xs text-on-surface-variant mt-1">Sélectionnez l'enfant pour lequel vous souhaitez réserver une séance.</p>
+            </div>
+
+            <!-- Niveau de l'enfant -->
+            <div id="niveau_enfant_container" class="bg-primary/5 p-4 rounded-xl border border-primary/20 hidden">
+                <label class="block text-sm font-medium text-on-surface-variant mb-1">Niveau de l'enfant</label>
+                <p class="text-lg font-semibold text-on-surface flex items-center gap-2" id="niveau_enfant_affichage">
+                    <span class="material-symbols-outlined text-primary">school</span>
+                    <span id="niveau_enfant_text">-</span>
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-2">Nombre de séances *</label>
+                    <select id="nb_seances" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" onchange="toggleModeSeances()">
+                        <option value="1">1 séance</option>
+                        <option value="multiple">Plusieurs séances</option>
+                    </select>
                 </div>
-            </div>
-        </div>
-
-        <!-- Formulaire de réservation (contenu principal) -->
-        <div class="w-full max-w-5xl glass-card rounded-2xl p-8 lg:p-12 transition-all duration-500 overflow-hidden">
-
-            <div class="flex justify-center gap-2 mb-10">
-                <div class="step-indicator active" id="dot-1"></div>
-                <div class="step-indicator" id="dot-2"></div>
-                <div class="step-indicator" id="dot-3"></div>
-                <div class="step-indicator" id="dot-4"></div>
-                <div class="step-indicator" id="dot-5"></div>
-                <div class="step-indicator" id="dot-6"></div>
-            </div>
-
-            <!-- ===== STEP 1: Informations de base ===== -->
-            <div class="space-y-8 animate-fade-in" id="step-1">
-                <div class="text-center mb-8">
-                    <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Informations de la séance</h2>
-                    <p class="font-body-lg text-body-lg text-on-surface-variant">Définissez les paramètres de la séance</p>
-                </div>
-
-                <!-- Sélection de l'enfant -->
-                <div class="bg-primary/5 p-4 rounded-xl border border-primary/20">
-                    <label class="block text-sm font-medium text-on-surface-variant mb-2">Pour quel enfant ? *</label>
-                    <select id="enfant_select" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" required>
-                        <option value="">Sélectionnez un enfant</option>
-                        {% for enfant in enfants %}
-                            <option value="{{ enfant.id }}" data-niveau="{{ enfant.niveau_scolaire|default:'' }}">
-                                {{ enfant.prenom }} {{ enfant.nom }} ({{ enfant.niveau_scolaire|default:"Niveau non spécifié" }})
-                            </option>
+                <div id="matiere_simple_container">
+                    <label class="block text-sm font-medium text-on-surface-variant mb-2">Matière souhaitée *</label>
+                    <select id="matiere" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" required>
+                        <option value="">Sélectionnez une matière</option>
+                        {% for matiere in matieres_disponibles %}
+                            <option value="{{ matiere }}">{{ matiere }}</option>
                         {% endfor %}
                     </select>
-                    <p class="text-xs text-on-surface-variant mt-1">Sélectionnez l'enfant pour lequel vous souhaitez réserver une séance.</p>
                 </div>
+            </div>
 
-                <!-- Niveau de l'enfant -->
-                <div id="niveau_enfant_container" class="bg-primary/5 p-4 rounded-xl border border-primary/20 hidden">
-                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Niveau de l'enfant</label>
-                    <p class="text-lg font-semibold text-on-surface flex items-center gap-2" id="niveau_enfant_affichage">
-                        <span class="material-symbols-outlined text-primary">school</span>
-                        <span id="niveau_enfant_text">-</span>
-                    </p>
+            <!-- SECTION SÉANCES MULTIPLES -->
+            <div id="seances-multiples" class="hidden space-y-6 border-t border-outline-variant/30 pt-6">
+                <div class="text-center mb-4">
+                    <h3 class="font-title-md text-title-md text-on-surface">Comment souhaitez-vous organiser vos séances ?</h3>
+                    <p class="text-sm text-on-surface-variant mt-1">Choisissez le mode qui correspond le mieux à vos besoins</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-on-surface-variant mb-2">Nombre de séances *</label>
-                        <select id="nb_seances" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" onchange="toggleModeSeances()">
-                            <option value="1">1 séance</option>
-                            <option value="multiple">Plusieurs séances</option>
-                        </select>
+                    <!-- Option Identique -->
+                    <div id="mode-identique" class="choice-card selected p-6 rounded-xl border-2 border-primary bg-primary/5" onclick="setMode('identique')">
+                        <div class="flex items-start gap-4">
+                            <div class="icon-box w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined text-2xl">content_copy</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-on-surface text-lg">Séances identiques</h4>
+                                <p class="text-sm text-on-surface-variant mt-1">Toutes les séances auront la <strong>même matière</strong> mais des <strong>dates et créneaux différents</strong>.</p>
+                                <div class="mt-3 flex items-center gap-2 text-xs text-primary bg-primary/5 px-3 py-1.5 rounded-full inline-flex">
+                                    <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                                    Recommandé pour un stage intensif
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div id="matiere_simple_container">
-                        <label class="block text-sm font-medium text-on-surface-variant mb-2">Matière souhaitée *</label>
-                        <select id="matiere" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" required>
-                            <option value="">Sélectionnez une matière</option>
-                            {% for matiere in matieres_disponibles %}
-                                <option value="{{ matiere }}">{{ matiere }}</option>
-                            {% endfor %}
-                        </select>
+
+                    <!-- Option Personnalisée -->
+                    <div id="mode-personnalise" class="choice-card p-6 rounded-xl border-2 border-outline-variant hover:border-primary/30" onclick="setMode('personnalise')">
+                        <div class="flex items-start gap-4">
+                            <div class="icon-box w-12 h-12 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined text-2xl">edit_note</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-on-surface text-lg">Séances personnalisées</h4>
+                                <p class="text-sm text-on-surface-variant mt-1">Chaque séance aura sa <strong>propre matière</strong>, son <strong>propre créneau</strong> et sa <strong>propre date</strong>.</p>
+                                <div class="mt-3 flex items-center gap-2 text-xs text-secondary bg-secondary/5 px-3 py-1.5 rounded-full inline-flex">
+                                    <span class="material-symbols-outlined text-[16px]">star</span>
+                                    Idéal pour des cours variés
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- ===== SECTION SÉANCES MULTIPLES ===== -->
-                <div id="seances-multiples" class="hidden space-y-6 border-t border-outline-variant/30 pt-6">
-                    <div class="text-center mb-4">
-                        <h3 class="font-title-md text-title-md text-on-surface">Comment souhaitez-vous organiser vos séances ?</h3>
-                        <p class="text-sm text-on-surface-variant mt-1">Choisissez le mode qui correspond le mieux à vos besoins</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Option Identique -->
-                        <div id="mode-identique" class="choice-card selected p-6 rounded-xl border-2 border-primary bg-primary/5" onclick="setMode('identique')">
-                            <div class="flex items-start gap-4">
-                                <div class="icon-box w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined text-2xl">content_copy</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-on-surface text-lg">Séances identiques</h4>
-                                    <p class="text-sm text-on-surface-variant mt-1">Toutes les séances auront la <strong>même matière</strong> mais des <strong>dates et créneaux différents</strong>.</p>
-                                    <div class="mt-3 flex items-center gap-2 text-xs text-primary bg-primary/5 px-3 py-1.5 rounded-full inline-flex">
-                                        <span class="material-symbols-outlined text-[16px]">check_circle</span>
-                                        Recommandé pour un stage intensif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Option Personnalisée -->
-                        <div id="mode-personnalise" class="choice-card p-6 rounded-xl border-2 border-outline-variant hover:border-primary/30" onclick="setMode('personnalise')">
-                            <div class="flex items-start gap-4">
-                                <div class="icon-box w-12 h-12 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined text-2xl">edit_note</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-on-surface text-lg">Séances personnalisées</h4>
-                                    <p class="text-sm text-on-surface-variant mt-1">Chaque séance aura sa <strong>propre matière</strong>, son <strong>propre créneau</strong> et sa <strong>propre date</strong>.</p>
-                                    <div class="mt-3 flex items-center gap-2 text-xs text-secondary bg-secondary/5 px-3 py-1.5 rounded-full inline-flex">
-                                        <span class="material-symbols-outlined text-[16px]">star</span>
-                                        Idéal pour des cours variés
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Détails des séances -->
-                    <div id="seances-details" class="pt-4">
-                        <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
-                            <span class="material-symbols-outlined text-primary">list_alt</span>
-                            Détails des séances
-                        </h3>
-                        
-                        <!-- Mode Identique : Même matière, dates et créneaux différents -->
-                        <div id="details-identique" class="p-4 bg-surface-container-low rounded-xl border border-outline-variant/30 space-y-4">
-                            <div class="flex items-center justify-between">
-                                <h4 class="font-semibold text-on-surface text-sm">Séances identiques (même matière, dates et créneaux différents)</h4>
-                                <button type="button" onclick="ajouterSeanceIdentique()" class="flex items-center gap-1 px-3 py-1.5 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-all text-xs font-semibold">
-                                    <span class="material-symbols-outlined text-[16px]">add</span>
-                                    Ajouter une séance
-                                </button>
-                            </div>
-                            
-                            <!-- Matière commune -->
-                            <div>
-                                <label class="block text-xs font-medium text-on-surface-variant mb-1">Matière *</label>
-                                <select id="matiere_identique" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all">
-                                    <option value="">Choisir</option>
-                                    {% for matiere in matieres_disponibles %}
-                                        <option value="{{ matiere }}">{{ matiere }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            
-                            <!-- Liste des séances identiques -->
-                            <div id="seances-identiques-container" class="space-y-3">
-                                <!-- Séance 1 -->
-                                <div class="seance-item p-3 bg-surface-container-lowest rounded-xl border border-outline-variant/30">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="font-semibold text-on-surface text-sm">Séance #1</span>
-                                        <button type="button" onclick="supprimerSeanceIdentique(this)" class="btn-supprimer text-on-surface-variant hover:text-error rounded-full p-1 transition-all" style="display: none;">
-                                            <span class="material-symbols-outlined text-[18px]">close</span>
-                                        </button>
-                                    </div>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div>
-                                            <label class="block text-xs font-medium text-on-surface-variant mb-1">Date *</label>
-                                            <input type="date" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all date-identique-input">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-on-surface-variant mb-1">Créneau *</label>
-                                            <select class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all creneau-identique-select">
-                                                <option value="">Choisir</option>
-                                                <option value="9-10">9h - 10h</option>
-                                                <option value="10-11">10h - 11h</option>
-                                                <option value="11-12">11h - 12h</option>
-                                                <option value="14-15">14h - 15h</option>
-                                                <option value="15-16">15h - 16h</option>
-                                                <option value="16-17">16h - 17h</option>
-                                                <option value="17-18">17h - 18h</option>
-                                                <option value="18-19">18h - 19h</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs text-on-surface-variant mt-2 flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[16px]">info</span>
-                                Toutes les séances auront la <strong>même matière</strong> mais des dates et créneaux différents.
-                            </p>
-                        </div>
-
-                        <!-- Mode Personnalisé : Un formulaire par séance -->
-                        <div id="details-personnalise" class="hidden space-y-4">
-                            <div id="seances-container" class="space-y-4">
-                                <!-- Séance 1 -->
-                                <div class="seance-item p-4 bg-surface-container-low rounded-xl border border-outline-variant/30">
-                                    <div class="flex justify-between items-center mb-3">
-                                        <span class="font-semibold text-on-surface">Séance #1</span>
-                                        <button type="button" onclick="supprimerSeance(this)" class="btn-supprimer text-on-surface-variant hover:text-error rounded-full p-1 transition-all" style="display: none;">
-                                            <span class="material-symbols-outlined text-[18px]">close</span>
-                                        </button>
-                                    </div>
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <div>
-                                            <label class="block text-xs font-medium text-on-surface-variant mb-1">Matière</label>
-                                            <select class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all matiere-select">
-                                                <option value="">Choisir</option>
-                                                {% for matiere in matieres_disponibles %}
-                                                    <option value="{{ matiere }}">{{ matiere }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-on-surface-variant mb-1">Date</label>
-                                            <input type="date" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all date-input">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-on-surface-variant mb-1">Créneau</label>
-                                            <select class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all creneau-select">
-                                                <option value="">Choisir</option>
-                                                <option value="9-10">9h - 10h</option>
-                                                <option value="10-11">10h - 11h</option>
-                                                <option value="11-12">11h - 12h</option>
-                                                <option value="14-15">14h - 15h</option>
-                                                <option value="15-16">15h - 16h</option>
-                                                <option value="16-17">16h - 17h</option>
-                                                <option value="17-18">17h - 18h</option>
-                                                <option value="18-19">18h - 19h</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" onclick="ajouterSeance()" class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all text-sm font-semibold">
-                                <span class="material-symbols-outlined text-[18px]">add</span>
+                <!-- Détails des séances -->
+                <div id="seances-details" class="pt-4">
+                    <h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-4">
+                        <span class="material-symbols-outlined text-primary">list_alt</span>
+                        Détails des séances
+                    </h3>
+                    
+                    <!-- Mode Identique -->
+                    <div id="details-identique" class="p-4 bg-surface-container-low rounded-xl border border-outline-variant/30 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-semibold text-on-surface text-sm">Séances identiques (même matière, dates et créneaux différents)</h4>
+                            <button type="button" onclick="ajouterSeanceIdentique()" class="flex items-center gap-1 px-3 py-1.5 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-all text-xs font-semibold">
+                                <span class="material-symbols-outlined text-[16px]">add</span>
                                 Ajouter une séance
                             </button>
                         </div>
-                    </div>
-                </div>
-
-                <div class="flex justify-end pt-6">
-                    <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300" onclick="nextStep()">
-                        Continuer
-                        <span class="material-symbols-outlined">arrow_forward</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- ===== STEP 2: Créneaux & Localisation ===== -->
-            <div class="hidden space-y-8 animate-fade-in" id="step-2">
-                <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                    <span>Retour</span>
-                </button>
-
-                <div>
-                    <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Créneaux & Localisation</h2>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant">Choisissez les créneaux horaires et la localisation</p>
-                </div>
-
-                <!-- Si 1 séance, on affiche les champs -->
-                <div id="creneaux-simple">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
                         <div>
-                            <label class="block text-sm font-medium text-on-surface-variant mb-2">Date</label>
-                            <input type="date" id="date_seance" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-on-surface-variant mb-2">Créneau horaire préféré</label>
-                            <select id="creneau" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all">
-                                <option value="">Choisir un créneau</option>
-                                <option value="9-10">9h - 10h</option>
-                                <option value="10-11">10h - 11h</option>
-                                <option value="11-12">11h - 12h</option>
-                                <option value="14-15">14h - 15h</option>
-                                <option value="15-16">15h - 16h</option>
-                                <option value="16-17">16h - 17h</option>
-                                <option value="17-18">17h - 18h</option>
-                                <option value="18-19">18h - 19h</option>
+                            <label class="block text-xs font-medium text-on-surface-variant mb-1">Matière *</label>
+                            <select id="matiere_identique" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all">
+                                <option value="">Choisir</option>
+                                {% for matiere in matieres_disponibles %}
+                                    <option value="{{ matiere }}">{{ matiere }}</option>
+                                {% endfor %}
                             </select>
                         </div>
+                        
+                        <div id="seances-identiques-container" class="space-y-3">
+                            <div class="seance-item p-3 bg-surface-container-lowest rounded-xl border border-outline-variant/30">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-semibold text-on-surface text-sm">Séance #1</span>
+                                    <button type="button" onclick="supprimerSeanceIdentique(this)" class="btn-supprimer text-on-surface-variant hover:text-error rounded-full p-1 transition-all" style="display: none;">
+                                        <span class="material-symbols-outlined text-[18px]">close</span>
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-xs font-medium text-on-surface-variant mb-1">Date *</label>
+                                        <input type="date" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all date-identique-input">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-on-surface-variant mb-1">Créneau *</label>
+                                        <select class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all creneau-identique-select">
+                                            <option value="">Choisir</option>
+                                            <option value="9-10">9h - 10h</option>
+                                            <option value="10-11">10h - 11h</option>
+                                            <option value="11-12">11h - 12h</option>
+                                            <option value="14-15">14h - 15h</option>
+                                            <option value="15-16">15h - 16h</option>
+                                            <option value="16-17">16h - 17h</option>
+                                            <option value="17-18">17h - 18h</option>
+                                            <option value="18-19">18h - 19h</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-on-surface-variant mt-2 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[16px]">info</span>
+                            Toutes les séances auront la <strong>même matière</strong> mais des dates et créneaux différents.
+                        </p>
                     </div>
-                </div>
 
-                <!-- Si plusieurs séances en mode personnalisé -->
-                <div id="creneaux-personnalise" class="hidden">
-                    <div class="bg-primary/5 p-4 rounded-xl border border-primary/20 text-center">
-                        <span class="material-symbols-outlined text-primary text-2xl block mb-2">event_note</span>
-                        <p class="text-sm text-on-surface-variant">Les dates et créneaux sont déjà définis pour chaque séance.</p>
-                        <p class="text-xs text-on-surface-variant mt-1">Passez à l'étape suivante pour choisir les professeurs.</p>
-                    </div>
-                </div>
-
-                <!-- Si plusieurs séances en mode identique -->
-                <div id="creneaux-identique" class="hidden">
-                    <div class="bg-primary/5 p-4 rounded-xl border border-primary/20 text-center">
-                        <span class="material-symbols-outlined text-primary text-2xl block mb-2">event_note</span>
-                        <p class="text-sm text-on-surface-variant">Les dates et créneaux sont déjà définis pour chaque séance identique.</p>
-                        <p class="text-xs text-on-surface-variant mt-1">Passez à l'étape suivante pour choisir les professeurs.</p>
-                    </div>
-                </div>
-
-                <!-- Localisation -->
-                <div>
-                    <label class="block text-sm font-medium text-on-surface-variant mb-2">Localisation (adresse)</label>
-                    <div class="flex gap-3">
-                        <input type="text" id="localisation" class="flex-1 bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" placeholder="15 rue de Paris, Lyon">
-                        <button class="px-4 py-3.5 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all" onclick="utiliserMaPosition()">
-                            <span class="material-symbols-outlined">my_location</span>
+                    <!-- Mode Personnalisé -->
+                    <div id="details-personnalise" class="hidden space-y-4">
+                        <div id="seances-container" class="space-y-4">
+                            <div class="seance-item p-4 bg-surface-container-low rounded-xl border border-outline-variant/30">
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="font-semibold text-on-surface">Séance #1</span>
+                                    <button type="button" onclick="supprimerSeance(this)" class="btn-supprimer text-on-surface-variant hover:text-error rounded-full p-1 transition-all" style="display: none;">
+                                        <span class="material-symbols-outlined text-[18px]">close</span>
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-medium text-on-surface-variant mb-1">Matière</label>
+                                        <select class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all matiere-select">
+                                            <option value="">Choisir</option>
+                                            {% for matiere in matieres_disponibles %}
+                                                <option value="{{ matiere }}">{{ matiere }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-on-surface-variant mb-1">Date</label>
+                                        <input type="date" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all date-input">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-on-surface-variant mb-1">Créneau</label>
+                                        <select class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all creneau-select">
+                                            <option value="">Choisir</option>
+                                            <option value="9-10">9h - 10h</option>
+                                            <option value="10-11">10h - 11h</option>
+                                            <option value="11-12">11h - 12h</option>
+                                            <option value="14-15">14h - 15h</option>
+                                            <option value="15-16">15h - 16h</option>
+                                            <option value="16-17">16h - 17h</option>
+                                            <option value="17-18">17h - 18h</option>
+                                            <option value="18-19">18h - 19h</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="ajouterSeance()" class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all text-sm font-semibold">
+                            <span class="material-symbols-outlined text-[18px]">add</span>
+                            Ajouter une séance
                         </button>
                     </div>
-                    <p class="text-xs text-on-surface-variant mt-2">Utilisez votre position actuelle pour trouver les professeurs les plus proches.</p>
-                </div>
-
-                <div class="flex justify-between pt-6">
-                    <button class="px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container transition-all" onclick="prevStep()">
-                        Retour
-                    </button>
-                    <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300" onclick="nextStep()">
-                        Trouver des professeurs
-                        <span class="material-symbols-outlined">search</span>
-                    </button>
                 </div>
             </div>
 
-            <!-- ===== STEP 3: Suggestions IA ===== -->
-            <div class="hidden space-y-8 animate-fade-in" id="step-3">
-                <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                    <span>Retour</span>
+            <div class="flex justify-end pt-6">
+                <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300" onclick="nextStep()">
+                    Continuer
+                    <span class="material-symbols-outlined">arrow_forward</span>
                 </button>
+            </div>
+        </div>
 
+        <!-- STEP 2: Créneaux & Localisation -->
+        <div class="hidden space-y-8 animate-fade-in" id="step-2">
+            <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span>Retour</span>
+            </button>
+
+            <div>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Créneaux & Localisation</h2>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Choisissez les créneaux horaires et la localisation</p>
+            </div>
+
+            <div id="creneaux-simple">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-2">Date</label>
+                        <input type="date" id="date_seance" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-2">Créneau horaire préféré</label>
+                        <select id="creneau" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all">
+                            <option value="">Choisir un créneau</option>
+                            <option value="9-10">9h - 10h</option>
+                            <option value="10-11">10h - 11h</option>
+                            <option value="11-12">11h - 12h</option>
+                            <option value="14-15">14h - 15h</option>
+                            <option value="15-16">15h - 16h</option>
+                            <option value="16-17">16h - 17h</option>
+                            <option value="17-18">17h - 18h</option>
+                            <option value="18-19">18h - 19h</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="creneaux-personnalise" class="hidden">
+                <div class="bg-primary/5 p-4 rounded-xl border border-primary/20 text-center">
+                    <span class="material-symbols-outlined text-primary text-2xl block mb-2">event_note</span>
+                    <p class="text-sm text-on-surface-variant">Les dates et créneaux sont déjà définis pour chaque séance.</p>
+                    <p class="text-xs text-on-surface-variant mt-1">Passez à l'étape suivante pour choisir les professeurs.</p>
+                </div>
+            </div>
+
+            <div id="creneaux-identique" class="hidden">
+                <div class="bg-primary/5 p-4 rounded-xl border border-primary/20 text-center">
+                    <span class="material-symbols-outlined text-primary text-2xl block mb-2">event_note</span>
+                    <p class="text-sm text-on-surface-variant">Les dates et créneaux sont déjà définis pour chaque séance identique.</p>
+                    <p class="text-xs text-on-surface-variant mt-1">Passez à l'étape suivante pour choisir les professeurs.</p>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-2">Localisation (adresse)</label>
+                <div class="flex gap-3">
+                    <input type="text" id="localisation" class="flex-1 bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" placeholder="15 rue de Paris, Lyon">
+                    <button class="px-4 py-3.5 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all" onclick="utiliserMaPosition()">
+                        <span class="material-symbols-outlined">my_location</span>
+                    </button>
+                </div>
+                <p class="text-xs text-on-surface-variant mt-2">Utilisez votre position actuelle pour trouver les professeurs les plus proches.</p>
+            </div>
+
+            <div class="flex justify-between pt-6">
+                <button class="px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container transition-all" onclick="prevStep()">
+                    Retour
+                </button>
+                <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300" onclick="nextStep()">
+                    Trouver des professeurs
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 3: Suggestions IA -->
+        <div class="hidden space-y-8 animate-fade-in" id="step-3">
+            <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span>Retour</span>
+            </button>
+
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Professeurs suggérés</h2>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Notre IA a sélectionné les meilleurs professeurs pour vous</p>
+                </div>
+                <button onclick="rafraichirProfesseurs()" class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all text-sm font-semibold">
+                    <span class="material-symbols-outlined text-[18px]">refresh</span>
+                    Rafraîchir les suggestions
+                </button>
+            </div>
+
+            <div id="professeurs-simple" class="space-y-4">
+                <div id="professeurs-container" class="space-y-4">
+                    <div class="text-center py-8 text-on-surface-variant">
+                        <div class="spinner"></div>
+                        <p class="mt-4">Recherche des professeurs...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="professeurs-multiples" class="hidden space-y-6">
+                <div id="professeurs-multiples-container" class="space-y-6"></div>
+            </div>
+
+            <div class="flex justify-between pt-6">
+                <button class="px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container transition-all" onclick="prevStep()">
+                    Retour
+                </button>
+                <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300 opacity-50 cursor-not-allowed" id="next-step-3" disabled onclick="nextStep()">
+                    Continuer
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 4: Diagnostic -->
+        <div class="hidden space-y-8 animate-fade-in" id="step-4">
+            <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span>Retour</span>
+            </button>
+
+            <div>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Petit diagnostic avant de commencer</h2>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Ces quelques questions aident le professeur à préparer une séance qui correspond réellement à votre enfant.</p>
+            </div>
+
+            <!-- Style d'apprentissage -->
+            <div>
+                <h3 class="font-title-md text-title-md text-on-surface mb-1">Comment votre enfant apprend-il le mieux ? *</h3>
+                <p class="text-xs text-on-surface-variant mb-4">Sélectionnez le style qui lui ressemble le plus.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="group-style-apprentissage">
+                    <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_apprentissage" data-value="visuel" onclick="setDiagnosticChoice(this)">
+                        <div class="flex items-start gap-3">
+                            <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-on-surface text-sm">Visuel</h4>
+                                <p class="text-xs text-on-surface-variant mt-1">Schémas, couleurs, supports écrits et exemples visuels.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_apprentissage" data-value="auditif" onclick="setDiagnosticChoice(this)">
+                        <div class="flex items-start gap-3">
+                            <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined">hearing</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-on-surface text-sm">Auditif</h4>
+                                <p class="text-xs text-on-surface-variant mt-1">Explications orales, discussions et reformulations.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_apprentissage" data-value="pratique" onclick="setDiagnosticChoice(this)">
+                        <div class="flex items-start gap-3">
+                            <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined">handyman</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-on-surface text-sm">Pratique</h4>
+                                <p class="text-xs text-on-surface-variant mt-1">Beaucoup d'exercices, d'essais et de mises en situation.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_apprentissage" data-value="lecture_ecriture" onclick="setDiagnosticChoice(this)">
+                        <div class="flex items-start gap-3">
+                            <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined">menu_book</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-on-surface text-sm">Lecture / Écriture</h4>
+                                <p class="text-xs text-on-surface-variant mt-1">Prise de notes, résumés, fiches et lectures.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rythme préféré -->
+            <div>
+                <h3 class="font-title-md text-title-md text-on-surface mb-1">Quel rythme préférez-vous pour votre enfant ?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="group-rythme">
+                    <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="rythme" data-value="intensif" onclick="setDiagnosticChoice(this)">
+                        <div class="flex items-start gap-3">
+                            <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined">bolt</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-on-surface text-sm">Rapide et intensif</h4>
+                                <p class="text-xs text-on-surface-variant mt-1">Aller droit au but, couvrir un maximum en peu de temps.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="rythme" data-value="progressif" onclick="setDiagnosticChoice(this)">
+                        <div class="flex items-start gap-3">
+                            <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined">timeline</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-on-surface text-sm">Progressif et détaillé</h4>
+                                <p class="text-xs text-on-surface-variant mt-1">Prendre le temps, revoir les bases, avancer étape par étape.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Style de professeur préféré -->
+            <div>
+                <h3 class="font-title-md text-title-md text-on-surface mb-1">Quel style d'accompagnement préférez-vous pour votre enfant ?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="group-style-prof">
+                    <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_prof" data-value="structure" onclick="setDiagnosticChoice(this)">
+                        <div class="flex items-start gap-3">
+                            <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined">checklist</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-on-surface text-sm">Structuré et rigoureux</h4>
+                                <p class="text-xs text-on-surface-variant mt-1">Un plan clair, des objectifs précis à chaque séance.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_prof" data-value="decontracte" onclick="setDiagnosticChoice(this)">
+                        <div class="flex items-start gap-3">
+                            <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined">sentiment_satisfied</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-on-surface text-sm">Décontracté et encourageant</h4>
+                                <p class="text-xs text-on-surface-variant mt-1">Une ambiance détendue, avancer à son propre rythme.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Support pédagogique + rappel -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-2">Support pédagogique souhaité</label>
+                    <select id="diag_support" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" onchange="diagnosticData.support = this.value">
+                        <option value="mixte">Un peu des deux (théorie + exercices)</option>
+                        <option value="pratique">Surtout des exercices pratiques</option>
+                        <option value="theorique">Surtout des explications théoriques</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-2">Rappel avant la séance</label>
+                    <select id="diag_rappel" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" onchange="diagnosticData.rappel = this.value">
+                        <option value="oui">Oui, envoyez-moi un rappel</option>
+                        <option value="non">Non, ce n'est pas nécessaire</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Objectif et difficultés -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-2">Objectif principal de ces séances (optionnel)</label>
+                    <textarea id="diag_objectif" rows="3" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" placeholder="Ex : préparer un contrôle, combler des lacunes, préparer un examen..." oninput="diagnosticData.objectif = this.value"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-2">Difficultés rencontrées (optionnel)</label>
+                    <textarea id="diag_difficultes" rows="3" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" placeholder="Ex : j'ai du mal avec les exercices d'application..." oninput="diagnosticData.difficultes = this.value"></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-between pt-6">
+                <button class="px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container transition-all" onclick="prevStep()">
+                    Retour
+                </button>
+                <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300" onclick="nextStep()">
+                    Continuer vers le paiement
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 5: Paiement -->
+        <div class="hidden space-y-8 animate-fade-in" id="step-5">
+            <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span>Retour</span>
+            </button>
+
+            <div>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Paiement</h2>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Choisissez votre mode de paiement</p>
+            </div>
+
+            <div class="bg-primary/5 p-6 rounded-xl border border-primary/20">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Professeurs suggérés</h2>
-                        <p class="font-body-sm text-body-sm text-on-surface-variant">Notre IA a sélectionné les meilleurs professeurs pour vous</p>
+                        <p class="text-sm text-on-surface-variant">Solde de votre portefeuille</p>
+                        <p class="text-2xl font-bold text-on-surface">{{ solde_portefeuille|floatformat:2 }} MAD</p>
                     </div>
-                    <button onclick="rafraichirProfesseurs()" 
-                            class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all text-sm font-semibold">
-                        <span class="material-symbols-outlined text-[18px]">refresh</span>
-                        Rafraîchir les suggestions
-                    </button>
-                </div>
-
-                <!-- Container pour 1 séance ou mode identique -->
-                <div id="professeurs-simple" class="space-y-4">
-                    <div id="professeurs-container" class="space-y-4">
-                        <div class="text-center py-8 text-on-surface-variant">
-                            <div class="spinner"></div>
-                            <p class="mt-4">Recherche des professeurs...</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Container pour plusieurs séances personnalisées -->
-                <div id="professeurs-multiples" class="hidden space-y-6">
-                    <div id="professeurs-multiples-container" class="space-y-6">
-                        <!-- Les professeurs pour chaque séance seront chargés dynamiquement -->
-                    </div>
-                </div>
-
-                <div class="flex justify-between pt-6">
-                    <button class="px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container transition-all" onclick="prevStep()">
-                        Retour
-                    </button>
-                    <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300 opacity-50 cursor-not-allowed" id="next-step-3" disabled onclick="nextStep()">
-                        Continuer
-                        <span class="material-symbols-outlined">arrow_forward</span>
-                    </button>
+                    <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">
+                        <span class="material-symbols-outlined text-[16px] align-middle">account_balance_wallet</span>
+                        Portefeuille
+                    </span>
                 </div>
             </div>
 
-            <!-- ===== STEP 4: Diagnostic pédagogique ===== -->
-            <div class="hidden space-y-8 animate-fade-in" id="step-4">
-                <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                    <span>Retour</span>
+            <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/30">
+                <div class="flex justify-between items-center">
+                    <span class="text-on-surface-variant">Total à payer</span>
+                    <span class="text-2xl font-bold text-on-surface" id="total-payer">0.00 MAD</span>
+                </div>
+                <div class="flex justify-between text-sm text-on-surface-variant mt-2">
+                    <span>Nombre de séances: <span id="nb-seances-total">0</span></span>
+                    <span>Tarif moyen: <span id="tarif-moyen">0</span> MAD/séance</span>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-2">Mode de paiement</label>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 p-4 rounded-xl border-2 border-primary bg-primary/5">
+                        <input type="radio" name="mode_paiement" value="portefeuille" checked id="pay-portefeuille" class="w-4 h-4 text-primary focus:ring-primary">
+                        <label for="pay-portefeuille" class="flex-1 font-semibold text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+                            Payer avec mon portefeuille
+                        </label>
+                        <span class="text-sm text-on-surface-variant">({{ solde_portefeuille|floatformat:2 }} MAD disponible)</span>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 rounded-xl border border-outline-variant hover:border-primary/30 transition-all">
+                        <input type="radio" name="mode_paiement" value="carte" id="pay-carte" class="w-4 h-4 text-primary focus:ring-primary">
+                        <label for="pay-carte" class="flex-1 font-semibold text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined">credit_card</span>
+                            Payer par carte bancaire
+                            <span class="text-xs font-normal text-on-surface-variant">(via CMI)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="champs-carte" class="hidden mt-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/30 space-y-3">
+                    <p class="text-xs text-on-surface-variant flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">lock</span>
+                        Paiement sécurisé — vous serez redirigé vers notre prestataire de paiement.
+                    </p>
+                    <div class="text-center py-4">
+                        <span class="material-symbols-outlined text-3xl text-primary block mb-2">credit_card</span>
+                        <p class="text-sm text-on-surface-variant">Vous allez être redirigé(e) vers la page de paiement sécurisée après confirmation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between pt-6">
+                <button class="px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container transition-all" onclick="prevStep()">
+                    Retour
                 </button>
-
-                <div>
-                    <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Petit diagnostic avant de commencer</h2>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant">Ces quelques questions aident le professeur à préparer une séance qui correspond réellement à votre enfant.</p>
-                </div>
-
-                <!-- Style d'apprentissage -->
-                <div>
-                    <h3 class="font-title-md text-title-md text-on-surface mb-1">Comment votre enfant apprend-il le mieux ? *</h3>
-                    <p class="text-xs text-on-surface-variant mb-4">Sélectionnez le style qui lui ressemble le plus.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="group-style-apprentissage">
-                        <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_apprentissage" data-value="visuel" onclick="setDiagnosticChoice(this)">
-                            <div class="flex items-start gap-3">
-                                <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined">visibility</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-on-surface text-sm">Visuel</h4>
-                                    <p class="text-xs text-on-surface-variant mt-1">Schémas, couleurs, supports écrits et exemples visuels.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_apprentissage" data-value="auditif" onclick="setDiagnosticChoice(this)">
-                            <div class="flex items-start gap-3">
-                                <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined">hearing</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-on-surface text-sm">Auditif</h4>
-                                    <p class="text-xs text-on-surface-variant mt-1">Explications orales, discussions et reformulations.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_apprentissage" data-value="pratique" onclick="setDiagnosticChoice(this)">
-                            <div class="flex items-start gap-3">
-                                <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined">handyman</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-on-surface text-sm">Pratique</h4>
-                                    <p class="text-xs text-on-surface-variant mt-1">Beaucoup d'exercices, d'essais et de mises en situation.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_apprentissage" data-value="lecture_ecriture" onclick="setDiagnosticChoice(this)">
-                            <div class="flex items-start gap-3">
-                                <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined">menu_book</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-on-surface text-sm">Lecture / Écriture</h4>
-                                    <p class="text-xs text-on-surface-variant mt-1">Prise de notes, résumés, fiches et lectures.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Rythme préféré -->
-                <div>
-                    <h3 class="font-title-md text-title-md text-on-surface mb-1">Quel rythme préférez-vous pour votre enfant ?</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="group-rythme">
-                        <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="rythme" data-value="intensif" onclick="setDiagnosticChoice(this)">
-                            <div class="flex items-start gap-3">
-                                <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined">bolt</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-on-surface text-sm">Rapide et intensif</h4>
-                                    <p class="text-xs text-on-surface-variant mt-1">Aller droit au but, couvrir un maximum en peu de temps.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="rythme" data-value="progressif" onclick="setDiagnosticChoice(this)">
-                            <div class="flex items-start gap-3">
-                                <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined">timeline</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-on-surface text-sm">Progressif et détaillé</h4>
-                                    <p class="text-xs text-on-surface-variant mt-1">Prendre le temps, revoir les bases, avancer étape par étape.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Style de professeur préféré -->
-                <div>
-                    <h3 class="font-title-md text-title-md text-on-surface mb-1">Quel style d'accompagnement préférez-vous pour votre enfant ?</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="group-style-prof">
-                        <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_prof" data-value="structure" onclick="setDiagnosticChoice(this)">
-                            <div class="flex items-start gap-3">
-                                <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined">checklist</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-on-surface text-sm">Structuré et rigoureux</h4>
-                                    <p class="text-xs text-on-surface-variant mt-1">Un plan clair, des objectifs précis à chaque séance.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="choice-card diag-card p-4 rounded-xl border-2 border-outline-variant" data-field="style_prof" data-value="decontracte" onclick="setDiagnosticChoice(this)">
-                            <div class="flex items-start gap-3">
-                                <div class="icon-box w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined">sentiment_satisfied</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-on-surface text-sm">Décontracté et encourageant</h4>
-                                    <p class="text-xs text-on-surface-variant mt-1">Une ambiance détendue, avancer à son propre rythme.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Support pédagogique + rappel -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-on-surface-variant mb-2">Support pédagogique souhaité</label>
-                        <select id="diag_support" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" onchange="diagnosticData.support = this.value">
-                            <option value="mixte">Un peu des deux (théorie + exercices)</option>
-                            <option value="pratique">Surtout des exercices pratiques</option>
-                            <option value="theorique">Surtout des explications théoriques</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-on-surface-variant mb-2">Rappel avant la séance</label>
-                        <select id="diag_rappel" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3.5 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" onchange="diagnosticData.rappel = this.value">
-                            <option value="oui">Oui, envoyez-moi un rappel</option>
-                            <option value="non">Non, ce n'est pas nécessaire</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Objectif et difficultés -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-on-surface-variant mb-2">Objectif principal de ces séances (optionnel)</label>
-                        <textarea id="diag_objectif" rows="3" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" placeholder="Ex : préparer un contrôle, combler des lacunes, préparer un examen..." oninput="diagnosticData.objectif = this.value"></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-on-surface-variant mb-2">Difficultés rencontrées (optionnel)</label>
-                        <textarea id="diag_difficultes" rows="3" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all" placeholder="Ex : j'ai du mal avec les exercices d'application..." oninput="diagnosticData.difficultes = this.value"></textarea>
-                    </div>
-                </div>
-
-                <div class="flex justify-between pt-6">
-                    <button class="px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container transition-all" onclick="prevStep()">
-                        Retour
-                    </button>
-                    <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300" onclick="nextStep()">
-                        Continuer vers le paiement
-                        <span class="material-symbols-outlined">arrow_forward</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- ===== STEP 5: Paiement ===== -->
-            <div class="hidden space-y-8 animate-fade-in" id="step-5">
-                <button class="flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold" onclick="prevStep()" type="button">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                    <span>Retour</span>
+                <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300" id="btn-confirmer-paiement" onclick="nextStep()">
+                    Confirmer la réservation
+                    <span class="material-symbols-outlined">check_circle</span>
                 </button>
+            </div>
+        </div>
 
+        <!-- STEP 6: Confirmation -->
+        <div class="hidden space-y-8 animate-fade-in" id="step-6">
+            <div class="text-center py-8">
+                <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-green-600 text-5xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                </div>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Réservation confirmée !</h2>
+                <p class="text-on-surface-variant">Votre séance a été réservée avec succès.</p>
+            </div>
+
+            <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/30 space-y-3">
+                <div id="recap-seances"></div>
+                <div class="border-t border-outline-variant/30 pt-3 flex justify-between">
+                    <span class="font-bold text-on-surface">Total payé</span>
+                    <span class="font-bold text-on-surface" id="recap-total">-</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center pt-6">
+                <a href="{% url 'clients:dashboard_parent' %}" class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center justify-center gap-3 transition-all duration-300">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Retour au dashboard
+                </a>
+                <a href="{% url 'seances:reserver_seance_parent' %}" class="px-8 py-3 rounded-full border border-primary text-primary font-semibold hover:bg-primary/5 transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    Nouvelle réservation
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 text-center">
+        <p class="text-xs text-on-surface-variant">
+            Besoin d'aide ? <a href="#" class="text-primary font-semibold hover:underline">Contactez le support</a>
+        </p>
+    </div>
+
+    <!-- MODAL Détails Professeur -->
+    <div id="modal-prof-details" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="fermerDetailProf()"></div>
+        <div class="relative bg-surface-container-lowest rounded-2xl max-w-md w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+            <div class="p-6 border-b border-outline-variant/30 flex items-start justify-between gap-4">
                 <div>
-                    <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Paiement</h2>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant">Choisissez votre mode de paiement</p>
+                    <h3 class="font-title-md text-title-md font-bold text-on-surface" id="modal-prof-nom">-</h3>
+                    <p class="text-sm text-on-surface-variant" id="modal-prof-matiere">-</p>
                 </div>
-
-                <div class="bg-primary/5 p-6 rounded-xl border border-primary/20">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-on-surface-variant">Solde de votre portefeuille</p>
-                            <p class="text-2xl font-bold text-on-surface">{{ solde_portefeuille|floatformat:2 }} MAD</p>
-                        </div>
-                        <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">
-                            <span class="material-symbols-outlined text-[16px] align-middle">account_balance_wallet</span>
-                            Portefeuille
-                        </span>
-                    </div>
-                </div>
-
-                <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/30">
-                    <div class="flex justify-between items-center">
-                        <span class="text-on-surface-variant">Total à payer</span>
-                        <span class="text-2xl font-bold text-on-surface" id="total-payer">0.00 MAD</span>
-                    </div>
-                    <div class="flex justify-between text-sm text-on-surface-variant mt-2">
-                        <span>Nombre de séances: <span id="nb-seances-total">0</span></span>
-                        <span>Tarif moyen: <span id="tarif-moyen">0</span> MAD/séance</span>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-on-surface-variant mb-2">Mode de paiement</label>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3 p-4 rounded-xl border-2 border-primary bg-primary/5">
-                            <input type="radio" name="mode_paiement" value="portefeuille" checked id="pay-portefeuille" class="w-4 h-4 text-primary focus:ring-primary">
-                            <label for="pay-portefeuille" class="flex-1 font-semibold text-on-surface flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary">account_balance_wallet</span>
-                                Payer avec mon portefeuille
-                            </label>
-                            <span class="text-sm text-on-surface-variant">({{ solde_portefeuille|floatformat:2 }} MAD disponible)</span>
-                        </div>
-                        <div class="flex items-center gap-3 p-4 rounded-xl border border-outline-variant hover:border-primary/30 transition-all">
-                            <input type="radio" name="mode_paiement" value="carte" id="pay-carte" class="w-4 h-4 text-primary focus:ring-primary">
-                            <label for="pay-carte" class="flex-1 font-semibold text-on-surface flex items-center gap-2">
-                                <span class="material-symbols-outlined">credit_card</span>
-                                Payer par carte bancaire
-                                <span class="text-xs font-normal text-on-surface-variant">(via CMI)</span>
-                            </label>
-                        </div>
-
-                        <!-- Virement bancaire : désactivé -->
-                        <div class="flex items-center gap-3 p-4 rounded-xl border border-outline-variant opacity-50 cursor-not-allowed select-none" title="Bientôt disponible">
-                            <input type="radio" name="mode_paiement" value="virement" id="pay-virement" class="w-4 h-4 text-primary" disabled>
-                            <label for="pay-virement" class="flex-1 font-semibold text-on-surface-variant flex items-center gap-2">
-                                <span class="material-symbols-outlined">account_balance</span>
-                                Virement bancaire
-                            </label>
-                            <span class="text-xs font-bold px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full">
-                                Prochainement
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Champs carte bancaire -->
-                    <div id="champs-carte" class="hidden mt-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/30 space-y-3">
-                        <p class="text-xs text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[16px]">lock</span>
-                            Paiement sécurisé — vous serez redirigé vers notre prestataire de paiement.
-                        </p>
-                        <div class="text-center py-4">
-                            <span class="material-symbols-outlined text-3xl text-primary block mb-2">credit_card</span>
-                            <p class="text-sm text-on-surface-variant">Vous allez être redirigé(e) vers la page de paiement sécurisée après confirmation.</p>
-                        </div>
-                    </div>
-
-                    <div id="champs-virement" class="hidden mt-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/30">
-                        <p class="text-sm text-on-surface-variant mb-2 font-semibold">Effectuez le virement vers :</p>
-                        <p class="font-mono text-sm text-on-surface">RIB : XXX XXX XXXXXXXXXXXXX XX</p>
-                        <p class="font-mono text-sm text-on-surface">Bénéficiaire : Origami Privé SARL</p>
-                        <p class="text-xs text-on-surface-variant mt-3 flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[16px]">info</span>
-                            Votre réservation sera confirmée après réception du virement (24-48h).
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex justify-between pt-6">
-                    <button class="px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container transition-all" onclick="prevStep()">
-                        Retour
-                    </button>
-                    <button class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center gap-3 transition-all duration-300" id="btn-confirmer-paiement" onclick="nextStep()">
-                        Confirmer la réservation
-                        <span class="material-symbols-outlined">check_circle</span>
-                    </button>
-                </div>
+                <button onclick="fermerDetailProf()" class="p-2 rounded-full hover:bg-surface-container-high transition-colors flex-shrink-0">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
             </div>
-
-            <!-- ===== STEP 6: Confirmation ===== -->
-            <div class="hidden space-y-8 animate-fade-in" id="step-6">
-                <div class="text-center py-8">
-                    <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="material-symbols-outlined text-green-600 text-5xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                    </div>
-                    <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Réservation confirmée !</h2>
-                    <p class="text-on-surface-variant">Votre séance a été réservée avec succès.</p>
-                </div>
-
-                <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/30 space-y-3">
-                    <div id="recap-seances">
-                        <!-- Rempli dynamiquement -->
-                    </div>
-                    <div class="border-t border-outline-variant/30 pt-3 flex justify-between">
-                        <span class="font-bold text-on-surface">Total payé</span>
-                        <span class="font-bold text-on-surface" id="recap-total">-</span>
-                    </div>
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-                    <a href="{% url 'clients:dashboard_parent' %}" class="gradient-button text-on-primary px-12 py-4 rounded-full font-title-md text-title-md flex items-center justify-center gap-3 transition-all duration-300">
-                        <span class="material-symbols-outlined">dashboard</span>
-                        Retour au dashboard
-                    </a>
-                    <a href="{% url 'clients:reservation_parent' %}" class="px-8 py-3 rounded-full border border-primary text-primary font-semibold hover:bg-primary/5 transition-all flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined">add_circle</span>
-                        Nouvelle réservation
-                    </a>
-                </div>
-            </div>
-
+            <div class="p-6 overflow-y-auto space-y-4" id="modal-prof-container"></div>
         </div>
+    </div>
 
-        <div class="mt-8 text-center">
-            <p class="text-xs text-on-surface-variant">
-                Besoin d'aide ? <a href="#" class="text-primary font-semibold hover:underline">Contactez le support</a>
-            </p>
-        </div>
-
-        <!-- ===== MODAL : Détails du professeur ===== -->
-        <div id="modal-prof-details" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="fermerDetailProf()"></div>
-            <div class="relative bg-surface-container-lowest rounded-2xl max-w-md w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
-                <div class="p-6 border-b border-outline-variant/30 flex items-start justify-between gap-4">
-                    <div>
-                        <h3 class="font-title-md text-title-md font-bold text-on-surface" id="modal-prof-nom">-</h3>
-                        <p class="text-sm text-on-surface-variant" id="modal-prof-matiere">-</p>
-                    </div>
-                    <button onclick="fermerDetailProf()" class="p-2 rounded-full hover:bg-surface-container-high transition-colors flex-shrink-0">
-                        <span class="material-symbols-outlined">close</span>
-                    </button>
-                </div>
-                <div class="p-6 overflow-y-auto space-y-4" id="modal-prof-container">
-                    <!-- Rempli dynamiquement -->
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-</div>
+</main>
 
 <script>
     let currentStep = 1;
@@ -1046,8 +896,10 @@ tailwind.config = {
     let modeActuel = 'identique';
     let seanceCount = 1;
     let nbSeancesTotal = 1;
+    let profsAffichesSimple = new Set();
+    let profsAffichesMultiples = {};
 
-    // ===== DIAGNOSTIC PÉDAGOGIQUE =====
+    // DIAGNOSTIC
     let diagnosticData = {
         style_apprentissage: null,
         rythme: null,
@@ -1085,10 +937,7 @@ tailwind.config = {
         return { valide: true, message: '' };
     }
 
-    let profsAffichesSimple = new Set();
-    let profsAffichesMultiples = {};
-
-    // ===== GESTION DE L'ENFANT SÉLECTIONNÉ =====
+    // GESTION DE L'ENFANT
     document.addEventListener('DOMContentLoaded', function() {
         const enfantSelect = document.getElementById('enfant_select');
         const niveauContainer = document.getElementById('niveau_enfant_container');
@@ -1114,7 +963,6 @@ tailwind.config = {
             radio.addEventListener('change', togglePaiementFields);
         });
 
-        // Empêche deux séances personnalisées d'avoir la même matière
         document.getElementById('seances-container').addEventListener('change', function(e) {
             if (e.target.classList.contains('matiere-select')) {
                 const matiere = e.target.value;
@@ -1152,23 +1000,16 @@ tailwind.config = {
         }
     }
 
-    // ===== GESTION DES SÉANCES IDENTIQUES =====
+    // SÉANCES IDENTIQUES
     function ajouterSeanceIdentique() {
         const container = document.getElementById('seances-identiques-container');
-        const seanceCount = container.children.length + 1;
-        
+        const count = container.children.length + 1;
         const template = document.querySelector('#seances-identiques-container .seance-item').cloneNode(true);
-        const label = template.querySelector('.font-semibold');
-        label.textContent = `Séance #${seanceCount}`;
-        
+        template.querySelector('.font-semibold').textContent = `Séance #${count}`;
         template.querySelector('.date-identique-input').value = '';
         template.querySelector('.creneau-identique-select').value = '';
-        
-        const btnSuppr = template.querySelector('.btn-supprimer');
-        btnSuppr.style.display = 'block';
-        
+        template.querySelector('.btn-supprimer').style.display = 'block';
         container.appendChild(template);
-        
         professeurSelectionne = null;
         document.getElementById('next-step-3').disabled = true;
         document.getElementById('next-step-3').classList.add('opacity-50', 'cursor-not-allowed');
@@ -1235,30 +1076,30 @@ tailwind.config = {
         const matiere = document.getElementById('matiere_identique').value;
         const seances = document.querySelectorAll('#seances-identiques-container .seance-item');
         const data = [];
-        
         seances.forEach((seance, index) => {
             const date = seance.querySelector('.date-identique-input').value;
             const creneau = seance.querySelector('.creneau-identique-select').value;
             if (matiere && date && creneau) {
-                data.push({
-                    matiere: matiere,
-                    date: date,
-                    creneau: creneau,
-                    index: index
-                });
+                data.push({ matiere, date, creneau, index });
             }
         });
-        
         return data;
     }
 
     function nextStep() {
         if (currentStep < totalSteps) {
             if (currentStep === 1) {
-                // Vérifier que l'enfant est sélectionné
                 const enfantSelect = document.getElementById('enfant_select');
+                 console.log('🔍 enfantSelect:', enfantSelect);
+                 console.log('🔍 enfantSelect.value:', enfantSelect.value);
+                 console.log('🔍 Options:', enfantSelect.options);
                 if (!enfantSelect.value) {
-                    alert('Veuillez sélectionner un enfant.');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Enfant non sélectionné',
+                        text: 'Veuillez sélectionner un enfant pour continuer.',
+                        confirmButtonText: 'OK'
+                    });
                     return;
                 }
 
@@ -1471,13 +1312,9 @@ tailwind.config = {
         seanceCount++;
         const container = document.getElementById('seances-container');
         const template = container.querySelector('.seance-item').cloneNode(true);
-        const label = template.querySelector('.font-semibold');
-        label.textContent = `Séance #${seanceCount}`;
-        template.querySelectorAll('select, input').forEach(el => {
-            el.value = '';
-        });
-        const btnSuppr = template.querySelector('.btn-supprimer');
-        btnSuppr.style.display = 'block';
+        template.querySelector('.font-semibold').textContent = `Séance #${seanceCount}`;
+        template.querySelectorAll('select, input').forEach(el => { el.value = ''; });
+        template.querySelector('.btn-supprimer').style.display = 'block';
         container.appendChild(template);
     }
 
@@ -1500,12 +1337,10 @@ tailwind.config = {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function(position) {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    document.getElementById('localisation').value = `Position: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                    document.getElementById('localisation').value = `Position: ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`;
                     alert('Position utilisée avec succès !');
                 },
-                function(error) {
+                function() {
                     alert('Impossible de récupérer votre position. Veuillez entrer une adresse manuellement.');
                 }
             );
@@ -1944,7 +1779,7 @@ tailwind.config = {
         }
     }
 
-    // ===== MODAL DÉTAILS DU PROFESSEUR =====
+    // MODAL DÉTAILS PROFESSEUR
     function ouvrirDetailProf(id) {
         let profData = null;
         
@@ -2214,7 +2049,6 @@ tailwind.config = {
         const mode = modeInput ? modeInput.value : 'portefeuille';
 
         document.getElementById('champs-carte').classList.toggle('hidden', mode !== 'carte');
-        document.getElementById('champs-virement').classList.toggle('hidden', mode !== 'virement');
 
         if (mode === 'portefeuille') {
             verifierSoldePortefeuille();

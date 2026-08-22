@@ -266,6 +266,7 @@
                 <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
                 <span>Portefeuille</span>
             </a>
+            
             <!-- Notifications -->
             <a href="{% url 'clients:notifications' %}" class="sidebar-link active">
         <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">notifications</span>
@@ -278,7 +279,13 @@
                 <span>Paramètres</span>
             </a>
         </nav>
-
+<!-- Dans le sidebar ou en bas du sidebar -->
+<div class="mt-4 pt-4 border-t border-outline-variant/30">
+    <a href="{% url 'seances:reserver_seance_parent' %}" class="w-full py-3.5 px-4 rounded-xl bg-primary-gradient text-white font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 hover:scale-[1.02] transition-all duration-300 shadow-lg shadow-primary/25 group">
+        <span class="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform duration-300">family_history</span>
+        Réserver une séance (Parent)
+    </a>
+</div>
         <div class="mt-auto pt-4 border-t border-outline-variant/30">
             <a href="{% url 'authentication:deconnexion' %}" class="sidebar-link text-error hover:bg-error/10 hover:text-error">
                 <span class="material-symbols-outlined text-[22px]">logout</span>

@@ -20,3 +20,32 @@ class Seance(models.Model):
 
     def __str__(self):
         return f"Séance du {self.date} - {self.affectation.matiere} ({self.statut})"
+
+
+class RappelSeance(models.Model):
+    CANAL_CHOICES = [
+        ('sms', 'SMS'),
+        ('whatsapp', 'WhatsApp'),
+    ]
+    STATUT_CHOICES = [
+        ('en_attente', 'En attente'),
+        ('envoye', 'Envoyé'),
+        ('echec', 'Échec'),
+        ('annule', 'Annulé'),
+    ]
+
+    seance = models.OneToOneField(Seance, on_delete=models.CASCADE, related_name='rappel')
+    canal = models.CharField(max_length=10, choices=CANAL_CHOICES)
+    telephone = models.CharField(max_length=20)
+    date_envoi_prevue = models.DateTimeField()
+    statut = models.CharField(max_length=15, choices=STATUT_CHOICES, default='en_attente')
+    date_envoi_reelle = models.DateTimeField(null=True, blank=True)
+    erreur = models.TextField(blank=True, default='')
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['statut', 'date_envoi_prevue']),
+        ]
+
+    def __str__(self):
+        return f"Rappel {self.canal} - {self.seance} ({self.statut})"

@@ -6,6 +6,7 @@ app_name = 'seances'
 
 urlpatterns = [
     path('reserver/', views.reserver_seance, name='reserver_seance'),
+    path('reserver-parent/', views.reserver_seance_parent, name='reserver_seance_parent'),
     path('suggerer-professeurs/', views.suggerer_professeurs, name='suggerer_professeurs'),
     path('suggerer-professeurs-multiples/', views.suggerer_professeurs_multiples, name='suggerer_professeurs_multiples'),
     path('nouvelle-reservation/', views.reserver_seance, name='nouvelle_reservation'),

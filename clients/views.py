@@ -6,8 +6,9 @@ from django.db.models import Count, Sum, Avg
 from django.utils import timezone
 from datetime import datetime, timedelta
 from .models import Client
-
-
+import uuid
+from django.utils.text import slugify
+from django.http import JsonResponse
 @login_required
 def dashboard_parent(request):
     """Dashboard pour les parents"""
@@ -92,13 +93,74 @@ def liste_enfants(request):
     enfants = Client.objects.filter(parent=parent, type_client='ETUDIANT')
     nombre_enfants = enfants.count()
     
+    # Importer les modèles nécessaires
+    from affectations.models import Affectation
+    from seances.models import Seance
+    from enseignants.models import Enseignant
+    
     # Données enrichies pour chaque enfant
     enfants_data = []
     for enfant in enfants:
-        # Calculer les heures restantes (exemple)
-        heures_restantes = 20
+        # Récupérer les affectations actives de l'enfant
+        affectations = Affectation.objects.filter(
+            utilisateur=enfant.utilisateur,
+            statut_affectation='active'
+        )
         
-        # Déterminer la couleur de la carte en fonction des heures
+        # Calculer les heures restantes
+        heures_restantes = 0
+        heures_total = 0
+        for aff in affectations:
+            heures_restantes += aff.heures_restantes or 0
+            # heures_total n'existe pas dans Affectation, on utilise une valeur par défaut
+            heures_total += 40  # ou aff.heures_total si le champ existe
+        
+        # Récupérer les matières (uniques)
+        matieres = list(affectations.values_list('matiere', flat=True).distinct())
+        if not matieres:
+            matieres = ['Aucune matière']
+        
+        # Récupérer les enseignants
+        enseignants_ids = []
+        for aff in affectations:
+            if aff.enseignant:
+                enseignants_ids.append(aff.enseignant.id_enseignant)
+        
+        nombre_enseignants = len(set(enseignants_ids))
+        
+        # Calculer la moyenne (à partir des notes / qualités des séances)
+        moyenne = 0
+        try:
+            seances_terminees = Seance.objects.filter(
+                affectation__in=affectations,
+                statut='termine'
+            )
+            # Si les séances ont un champ "qualite" ou "note"
+            notes = [s.qualite for s in seances_terminees if s.qualite]
+            if notes:
+                # Convertir les qualités en notes (si ce sont des nombres)
+                notes_valides = []
+                for n in notes:
+                    try:
+                        notes_valides.append(float(n))
+                    except (ValueError, TypeError):
+                        pass
+                if notes_valides:
+                    moyenne = round(sum(notes_valides) / len(notes_valides), 1)
+                else:
+                    moyenne = 0
+        except:
+            moyenne = 0
+        
+        # Calculer la progression
+        total_seances = Seance.objects.filter(affectation__in=affectations).count()
+        seances_terminees_count = Seance.objects.filter(
+            affectation__in=affectations, 
+            statut='termine'
+        ).count()
+        taux_progression = int((seances_terminees_count / total_seances * 100)) if total_seances > 0 else 0
+        
+        # Déterminer la couleur de la carte
         statut_carte = ''
         if heures_restantes <= 10:
             statut_carte = 'border-error/20'
@@ -107,31 +169,21 @@ def liste_enfants(request):
         else:
             statut_carte = 'border-primary/20'
         
-        # Matières de l'enfant (exemple)
-        matieres = ['Maths', 'Français']
-        
-        # Calculer la moyenne (exemple)
-        moyenne = 15.5
-        
         enfants_data.append({
             'id_client': enfant.id_client,
             'prenom': enfant.prenom,
             'nom': enfant.nom,
             'age': calculate_age(enfant.date_naissance) if enfant.date_naissance else '--',
-            'etablissement': enfant.etablissement or 'Établissement',
-            'niveau': enfant.niveau_scolaire or 'Niveau',
+            'etablissement': enfant.etablissement or 'Non spécifié',
+            'niveau': enfant.niveau_scolaire or 'Non spécifié',
             'photo': enfant.photo,
             'heures_restantes': heures_restantes,
-            'heures_total': 40,
-            'matieres': matieres,
+            'heures_total': heures_total,
+            'matieres': matieres[:4],  # Limiter à 4 matières
             'moyenne': moyenne,
-            'nombre_enseignants': 2,
+            'nombre_enseignants': nombre_enseignants,
             'statut_carte': statut_carte,
-            'taux_progression': 75,
-            'prochaine_seance': {
-                'matiere': 'Mathématiques',
-                'date_heure': "Demain, 16:30"
-            }
+            'taux_progression': taux_progression,
         })
     
     # Séances à venir (tous enfants confondus)
@@ -264,29 +316,52 @@ def creer_profil_parent(request):
 
 @login_required
 def ajouter_enfant(request):
-    """Ajoute un enfant au parent connecté"""
+    """Ajoute un enfant au parent connecté, avec son propre compte utilisateur."""
     if request.method != 'POST':
         return redirect('clients:liste_enfants')
-    
+
     parent = Client.objects.filter(utilisateur=request.user, type_client='PARENT').first()
     if not parent:
         messages.error(request, "Vous devez avoir un profil parent pour ajouter un enfant.")
         return redirect('clients:creer_profil_parent')
-    
+
     # Récupérer les données du formulaire
     prenom = request.POST.get('prenom')
     nom = request.POST.get('nom')
     date_naissance = request.POST.get('date_naissance')
     niveau_scolaire = request.POST.get('niveau_scolaire')
     etablissement = request.POST.get('etablissement')
-    
+
     if not prenom or not nom:
         messages.error(request, "Le prénom et le nom sont obligatoires.")
         return redirect('clients:liste_enfants')
-    
-    # Créer l'enfant
+
+    from authentication.models import Utilisateur
+
+    # 🔥 Générer un username unique pour l'enfant (il n'a pas de compte
+    # de connexion "actif" — voir set_unusable_password() plus bas —
+    # mais il lui faut un compte Utilisateur distinct de celui du parent
+    # pour que Affectation.utilisateur identifie chaque enfant séparément).
+    base_username = slugify(f"{prenom}.{nom}") or "enfant"
+    username = base_username
+    suffix = 1
+    while Utilisateur.objects.filter(username=username).exists():
+        suffix += 1
+        username = f"{base_username}{suffix}"
+
+    enfant_user = Utilisateur.objects.create_user(
+        username=username,
+        email='',  # pas de compte de connexion propre pour l'instant
+        first_name=prenom,
+        last_name=nom,
+        date_naissance=date_naissance if date_naissance else None,
+    )
+    enfant_user.set_unusable_password()
+    enfant_user.save()
+
+    # Créer le profil Client de l'enfant, lié à SON PROPRE utilisateur
     enfant = Client.objects.create(
-        utilisateur=request.user,
+        utilisateur=enfant_user,
         type_client='ETUDIANT',
         nom=nom,
         prenom=prenom,
@@ -297,7 +372,7 @@ def ajouter_enfant(request):
         etablissement=etablissement or '',
         date_naissance=date_naissance if date_naissance else None
     )
-    
+
     messages.success(request, f"{prenom} {nom} a été ajouté avec succès !")
     return redirect('clients:liste_enfants')
 
@@ -1589,3 +1664,196 @@ def parametres(request):
     }
     
     return render(request, 'parent/parametres.html', context)
+# clients/views.py - Ajouter ces fonctions
+
+@login_required
+def detail_enfant(request, enfant_id):
+    """Voir les détails d'un enfant"""
+    parent = Client.objects.filter(utilisateur=request.user, type_client='PARENT').first()
+    
+    if not parent:
+        return JsonResponse({'error': 'Parent non trouvé'}, status=404)
+    
+    enfant = Client.objects.filter(
+        id_client=enfant_id,
+        parent=parent,
+        type_client='ETUDIANT'
+    ).select_related('utilisateur').first()
+    
+    if not enfant:
+        return JsonResponse({'error': 'Enfant non trouvé'}, status=404)
+    
+    # Récupérer les données de l'enfant
+    from affectations.models import Affectation
+    from seances.models import Seance
+    from enseignants.models import Enseignant
+    
+    affectations = Affectation.objects.filter(
+        utilisateur=enfant.utilisateur,
+        statut_affectation='active'
+    )
+    
+    enseignants = []
+    for aff in affectations:
+        if aff.enseignant:
+            enseignants.append({
+                'id': aff.enseignant.id_enseignant,
+                'nom': f"{aff.enseignant.utilisateur.first_name} {aff.enseignant.utilisateur.last_name}".strip(),
+                'matiere': aff.matiere,
+                'heures_restantes': aff.heures_restantes
+            })
+    
+    # Prochaines séances
+    prochaines_seances = Seance.objects.filter(
+        affectation__in=affectations,
+        date__gte=timezone.now().date(),
+        statut='prevue'
+    ).order_by('date', 'heure')[:3]
+    
+    seances_data = []
+    for seance in prochaines_seances:
+        enseignant = None
+        if seance.affectation and seance.affectation.enseignant:
+            enseignant = seance.affectation.enseignant
+        
+        seances_data.append({
+            'date': seance.date.strftime('%d/%m/%Y'),
+            'heure': seance.heure.strftime('%H:%M') if seance.heure else '--:--',
+            'matiere': seance.affectation.matiere if seance.affectation else 'Cours',
+            'enseignant': f"{enseignant.utilisateur.first_name} {enseignant.utilisateur.last_name}".strip() if enseignant else 'Enseignant'
+        })
+    
+    # Statistiques
+    total_seances = Seance.objects.filter(affectation__in=affectations).count()
+    seances_terminees = Seance.objects.filter(affectation__in=affectations, statut='termine').count()
+    progression = int((seances_terminees / total_seances * 100)) if total_seances > 0 else 0
+    
+    data = {
+        'id': enfant.id_client,
+        'prenom': enfant.prenom,
+        'nom': enfant.nom,
+        'telephone': enfant.telephone or 'Non renseigné',
+        'telephone2': enfant.telephone2 or 'Non renseigné',
+        'adresse': enfant.adresse or 'Non renseignée',
+        'niveau_scolaire': enfant.niveau_scolaire or 'Non spécifié',
+        'etablissement': enfant.etablissement or 'Non spécifié',
+        'date_naissance': enfant.date_naissance.strftime('%d/%m/%Y') if enfant.date_naissance else 'Non renseignée',
+        'photo': enfant.photo.url if enfant.photo else None,
+        'enseignants': enseignants,
+        'prochaines_seances': seances_data,
+        'total_seances': total_seances,
+        'seances_terminees': seances_terminees,
+        'progression': progression,
+        'nombre_enseignants': len(enseignants),
+    }
+    
+    return JsonResponse(data)
+
+
+@login_required
+def modifier_enfant(request, enfant_id):
+    """Modifier les informations d'un enfant"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
+    
+    parent = Client.objects.filter(utilisateur=request.user, type_client='PARENT').first()
+    
+    if not parent:
+        return JsonResponse({'error': 'Parent non trouvé'}, status=404)
+    
+    enfant = Client.objects.filter(
+        id_client=enfant_id,
+        parent=parent,
+        type_client='ETUDIANT'
+    ).first()
+    
+    if not enfant:
+        return JsonResponse({'error': 'Enfant non trouvé'}, status=404)
+    
+    # Récupérer les données du formulaire
+    prenom = request.POST.get('prenom')
+    nom = request.POST.get('nom')
+    telephone = request.POST.get('telephone')
+    telephone2 = request.POST.get('telephone2')
+    adresse = request.POST.get('adresse')
+    niveau_scolaire = request.POST.get('niveau_scolaire')
+    etablissement = request.POST.get('etablissement')
+    date_naissance = request.POST.get('date_naissance')
+    
+    # Valider les champs obligatoires
+    if not prenom or not nom:
+        return JsonResponse({'error': 'Le prénom et le nom sont obligatoires'}, status=400)
+    
+    # Mettre à jour l'enfant
+    enfant.prenom = prenom
+    enfant.nom = nom
+    enfant.telephone = telephone or ''
+    enfant.telephone2 = telephone2 or ''
+    enfant.adresse = adresse or ''
+    enfant.niveau_scolaire = niveau_scolaire or ''
+    enfant.etablissement = etablissement or ''
+    if date_naissance:
+        from datetime import datetime
+        enfant.date_naissance = datetime.strptime(date_naissance, '%Y-%m-%d').date()
+    
+    enfant.save()
+    
+    # Mettre à jour l'utilisateur associé
+    user = enfant.utilisateur
+    user.first_name = prenom
+    user.last_name = nom
+    user.save()
+    
+    return JsonResponse({
+        'success': True,
+        'message': f"{prenom} {nom} a été modifié avec succès !",
+        'enfant_id': enfant.id_client
+    })
+
+
+@login_required
+def supprimer_enfant(request, enfant_id):
+    """Supprimer un enfant"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
+    
+    parent = Client.objects.filter(utilisateur=request.user, type_client='PARENT').first()
+    
+    if not parent:
+        return JsonResponse({'error': 'Parent non trouvé'}, status=404)
+    
+    enfant = Client.objects.filter(
+        id_client=enfant_id,
+        parent=parent,
+        type_client='ETUDIANT'
+    ).select_related('utilisateur').first()
+    
+    if not enfant:
+        return JsonResponse({'error': 'Enfant non trouvé'}, status=404)
+    
+    # Vérifier s'il y a des séances actives
+    from affectations.models import Affectation
+    from seances.models import Seance
+    
+    affectations = Affectation.objects.filter(
+        utilisateur=enfant.utilisateur,
+        statut_affectation='active'
+    )
+    
+    if affectations.exists():
+        return JsonResponse({
+            'error': f"Cet enfant a des séances actives. Vous devez d'abord terminer ou annuler les séances avant de supprimer le profil."
+        }, status=400)
+    
+    # Supprimer l'enfant
+    utilisateur = enfant.utilisateur
+    enfant.delete()
+    
+    # Optionnel : supprimer aussi l'utilisateur (ou le désactiver)
+    utilisateur.is_active = False
+    utilisateur.save()
+    
+    return JsonResponse({
+        'success': True,
+        'message': f"{enfant.prenom} {enfant.nom} a été supprimé avec succès !"
+    })

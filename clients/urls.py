@@ -1,7 +1,7 @@
 # clients/urls.py
 from django.urls import path
 from . import views
-
+from seances import views as seances_views
 app_name = 'clients'
 
 urlpatterns = [
@@ -16,5 +16,9 @@ urlpatterns = [
     path('paiements/', views.liste_paiements, name='liste_paiements'),
     path('creer-profil-parent/', views.creer_profil_parent, name='creer_profil_parent'),
     path('notifications/', views.notifications, name='notifications'),
-    path('parametres/', views.parametres, name='parametres'),     
+    path('reservation-parent/', seances_views.reserver_seance_parent, name='reservation_parent'), 
+    path('parametres/', views.parametres, name='parametres'),  
+    path('detail-enfant/<int:enfant_id>/', views.detail_enfant, name='detail_enfant'),
+    path('modifier-enfant/<int:enfant_id>/', views.modifier_enfant, name='modifier_enfant'),
+    path('supprimer-enfant/<int:enfant_id>/', views.supprimer_enfant, name='supprimer_enfant'),   
 ]

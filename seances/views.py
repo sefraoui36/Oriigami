@@ -4,10 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
+from datetime import datetime
 from django.db import transaction
 from datetime import datetime, timedelta
 from django.db.models import Q, Avg, Count
 from decimal import Decimal
+from django.utils import timezone
 import json
 import re
 import logging
@@ -755,6 +757,24 @@ def confirmer_reservation(request):
                     statut=statut_seance,
                 )
                 seances_creees_ids.append(seance.id)
+                seance = Seance.objects.create(
+                    affectation=affectation,
+                    date=s['date'],
+                    heure=s['heure'],
+                    duree=s.get('duree', '1h'),
+                    type_seance=s['matiere'],
+                    statut=statut_seance,
+                )
+                seances_creees_ids.append(seance.id)
+
+                # 👇 AJOUT : création du rappel si demandé
+                creer_rappel_si_demande(
+                    seance=seance,
+                    s_data=s,
+                    preferences=preferences,
+                    telephone_utilisateur=request.user.telephone,
+                    telephone_client=client.telephone,
+                )
 
     except ValueError as e:
         logger.error(f"Erreur confirmation réservation: {e}")
@@ -832,9 +852,17 @@ def supprimer_reservation(request, affectation_id):
 # PAGE DE RÉSERVATION POUR PARENT
 # ============================================================
 
+# ============================================================
+# PAGE DE RÉSERVATION POUR PARENT
+# ============================================================
+
 @login_required
 def reserver_seance_parent(request):
     """Page de réservation de séance pour un parent (pour ses enfants)"""
+    
+    print("=" * 60)
+    print("🔍 [DEBUG] reserver_seance_parent appelée")
+    print(f"👤 Utilisateur connecté: {request.user.username} (id: {request.user.id})")
     
     # Vérifier que l'utilisateur est un parent
     parent = Client.objects.filter(
@@ -842,7 +870,14 @@ def reserver_seance_parent(request):
         type_client='PARENT'
     ).first()
     
+    print(f"👨‍👩‍👦 Parent trouvé: {parent}")
+    if parent:
+        print(f"  - Nom: {parent.nom} {parent.prenom}")
+       
+        print(f"  - Type: {parent.type_client}")
+    
     if not parent:
+        print("❌ Aucun parent trouvé pour cet utilisateur")
         messages.warning(request, "Vous devez être un parent pour accéder à cette page.")
         return redirect('clients:dashboard_parent')
     
@@ -852,7 +887,14 @@ def reserver_seance_parent(request):
         type_client='ETUDIANT'
     ).select_related('utilisateur')
     
+    print(f"\n👶 Enfants trouvés: {enfants.count()}")
+    for enfant in enfants:
+        print(f"  - {enfant.prenom} {enfant.nom} (id: {enfant.id_client})")
+        print(f"    * Niveau: {enfant.niveau_scolaire}")
+        print(f"    * Utilisateur: {enfant.utilisateur.username if enfant.utilisateur else 'Aucun'}")
+    
     if not enfants.exists():
+        print("❌ Aucun enfant trouvé pour ce parent")
         messages.warning(request, "Vous n'avez pas encore d'enfant inscrit. Ajoutez un enfant d'abord.")
         return redirect('clients:liste_enfants')
     
@@ -864,6 +906,8 @@ def reserver_seance_parent(request):
         .distinct()
     )
     
+    print(f"\n📚 Matières disponibles: {len(matieres_disponibles)}")
+    
     if not matieres_disponibles:
         matieres_disponibles = [
             'Mathématiques', 'Physique', 'Chimie', 'SVT',
@@ -872,10 +916,14 @@ def reserver_seance_parent(request):
             'Sciences Economiques', 'Comptabilité', 'Arabe',
             'Espagnol', 'Allemand'
         ]
+        print("⚠️ Aucune matière trouvée en base, utilisation de la liste par défaut")
     
     # Solde du portefeuille du parent
     portefeuille = Portefeuille.objects.filter(utilisateur=request.user).first()
     solde_portefeuille = portefeuille.solde if portefeuille else 0
+    
+    print(f"\n💰 Solde du portefeuille: {solde_portefeuille} MAD")
+    print("=" * 60)
     
     context = {
         'client': parent,
@@ -887,8 +935,50 @@ def reserver_seance_parent(request):
         'non_lues': 0,  # À implémenter selon ton système de notifications
     }
     
-    return render(request, 'parent/reservation.html', context)
+    # Vérifier que le contexte contient bien les enfants
+    print(f"\n📦 Contexte passé au template:")
+    print(f"  - enfants: {context['enfants'].count()} élément(s)")
+    print(f"  - matieres_disponibles: {len(context['matieres_disponibles'])} élément(s)")
+    print(f"  - solde_portefeuille: {context['solde_portefeuille']}")
+    print("=" * 60)
+    
+    return render(request, 'seances/reservation_p.html', context)
+def creer_rappel_si_demande(seance, s_data, preferences, telephone_utilisateur, telephone_client):
+    """
+    Crée un RappelSeance si l'élève/parent a demandé un rappel et qu'un
+    numéro de téléphone est disponible. Ne lève jamais d'exception :
+    un rappel manqué ne doit jamais faire échouer la réservation.
+    """
+    if preferences.get('rappel') != 'oui':
+        return
 
+    canal = preferences.get('canal_rappel')
+    if canal not in ('sms', 'whatsapp'):
+        canal = 'whatsapp'
+
+    telephone = telephone_utilisateur or telephone_client
+    if not telephone:
+        logger.warning(f"Rappel demandé mais aucun téléphone disponible pour la séance {seance.id}")
+        return
+
+    try:
+        date_heure_seance = datetime.combine(seance.date, seance.heure)
+        date_heure_seance = timezone.make_aware(date_heure_seance)
+        date_envoi = date_heure_seance - timedelta(hours=24)
+
+        # Si la séance est dans moins de 24h, on programme l'envoi
+        # immédiatement au lieu d'une date dans le passé.
+        if date_envoi <= timezone.now():
+            date_envoi = timezone.now() + timedelta(minutes=2)
+
+        RappelSeance.objects.create(
+            seance=seance,
+            canal=canal,
+            telephone=telephone,
+            date_envoi_prevue=date_envoi,
+        )
+    except Exception:
+        logger.exception(f"Impossible de créer le rappel pour la séance {seance.id}")
 
 # ============================================================
 # API : CONFIRMATION DE RÉSERVATION PAR PARENT

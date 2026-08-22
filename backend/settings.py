@@ -18,7 +18,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-5rop()@4&4wle))qvr9dfu=#f9-zerzc+jq=*jnd3sz6c6j=o5'
-
+TWILIO_ACCOUNT_SID = 'xxx'
+TWILIO_AUTH_TOKEN = 'xxx'
+#TWILIO_SMS_FROM = '+1xxxxxxxxxx'
+TWILIO_WHATSAPP_FROM = '+14155238886'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
